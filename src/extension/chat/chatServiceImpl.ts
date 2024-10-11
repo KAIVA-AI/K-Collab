@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
-import { SelectionRange } from "../generate/core";
+// import { SelectionRange } from "../generate/core";
 import { chat, resetChat } from "./core";
 
 export interface ChatServiceClient {
@@ -147,7 +147,7 @@ export class ChatServiceImpl implements IChatService {
                         document,
                         selection,
                         abortController.signal,
-                        resultStream
+                        // resultStream
                     );
                 } catch (e) {
                     console.error(e);

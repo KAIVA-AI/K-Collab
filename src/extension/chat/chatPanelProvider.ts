@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-
-import { getNonce } from "../utils";
+import { Utils } from 'vscode-uri';
+import { getNonce } from "../../utils";
 import { sharedChatServiceImpl, ChatServiceClient } from "./chatServiceImpl";
 import { ExtensionHostServiceManager } from "../../common/ipc/extensionHost";
 import {
@@ -28,10 +28,10 @@ export class ChatPanelProvider
         _token: vscode.CancellationToken
     ): void | Thenable<void> {
         this.#view = webviewView;
-
+        console.log("BINGO");
         const { extensionUri } = this.#extensionContext;
         const { webview } = webviewView;
-        const baseUri = vscode.Uri.joinPath(extensionUri, "dist");
+        const baseUri = Utils.joinPath(extensionUri, "dist");
         webview.options = {
             enableScripts: true,
             localResourceRoots: [baseUri],
@@ -123,11 +123,14 @@ export class ChatPanelProvider
         baseUri: vscode.Uri
     ): string {
         const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(baseUri, "webview.js")
+            Utils.joinPath(baseUri, "webview.js")
         );
         const codiconsUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(baseUri, "codicon.css")
+            Utils.joinPath(baseUri, "codicon.css")
         );
+        console.log("scriptUri ", scriptUri);
+        console.log("codiconsUri ", codiconsUri);
+
         const nonce = getNonce();
 
         return `

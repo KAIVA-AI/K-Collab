@@ -14,6 +14,24 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+        "activitybar": [
+            {
+                "id": "cest_la_vie",
+                "title": "Vietis Extension",
+                "icon": "activitybar-icon.svg"
+            }
+        ]
+    },
+    "views": {
+        "cest_la_vie": [
+            {
+                "type": "webview",
+                "id": "chat",
+                "name": "Chat"
+            }
+        ]
+    },
     "commands": [
       {
         "command": "extension.helloWorld",
@@ -45,7 +63,8 @@
     "build-webview": "webpack --mode production --config webpack.webview.config.js",
     "build-ext": "webpack --mode production",
     "watch": "webpack --watch",
-    "start-ext": "webpack serve --mode development"
+    "start-ext": "webpack serve --mode development",
+    "copy-icons": "cp src/webview/codicons/* dist/"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
@@ -72,9 +91,11 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
+    "@types/keytar": "^4.4.2",
     "@vscode/codicons": "^0.0.36",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "react-markdown": "^9.0.1",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "vscode-uri": "^3.0.8"
   }
 }

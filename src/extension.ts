@@ -21,13 +21,13 @@ import { sharedChatServiceImpl } from "./extension/chat/chatServiceImpl";
 // import { ExtensionContext } from "./context.ts";
 // import { handleGenerateProjectCommand } from "./project";
 
-function setHasActiveGenerateSessionContext(value: boolean) {
-    vscode.commands.executeCommand(
-        "setContext",
-        "aicursor.hasActiveGenerateSession",
-        value
-    );
-}
+// function setHasActiveGenerateSessionContext(value: boolean) {
+//     vscode.commands.executeCommand(
+//         "setContext",
+//         "aicursor.hasActiveGenerateSession",
+//         value
+//     );
+// }
 
 async function handleGenerateCodeCommand() {
     const input = await vscode.window.showInputBox({
@@ -68,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
             crypto.randomFillSync(arr);
         },
     } as any;
-
+    console.log("BINGO ACTIVE EXT");
     // setExtensionContext(new ExtensionContext());
     // getGlobalState().storage = context.globalState;
 

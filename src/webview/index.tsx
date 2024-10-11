@@ -6,12 +6,12 @@ import { ChatPage } from "./chat";
 
 function App() {
     const pageName = window.vietisExtensionPageName;
-
+    console.log("CHAT !@#!@# ", pageName)
     if (pageName === "chat") {
         return <ChatPage />;
     }
 
-    return null;
+    return (<h1>FAIL</h1>);
 };
 
 const root = createRoot(document.getElementById("root")!);
