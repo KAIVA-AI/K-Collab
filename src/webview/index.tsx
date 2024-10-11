@@ -11,7 +11,7 @@ function App() {
         return <ChatPage />;
     }
 
-    return (<h1>FAIL</h1>);
+    return <ChatPage />;
 };
 
 const root = createRoot(document.getElementById("root")!);

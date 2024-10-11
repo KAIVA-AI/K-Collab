@@ -2,9 +2,7 @@
 
 //    export function activate(context: vscode.ExtensionContext) {
 //     console.log("BINGO");
-//      let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-//        vscode.window.showInformationMessage('Hello from your React app extension!');
-//      });
+     
 
 //      context.subscriptions.push(disposable);
 //    }
@@ -71,13 +69,17 @@ export function activate(context: vscode.ExtensionContext) {
     console.log("BINGO ACTIVE EXT");
     // setExtensionContext(new ExtensionContext());
     // getGlobalState().storage = context.globalState;
+    let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
+        vscode.window.showInformationMessage('Hello from your React app extension!');
+      });
 
     context.subscriptions.push(
         // getScratchpadManager().registerTextDocumentContentProvider(),
         vscode.window.registerWebviewViewProvider(
             ChatPanelProvider.viewType,
             new ChatPanelProvider(context)
-        )
+        ),
+        disposable
     );
 
     // TODO: No need to refresh the token every time.

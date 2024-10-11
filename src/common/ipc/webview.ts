@@ -5,7 +5,7 @@ import {
     MESSAGE_TYPE_RESPONSE,
 } from "./base";
 
-declare function acquireVsCodeApi(): any; 
+declare function acquireVsCodeApi(): any;
 class WebviewServiceManager extends ServiceManager {
     #currentMessageId = 0;
     #pendingReplies = new Map<number, IMessageReplyPort>();

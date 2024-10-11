@@ -18,6 +18,7 @@ export class ExtensionHostServiceManager extends ServiceManager {
         this.#webview = webview;
 
         this.#disposable = webview.onDidReceiveMessage(async (rawMsg) => {
+            console.log("WEBVIEW RECEIVE");
             const { id, type, payload } = rawMsg;
             if (type === MESSAGE_TYPE_REQUEST) {
                 const reply = await this.handleIncomingMessage(payload);

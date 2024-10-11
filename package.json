@@ -9,9 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:extension.helloWorld"
-  ],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -19,7 +16,7 @@
             {
                 "id": "cest_la_vie",
                 "title": "Vietis Extension",
-                "icon": "activitybar-icon.svg"
+                "icon": "logo.svg"
             }
         ]
     },
