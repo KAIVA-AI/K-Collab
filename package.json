@@ -1,6 +1,6 @@
 {
   "name": "cest-la-vie",
-  "displayName": "cest_la_vie",
+  "displayName": "Cest La Vie",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -12,22 +12,22 @@
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
-        "activitybar": [
-            {
-                "id": "cest_la_vie",
-                "title": "Vietis Extension",
-                "icon": "logo.svg"
-            }
-        ]
+      "activitybar": [
+        {
+          "id": "cest_la_vie",
+          "title": "Vietis Extension",
+          "icon": "logo.svg"
+        }
+      ]
     },
     "views": {
-        "cest_la_vie": [
-            {
-                "type": "webview",
-                "id": "chat",
-                "name": "Chat"
-            }
-        ]
+      "cest_la_vie": [
+        {
+          "type": "webview",
+          "id": "chat",
+          "name": "Chat"
+        }
+      ]
     },
     "commands": [
       {
@@ -38,6 +38,10 @@
         "command": "extension.chat.authenticateWithEmailPassword",
         "title": "Sign in Zulip with email and password",
         "category": "Chat"
+      },
+      {
+        "command": "myExtension.sayHello",
+        "title": "Say Hello"
       }
     ]
   },
@@ -76,6 +80,7 @@
     "@vscode/test-electron": "^2.4.1",
     "css-loader": "^7.1.2",
     "eslint": "^9.11.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -1,0 +1,123 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #2f2f2f;
+	margin: 0;
+}
+
+h1 {
+	text-align: center;
+	font-size: 1.5em;
+	margin-bottom: 1em;
+	margin-top: 1em;
+}
+
+h2 {
+	text-align: center;
+	opacity: 0.7;
+	font-size: 1em;
+}
+
+.powered-by {
+	text-align: center;
+	opacity: 0.7;
+	font-size: 1em;
+	margin-bottom: 4em;
+}
+
+.login-buttons {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.login-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 3em;
+	width: 19.625em;
+	border-radius: 0.25em;
+	margin: 0.825em 0;
+}
+
+.login-button img {
+	height: 1.5em;
+	margin-right: 0.9375em;
+}
+
+#login-with-zulip {
+	background-color: #228BDE;
+}
+
+#login-with-google {
+	background-color: #D0463B;
+}
+
+#login-with-gitlab {
+	background-color: #040404;
+}
+
+.login-with-email-and-password {
+	padding: 1.25em;
+	border-radius: 0.5em;
+	box-shadow: 0 0 0.625em rgba(0, 0, 0, 0.1);
+	width: 100%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.login-form input {
+	width: 19.625em;
+	padding: 0.625em;
+	margin-bottom: 0.625em;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 0.25em;
+}
+
+.login-form button {
+	width: 19.625em;
+	padding: 0.625em;
+	background-color: #4caf50;
+	color: #fff;
+	border: none;
+	border-radius: 0.25em;
+	cursor: pointer;
+}
+
+.login-form button:hover {
+	background-color: #45a049;
+}
+
+.login-email-password-title {
+	opacity: 1;
+	font-size: 1.1em;
+	margin-bottom: 1.25em;
+	margin-top: 0.5rem;
+}
+
+#error-container {
+	margin-top: 1em;
+	color: red;
+	font-style: italic;
+}
+
+.loading-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(47, 47, 47, 0.8);
+	/* Semi-transparent white background */
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.loading-spinner img {
+	width: 5.125em;
+	height: 5.125em;
+}

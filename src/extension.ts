@@ -72,6 +72,13 @@ export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
         vscode.window.showInformationMessage('Hello from your React app extension!');
       });
+      const command = 'myExtension.sayHello';
+
+      const commandHandler = (name: string = 'world') => {
+        console.log(`Hello ${name}!!!`);
+      };
+    
+    context.subscriptions.push(vscode.commands.registerCommand(command, commandHandler));
 
     context.subscriptions.push(
         // getScratchpadManager().registerTextDocumentContentProvider(),
