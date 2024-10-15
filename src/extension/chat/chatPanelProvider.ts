@@ -40,6 +40,7 @@ export class ChatPanelProvider
             webview,
             baseUri
         );
+        console.log("source html ", webview.html)
 
         const chatService = sharedChatServiceImpl();
         chatService.attachClient(this);

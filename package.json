@@ -1,7 +1,8 @@
 {
   "name": "cest-la-vie",
   "displayName": "Cest La Vie",
-  "description": "",
+  "description": "description",
+  "publisher": "vietis-idt",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.94.0"
@@ -9,13 +10,18 @@
   "categories": [
     "Other"
   ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage",
+    "*"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
           "id": "cest_la_vie",
-          "title": "Vietis Extension",
+          "title": "Chat",
           "icon": "logo.svg"
         }
       ]
@@ -46,9 +52,7 @@
     ]
   },
   "keywords": [
-    "collaboration",
-    "chat",
-    "live"
+    "chat"
   ],
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -60,7 +64,7 @@
     "lint": "eslint src",
     "test": "vscode-test",
     "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
-    "build-live": "webpack-dev-server --mode production",
+    "build": "webpack-dev-server --mode production",
     "build-webview": "webpack --mode production --config webpack.webview.config.js",
     "build-ext": "webpack --mode production",
     "watch": "webpack --watch",
@@ -96,6 +100,9 @@
     "@types/keytar": "^4.4.2",
     "@vscode/codicons": "^0.0.36",
     "@vscode/webview-ui-toolkit": "^1.4.0",
+    "axios": "^1.7.7",
+    "lucide-react": "^0.452.0",
+    "mobx": "^6.13.3",
     "react-markdown": "^9.0.1",
     "react-syntax-highlighter": "^15.5.0",
     "vscode-uri": "^3.0.8"

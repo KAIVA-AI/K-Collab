@@ -61,14 +61,8 @@ async function handleGenerateCodeCommand() {
 
 export function activate(context: vscode.ExtensionContext) {
     // To use crypto features in WebAssembly, we need to add this polyfill.
-    global.crypto = {
-        getRandomValues: (arr: Uint8Array) => {
-            crypto.randomFillSync(arr);
-        },
-    } as any;
     console.log("BINGO ACTIVE EXT");
-    // setExtensionContext(new ExtensionContext());
-    // getGlobalState().storage = context.globalState;
+
     let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
         vscode.window.showInformationMessage('Hello from your React app extension!');
       });

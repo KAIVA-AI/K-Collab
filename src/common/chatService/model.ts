@@ -4,3 +4,9 @@ export interface MessageItemModel {
     isReply?: boolean;
     isFinished?: boolean;
 }
+
+export interface User {
+    id: string;
+    avatar: string;
+    name: string;
+}

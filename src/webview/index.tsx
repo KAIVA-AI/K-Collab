@@ -21,7 +21,8 @@ function App() {
     return (
         <div>
             {!isLoggedIn ? (
-                <Login onLoginSuccess={handleLoginSuccess} />
+                // <Login onLoginSuccess={handleLoginSuccess} />
+                <ChatPage />
             ) : (
                 <ChatPage />
             )}

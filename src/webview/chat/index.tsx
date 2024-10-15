@@ -15,6 +15,7 @@ import { ChatViewServiceImpl } from "./chatViewServiceImpl";
 import { getServiceManager } from "../../common/ipc/webview";
 import { IChatService, CHAT_SERVICE_NAME } from "../../common/chatService";
 import { MessageItemModel } from "../../common/chatService/model";
+import { messages as sampleMessages } from "../constants/message";
 
 function messagesWithUpdatedBotMessage(
     msgs: MessageItemModel[],
@@ -133,35 +134,41 @@ export function ChatPage() {
                 chatService.syncState();
             });
     }, []);
-
-    return `
-        <div className="chat-root">
-            <div ref={chatListRef} className="chat-list">
-                {messages.map((m) => {
-                    return <MessageItem key={m.id} model={m} />;
-                })}
-            </div>
-            <div className="chat-input-area">
-                <VSCodeTextArea
-                    style={{ width: "100%" }}
-                    rows={3}
-                    placeholder={"""Talk about the ${
-                        hasSelection ? "selected contents" : "whole document"
-                    }..."""}
-                    disabled={!isReady}
-                    value={prompt}
-                    onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        setPrompt(e.target.value);
-                    }}
-                    onKeyDown={confirmShortcut.keyDownHandler}
-                />
-                <VSCodeButton
-                    disabled={!isReady || prompt.length === 0}
-                    onClick={handleAskAction}
-                >
-                    {"""Ask (${confirmShortcut.label})"""}
-                </VSCodeButton>
-            </div>
+    return (<div className="chat-root">
+        <div ref={chatListRef} className="chat-list">
+            {sampleMessages.map((m: MessageItemModel) => {
+                return <MessageItem key={m.id} model={m} />;
+            })}
         </div>
-    `;
+        <div className="chat-input-area">
+            <VSCodeTextArea
+                style={{ width: "100%" }}
+                rows={3}
+                placeholder={`Talk about the ${
+                    hasSelection ? "selected contents" : "whole document"
+                }...`}
+                disabled={!isReady}
+                value={prompt}
+                // onChange={(e: Event) => {
+                //     const target = e.target as HTMLTextAreaElement;
+                //     setPrompt(target.value);
+                // }}
+                onKeyDown={confirmShortcut.keyDownHandler}
+            />
+            <div className="input-actions">
+                <VSCodeButton className="icon-button"
+                    disabled={!isReady || prompt.length === 0}
+                    onClick={handleAskAction}>
+                        ↩ {`Ask follow up (${confirmShortcut.label})`}
+                </VSCodeButton>
+                <VSCodeButton className="icon-button">⌘ codebase</VSCodeButton>
+            </div>
+            {/* <VSCodeButton
+                disabled={!isReady || prompt.length === 0}
+                onClick={handleAskAction}
+            >
+                {`Ask (${confirmShortcut.label})`}
+            </VSCodeButton> */}
+        </div>
+    </div>);
 }
