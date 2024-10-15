@@ -69,3 +69,13 @@ You can author your README using Visual Studio Code. Here are some useful editor
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
+
+## Requirement
+node 18.18+
+VScode Version: 1.94.2+
+## Install dependencies
+* npm install
+## Build webview (react) by webpack
+* npm run build-webview
+## Run our extension
+Press F5 to start debugging or choose lauch.json to Run Extension in Run&Debug
