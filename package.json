@@ -17,6 +17,14 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "handlers": {
+      "uri": [
+        {
+          "scheme": "vscode",
+          "command": "vietis-idt.handleUri"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {

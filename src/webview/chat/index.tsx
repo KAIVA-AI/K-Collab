@@ -136,9 +136,19 @@ export function ChatPage() {
     }, []);
     return (<div className="chat-root">
         <div ref={chatListRef} className="chat-list">
-            {sampleMessages.map((m: MessageItemModel) => {
-                return <MessageItem key={m.id} model={m} />;
-            })}
+            {messages.map((m) => (
+                <div key={m.id} className="message-item">
+                    <img src={m.avatarUrl} alt={`${m.username}'s avatar`} className="avatar" />
+                    <div className="message-content">
+                        <div className="message-header">
+                            <span className="username">{m.username}</span>
+                        </div>
+                        <div className="message-body">
+                            <p>{m.contents}</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
         <div className="chat-input-area">
             <VSCodeTextArea
