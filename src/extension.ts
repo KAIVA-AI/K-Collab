@@ -83,6 +83,37 @@ export function activate(context: vscode.ExtensionContext) {
         disposable
     );
 
+
+    // authencation provider
+    const handleUri = (uri: vscode.Uri) => {
+        // const queryParams = new URLSearchParams(uri.query);
+      
+        //   if (queryParams.has('say')) {
+        //     vscode.window.showInformationMessage(`URI Handler says: ${queryParams.get('say') as string}`);
+        //   }
+        const queryParams = new URLSearchParams(uri.query);
+            const accessToken = queryParams.get('token'); // Assuming token is returned as a query param
+            const realm = queryParams.get('realm');
+
+            if (accessToken) {
+                // Store the token in the global state for later use
+                context.globalState.update('accessToken', accessToken);
+            } else {
+                vscode.window.showErrorMessage('Authentication failed!');
+            }
+            if (realm) {
+                context.globalState.update('realm_string', realm);
+            }
+            vscode.window.showInformationMessage(`${realm} Authentication successful! ${accessToken}`);
+
+        };
+      
+        context.subscriptions.push(
+          vscode.window.registerUriHandler({
+            handleUri
+          })
+        );
+
     // TODO: No need to refresh the token every time.
     // If the token is still valid, there is no need to refresh it.
     // refreshToken();

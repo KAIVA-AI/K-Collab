@@ -44,6 +44,23 @@
     "copy-icons": "cp src/webview/codicons/* dist/"
   },
   "contributes": {
+    "authentication": {
+      "sessions": [
+        {
+          "id": "vietis-idt",
+          "label": "vietis-idt",
+          "scheme": "vietis-idt"
+        }
+      ]
+    },
+    "handlers": {
+      "uri": [
+        {
+          "scheme": "vscode",
+          "command": "vietis-idt.handleUri"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {

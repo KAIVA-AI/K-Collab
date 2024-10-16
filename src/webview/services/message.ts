@@ -3,7 +3,7 @@ import { IChannelSubscriptionParam,
     IMessageFlagParam, IStream, 
     ITopicPreferences, ITypingStatusParams } from "../constants/chatbox";
 import axios from "axios";
-import { PROJECT_ZULIP_SERVER_CURRENT, PROJECT_ZULIP_SERVER_MAP } from "../constants/chatbox";
+import { PROJECT_ZULIP_SERVER_CURRENT, PROJECT_ZULIP_SERVER_MAP, UserLogin } from "../constants/chatbox";
 import api from "../lib/api";
 import { makeObservable, observable } from "mobx";
 
@@ -31,49 +31,57 @@ export enum EChatEventKey {
 
 const ERROR_DISCONNECT_FROM_QUEUE = "disconnect from current queue";
 
+const BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+
+
 export class ZulipService {
-  router: any = undefined;
+  realm_string: any = undefined;
+  token: string = "";
 
-  constructor(_router: any) {
+  constructor(realm: any, token: string) {
     makeObservable(this, {
-      router: observable
+      realm_string: observable
     });
-    this.router = _router;
+    this.realm_string = realm;
+    this.token = token;
   }
+  
+  getZulipUrl(realm:string) {
+    // let url = '';
+    // try {
+    //   const slug = this.router.query.workspaceSlug || "";
+    //   const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
+    //   const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
+    //   url = chatServerMap[slug][projectId]?.url;
+    // } catch (error) {
+    //   console.error("Error retrieving zulip url: " + error);
+    // }
+    const formattedSubDomain = realm.endsWith('.') ? realm.slice(0, -1) : realm;
 
-  getZulipUrl() {
-    let url = '';
-    try {
-      const slug = this.router.query.workspaceSlug || "";
-      const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
-      const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-      url = chatServerMap[slug][projectId]?.url;
-    } catch (error) {
-      console.error("Error retrieving zulip url: " + error);
-    }
-    return url;
+    return `https://${formattedSubDomain}.${BASE_DOMAIN}`;
   }
 
   getZulipToken() {
-    let token = '';
-    try {
-      const slug = this.router.query.workspaceSlug || "";
-      const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
-      const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-      token = chatServerMap[slug][projectId]?.token;
-    } catch (error) {
-      console.error("Error retrieving zulip token: " + error);
-    }
-    return token;
+    // let token = '';
+    // try {
+    //   const slug = this.router.query.workspaceSlug || "";
+    //   const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
+    //   const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
+    //   token = chatServerMap[slug][projectId]?.token;
+    // } catch (error) {
+    //   console.error("Error retrieving zulip token: " + error);
+    // }
+    return this.token;
   }
 
   zulipApi = async (requestUrl: string, method: any, params?: any) => {
     try {
-      const slug = this.router.query.workspaceSlug || "";
-      if (!slug) throw "Error fetching zulip server.";
+      // const slug = this.router.query.workspaceSlug || "";
+      // if (!slug) throw "Error fetching zulip server.";
+      console.log("DATA API ", params, requestUrl, method)
       return api(
         requestUrl,
-        { workspaceSlug: slug },
+        { workspaceSlug: this.realm_string },
         method,
         params
       );
@@ -87,10 +95,10 @@ export class ZulipService {
     const _token = this.getZulipToken();
     if (!_token) return Promise.reject(_token);
     return axios({
-      baseURL: this.getZulipUrl(),
+      baseURL: this.getZulipUrl(this.realm_string),
       method: "get",
       url: url,
-      headers: _token ? { Authorization: `Bearer ${_token}` } : {},
+      headers: _token ? { Authorization: `Basic ${_token}` } : {},
       ...config,
     });
   }
@@ -171,6 +179,11 @@ export class ZulipService {
 
   async migrateTopic(params: any, draftStreamId: IStream["stream_id"]): Promise<any> {
     const url = `/api/v1/streams/migrate_topic/${draftStreamId}`;
+    return this.zulipApi(url, "POST", params);
+  }
+
+  async get_api_key(params: UserLogin): Promise<any> {
+    const url = `/api/v1/fetch_api_key`;
     return this.zulipApi(url, "POST", params);
   }
 
