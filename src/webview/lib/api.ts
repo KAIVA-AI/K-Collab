@@ -1,16 +1,34 @@
 import { PROJECT_ZULIP_SERVER_CURRENT, PROJECT_ZULIP_SERVER_MAP } from "../constants/chatbox";
 import zulipRequestManager from "./request-manage";
 
+const BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+
+function getBaseUrl(realm:string) {
+  // let url = '';
+  // try {
+  //   const slug = this.router.query.workspaceSlug || "";
+  //   const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
+  //   const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
+  //   url = chatServerMap[slug][projectId]?.url;
+  // } catch (error) {
+  //   console.error("Error retrieving zulip url: " + error);
+  // }
+  const formattedSubDomain = realm.endsWith('.') ? realm.slice(0, -1) : realm;
+
+  return `https://${formattedSubDomain}.${BASE_DOMAIN}`;
+}
+
 async function api(requestUrl: string, config: any, method: any, params?: any) {
   let baseUrl = '';
   let token = '';
   try {
-    const workspaceSlug = config.workspaceSlug;
-    const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
-    const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-
-    baseUrl = chatServerMap[workspaceSlug][projectId]?.url;
-    token = chatServerMap[workspaceSlug][projectId]?.token;
+    // const workspaceSlug = config.workspaceSlug;
+    // const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
+    // const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
+    console.log("API CALL ", config)
+    baseUrl = getBaseUrl(config.workspaceSlug);
+    console.log("BASE URL ", baseUrl);
+    // token = chatServerMap[workspaceSlug][projectId]?.token;
   } catch (error) { }
   if (!baseUrl) throw "Unable to find zulip server";
 
@@ -19,7 +37,7 @@ async function api(requestUrl: string, config: any, method: any, params?: any) {
   const options: any = {
     method,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Basic ${token}`,
     },
   };
 

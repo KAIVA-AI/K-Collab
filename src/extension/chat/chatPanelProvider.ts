@@ -28,6 +28,21 @@ export class ChatPanelProvider
         _token: vscode.CancellationToken
     ): void | Thenable<void> {
         this.#view = webviewView;
+        // Send authentication state to the webview
+        const isAuthenticated = this.#extensionContext.globalState.get<boolean>('isAuthenticated') || false;
+        this.#view.webview.postMessage({
+            command: 'setAuthState',
+            isAuthenticated: isAuthenticated,
+        });
+
+        this.#view.webview.onDidReceiveMessage(async (message) => {
+            switch (message.command) {
+                case 'setAuthState':
+                    this.#extensionContext.globalState.update('isAuthenticated', message.isAuthenticated);
+                    vscode.window.showInformationMessage(`User authenticated: ${message.isAuthenticated}`);
+                    break;
+            }
+        });
         console.log("BINGO");
         const { extensionUri } = this.#extensionContext;
         const { webview } = webviewView;
@@ -36,11 +51,32 @@ export class ChatPanelProvider
             enableScripts: true,
             localResourceRoots: [baseUri],
         };
+        const accessToken = this.#extensionContext.globalState.get<string>("accessToken") || '';
+        const realmString = this.#extensionContext.globalState.get<string>("realm_string") || '';
+        // Listen for messages from the webview
+        // webview.onDidReceiveMessage(
+        //     message => {
+        //     switch (message.command) {
+        //         case 'setAuthState':
+        //         // Use the token and redirect to the ChatPage inside the webview
+        //         this.handleAuthentication(webviewView, message.token, message.realm);
+        //         break;
+        //     }
+        //     },
+        //     undefined,
+        //     this.#extensionContext.subscriptions
+        // );
+
         webview.html = ChatPanelProvider.#buildWebviewContents(
             webview,
-            baseUri
+            baseUri,
+            accessToken,
+            realmString
         );
-        console.log("source html ", webview.html)
+        if (accessToken && realmString) {
+            console.log("PROVIDER LOAD ", accessToken, realmString);
+            this.handleAuthentication(webviewView, accessToken, realmString);
+        }
 
         const chatService = sharedChatServiceImpl();
         chatService.attachClient(this);
@@ -66,6 +102,14 @@ export class ChatPanelProvider
             chatService.detachClient(this);
         });
     }
+
+    handleAuthentication(webview:vscode.WebviewView, token: string, realm: string) {
+        if (token) {
+          webview?.webview.postMessage({ command: 'loadChatPage', token, realm });
+        } else {
+          vscode.window.showErrorMessage("Authentication failed. Please try again.");
+        }
+      }
 
     handleReadyStateChange(isReady: boolean): void {
         const serviceManager = this.#serviceManager;
@@ -121,7 +165,9 @@ export class ChatPanelProvider
 
     static #buildWebviewContents(
         webview: vscode.Webview,
-        baseUri: vscode.Uri
+        baseUri: vscode.Uri,
+        accessToken: string,
+        realmString: string
     ): string {
         const scriptUri = webview.asWebviewUri(
             Utils.joinPath(baseUri, "webview.js")
@@ -150,6 +196,15 @@ export class ChatPanelProvider
             <body>
                 <div id="root"></div>
                 <script nonce="${nonce}" src="${scriptUri}"></script>
+                <script>
+                    const vscode = acquireVsCodeApi();
+                    
+                    // Send accessToken and realmString to the webview
+                    vscode.postMessage({
+                    accessToken: "${accessToken}",
+                    realmString: "${realmString}"
+                    });
+                </script>
             </body>
         </html>
         `;

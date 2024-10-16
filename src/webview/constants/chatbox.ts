@@ -48,3 +48,13 @@ export interface ITypingStatusParams {
     topic: string
 
 }
+
+export interface IZulipDM {
+    full_name: string;
+    id: number[];
+  }  
+
+export interface UserLogin {
+    username: string;
+    password: string
+}
