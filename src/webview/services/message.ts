@@ -3,7 +3,11 @@ import { IChannelSubscriptionParam,
     IMessageFlagParam, IStream, 
     ITopicPreferences, ITypingStatusParams } from "../constants/chatbox";
 import axios from "axios";
+<<<<<<< HEAD
 import { PROJECT_ZULIP_SERVER_CURRENT, PROJECT_ZULIP_SERVER_MAP, UserLogin } from "../constants/chatbox";
+=======
+import { PROJECT_ZULIP_SERVER_CURRENT, PROJECT_ZULIP_SERVER_MAP } from "../constants/chatbox";
+>>>>>>> 2357529d4def1e203a42c90bc4ad2fe0550335f1
 import api from "../lib/api";
 import { makeObservable, observable } from "mobx";
 

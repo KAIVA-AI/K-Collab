@@ -43,6 +43,7 @@ export class ChatPanelProvider
                     break;
             }
         });
+
         console.log("BINGO");
         const { extensionUri } = this.#extensionContext;
         const { webview } = webviewView;
@@ -77,7 +78,6 @@ export class ChatPanelProvider
             console.log("PROVIDER LOAD ", accessToken, realmString);
             this.handleAuthentication(webviewView, accessToken, realmString);
         }
-
         const chatService = sharedChatServiceImpl();
         chatService.attachClient(this);
 
