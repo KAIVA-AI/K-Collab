@@ -1,0 +1,81 @@
+{
+  "name": "v-collab",
+  "displayName": "VCollab",
+  "description": "VIETIS AI powered collaborative chat for developers",
+  "version": "1.0.2",
+  "license": "MIT",
+  "publisher": "vietis",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "packageManager": "yarn@1.22.22",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "icon": "public/icon.png",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "chat"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage",
+    "onUri"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
+    "build": "webpack-dev-server --mode production",
+    "build-webview": "webpack --mode production --config webpack.webview.config.js",
+    "build-ext": "webpack --mode production",
+    "watch": "webpack --watch",
+    "start-ext": "webpack serve --mode development",
+    "copy-icons": "cp src/webview/codicons/* dist/"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cest_la_vie",
+          "title": "Chat",
+          "icon": "logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "cest_la_vie": [
+        {
+          "type": "webview",
+          "id": "chat",
+          "name": "Chat"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "extension.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "extension.chat.authenticateWithEmailPassword",
+        "title": "Sign in Zulip with email and password",
+        "category": "Chat"
+      },
+      {
+        "command": "myExtension.sayHello",
+        "title": "Say Hello"
+      }
+    ]
+  }
+}
