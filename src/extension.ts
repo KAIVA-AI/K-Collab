@@ -63,10 +63,10 @@ export function activate(context: vscode.ExtensionContext) {
     // To use crypto features in WebAssembly, we need to add this polyfill.
     console.log("BINGO ACTIVE EXT");
 
-    let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
+    let disposable = vscode.commands.registerCommand('vietis.helloWorld', () => {
         vscode.window.showInformationMessage('Hello from your React app extension!');
       });
-      const command = 'myExtension.sayHello';
+      const command = 'vietis.sayHello';
 
       const commandHandler = (name: string = 'world') => {
         console.log(`Hello ${name}!!!`);
@@ -80,6 +80,11 @@ export function activate(context: vscode.ExtensionContext) {
             ChatPanelProvider.viewType,
             new ChatPanelProvider(context)
         ),
+        vscode.commands.registerCommand('vietis.showChatTopicList', () => {
+            // Logic to open ChatTopicList view
+            vscode.window.showInformationMessage('Opening Chat Topic List...');
+            // If you want to open another webview, create a new WebviewViewProvider or panel here.
+        }),
         disposable
     );
 

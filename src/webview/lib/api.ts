@@ -18,9 +18,9 @@ function getBaseUrl(realm:string) {
   return `https://${formattedSubDomain}.${BASE_DOMAIN}`;
 }
 
-async function api(requestUrl: string, config: any, method: any, params?: any) {
+async function api(requestUrl: string, config: any, method: any, token: string,params?: any) {
   let baseUrl = '';
-  let token = '';
+  // let token = '';
   try {
     // const workspaceSlug = config.workspaceSlug;
     // const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
@@ -40,6 +40,7 @@ async function api(requestUrl: string, config: any, method: any, params?: any) {
       Authorization: `Basic ${token}`,
     },
   };
+  console.log("OPTIONS ", options);
 
   if (method === 'POST') {
     options.body = new FormData();
@@ -63,8 +64,10 @@ async function api(requestUrl: string, config: any, method: any, params?: any) {
   });
 
   try {
+    console.log("CALL API SUCCESS");
     return await response.json();
   } catch (e: any) {
+    console.log("BINGOOOOOOOOOOO ERRROR ", e)
     if (e.name === "AbortError") {
       console.info("Fetch aborted");
       return;

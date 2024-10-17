@@ -15,12 +15,13 @@ export interface IMessageFlagParam {
 }
 
 export interface IListTopic {
-    name : string
+    name : string;
+    timestamp: string
 }
 
 export interface IStream {
     name : string;
-    stream_id : number
+    stream_id : string
 }
 
 export interface IChannelSubscriptionParam {

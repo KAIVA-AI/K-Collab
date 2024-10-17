@@ -1,36 +1,90 @@
 {
-  "name": "cest-la-vie",
-  "displayName": "Cest La Vie",
-  "description": "description",
-  "publisher": "vietis-idt",
-  "version": "0.0.1",
+  "name": "v-collab",
+  "displayName": "VCollab",
+  "description": "VIETIS AI powered collaborative chat for developers",
+  "version": "1.0.2",
+  "license": "MIT",
+  "publisher": "vietis",
+  "main": "./dist/extension.js",
   "engines": {
     "vscode": "^1.94.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "chat"
+  ],
   "activationEvents": [
     "onStartupFinished",
     "onLanguage",
-    "*"
+    "onUri"
   ],
-  "main": "./dist/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
+    "build": "webpack-dev-server --mode production",
+    "build-webview": "webpack --mode production --config webpack.webview.config.js",
+    "build-ext": "webpack --mode production",
+    "watch": "webpack --watch",
+    "start-ext": "webpack serve --mode development",
+    "copy-icons": "cp src/webview/codicons/* dist/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/vscode": "^1.94.0",
+    "@typescript-eslint/eslint-plugin": "^8.9.0",
+    "@typescript-eslint/parser": "^8.9.0",
+    "eslint": "^9.12.0",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "css-loader": "^7.1.2",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3",
+    "vscode": "^1.1.37",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "@types/diff-match-patch": "^1.0.36",
+    "@types/mocha": "^10.0.8",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "diff-match-patch": "^1.0.5"
+  },
+  "dependencies": {
+    "mobx-react": "^9.1.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "tailwind-merge": "^2.5.4",
+    "@types/keytar": "^4.4.2",
+    "@vscode/codicons": "^0.0.36",
+    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "axios": "^1.7.7",
+    "lucide-react": "^0.452.0",
+    "mobx": "^6.13.3",
+    "react-markdown": "^9.0.1",
+    "react-syntax-highlighter": "^15.5.0",
+    "vscode-uri": "^3.0.8"
+  },
   "contributes": {
-    "authentication": {
-      "sessions": [
-        {
-          "id": "vietis-idt",
-          "label": "vietis-idt",
-          "scheme": "vietis-idt"
-        }
-      ]
-    },
     "handlers": {
       "uri": [
         {
           "scheme": "vscode",
-          "command": "vietis-idt.handleUri"
+          "command": "vietis.handleUri"
         }
       ]
     },
@@ -54,78 +108,22 @@
     },
     "commands": [
       {
-        "command": "extension.helloWorld",
+        "command": "vietis.helloWorld",
         "title": "Hello World"
       },
       {
-        "command": "extension.chat.authenticateWithEmailPassword",
+        "command": "vietis.chat.authenticateWithEmailPassword",
         "title": "Sign in Zulip with email and password",
         "category": "Chat"
       },
       {
-        "command": "myExtension.sayHello",
+        "command": "vietis.sayHello",
         "title": "Say Hello"
+      },
+      {
+        "command": "vietis.showChatTopicList",
+        "title": "Show Chat Topic List"
       }
     ]
-  },
-  "keywords": [
-    "chat"
-  ],
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test",
-    "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
-    "build": "webpack-dev-server --mode production",
-    "build-webview": "webpack --mode production --config webpack.webview.config.js",
-    "build-ext": "webpack --mode production",
-    "watch": "webpack --watch",
-    "start-ext": "webpack serve --mode development",
-    "copy-icons": "cp src/webview/codicons/* dist/"
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.8",
-    "@types/node": "20.x",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.0",
-    "@types/react-syntax-highlighter": "^15.5.13",
-    "@types/vscode": "^1.94.0",
-    "@typescript-eslint/eslint-plugin": "^8.7.0",
-    "@typescript-eslint/parser": "^8.7.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
-    "css-loader": "^7.1.2",
-    "eslint": "^9.11.1",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.6.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "style-loader": "^4.0.0",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.6.2",
-    "vscode": "^1.1.37",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
-  },
-  "dependencies": {
-    "@types/keytar": "^4.4.2",
-    "@vscode/codicons": "^0.0.36",
-    "@vscode/webview-ui-toolkit": "^1.4.0",
-    "axios": "^1.7.7",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "lucide-react": "^0.452.0",
-    "mobx": "^6.13.3",
-    "mobx-react": "^9.1.1",
-    "react-markdown": "^9.0.1",
-    "react-syntax-highlighter": "^15.5.0",
-    "tailwind-merge": "^2.5.4",
-    "vscode-uri": "^3.0.8"
   }
 }

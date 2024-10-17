@@ -23,6 +23,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import clsx from "clsx";
 import { format, isToday } from "date-fns";
+import { IListTopic } from "../constants/chatbox";
 
 function messagesWithUpdatedBotMessage(
     msgs: MessageItemModel[],
@@ -104,14 +105,17 @@ const ChatRow = observer(({ data, mode }: IChatRow) => {
   });
   
 
-export function ChatPage() {
+export function ChatPage({ topic }: { topic: IListTopic }) {
+    // declare Messages
     const [messages, setMessages] = useState([] as MessageItemModel[]);
+    // delcare dms
     const [dms, setDms] = useState([] as IZulipDM[]);
     const [hasSelection, setHasSelection] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [autoScrollFlag, setAutoScrollFlag] = useState(AUTO_SCROLL_FLAG_NONE);
     const chatListRef = useRef<HTMLDivElement>(null);
+    
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -191,6 +195,10 @@ export function ChatPage() {
     const userAvatar = getUserAvatar("", 'prd-1');
 
     return (<div className="chat-root">
+        <div className="chat-header">
+                {/* Display the selected topic */}
+                <h2>{`Chatting about: ${topic.name}`}</h2>
+            </div>
         <div ref={chatListRef} className="chat-list">
             {ChatRowData.map((m) => (
                 // <div key={m.id} className="message-item">
