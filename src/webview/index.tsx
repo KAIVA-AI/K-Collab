@@ -14,8 +14,28 @@ declare function acquireVsCodeApi(): {
 };
 
 function App() {
+    console.log("INIT APP");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    //@ts-ignore
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true); // Switch to chat page after successful login
+    };
+    // declare list topic
+    const [selectedTopic, setSelectedTopic] = useState<IListTopic | null>(null);
+    const [topics, setTopics] = useState<IListTopic[]>([]);
+
+    // setTopics([
+    //     { name: "Channel Interface Declaration in Constants File", timestamp: "2d ago" },
+    //     { name: "Resolving EventSource Type Error in TypeScript", timestamp: "5d ago" },
+    //     { name: "Define or import the 'Messages' type.", timestamp: "5d ago" },
+    //     { name: "New chat", timestamp: "6d ago" },
+    //     { name: "Importing the IManager Interface to Fix Error", timestamp: "1w ago" },
+    //     { name: "Fixing TypeScript Module Export Error", timestamp: "1w ago" }
+    //     // ...more topics
+    // ]);
+
     useEffect(() => {
-        setIsLoggedIn(true);
         console.log("BINGO")
         const handleMessage = (event: MessageEvent) => {
             const message = event.data;
@@ -58,8 +78,17 @@ function App() {
                 // You can now use the accessToken and realmString to handle login
                 console.log('Received accessToken:', message.accessToken);
                 console.log('Received realmString:', message.realmString);
-                setIsLoggedIn(true)
 
+                !isLoggedIn && setIsLoggedIn(true)
+                const zulipStore = new ZulipStore(message.realmString, message.accessToken);
+                // After login success
+                zulipStore.initialize().then(() => {
+                    // Navigate to ChatTopicList after initialization
+                    console.log("STREAM LOAD ", zulipStore.streams)
+                    console.log("STREAM select ", zulipStore.selectedStream)
+                    console.log("TOPIC LOAD ", zulipStore.topics)
+                    setTopics(zulipStore.topics)
+                });
                 // setToken(message.accessToken)
                 // setRealm(message.realmString)
                 // Optionally, call your login handler here with accessToken and realmString
@@ -75,25 +104,8 @@ function App() {
 
     }, []); // Empty array to ensure this effect runs only on component mount
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    //@ts-ignore
 
-    const handleLoginSuccess = () => {
-        setIsLoggedIn(true); // Switch to chat page after successful login
-    };
-    // declare list topic
-    const [selectedTopic, setSelectedTopic] = useState<IListTopic | null>(null);
-    const [topics, setTopics] = useState<IListTopic[]>([]);
-
-    setTopics([
-        { name: "Channel Interface Declaration in Constants File", timestamp: "2d ago" },
-        { name: "Resolving EventSource Type Error in TypeScript", timestamp: "5d ago" },
-        { name: "Define or import the 'Messages' type.", timestamp: "5d ago" },
-        { name: "New chat", timestamp: "6d ago" },
-        { name: "Importing the IManager Interface to Fix Error", timestamp: "1w ago" },
-        { name: "Fixing TypeScript Module Export Error", timestamp: "1w ago" }
-        // ...more topics
-    ]);
+    
 
     const handleSelectTopic = (topic: IListTopic) => {
         console.log("Selected topic:", topic);
@@ -140,17 +152,17 @@ function App() {
 
 
     //     // fetchTopics();
-    if (isLoggedIn) {
-        const zulipStore = new ZulipStore("pjd-1", "aGFvLm5ndXllbmRhbmdAdmlldGlzLmNvbS52bjpTWUpxamw3VE12MnJSTENWNGFWMVBmbUtmOUNHcVhKaA==");
-        // After login success
-        zulipStore.initialize().then(() => {
-            // Navigate to ChatTopicList after initialization
-            console.log("STREAM LOAD ", zulipStore.streams)
-            console.log("STREAM select ", zulipStore.selectedStream)
-            console.log("TOPIC LOAD ", zulipStore.topics)
-            setTopics(zulipStore.topics)
-        });
-    }
+    // if (isLoggedIn) {
+    //     const zulipStore = new ZulipStore("pjd-1", "aGFvLm5ndXllbmRhbmdAdmlldGlzLmNvbS52bjpTWUpxamw3VE12MnJSTENWNGFWMVBmbUtmOUNHcVhKaA==");
+    //     // After login success
+    //     zulipStore.initialize().then(() => {
+    //         // Navigate to ChatTopicList after initialization
+    //         console.log("STREAM LOAD ", zulipStore.streams)
+    //         console.log("STREAM select ", zulipStore.selectedStream)
+    //         console.log("TOPIC LOAD ", zulipStore.topics)
+    //         setTopics(zulipStore.topics)
+    //     });
+    // }
 
     // }, []);
     // const vscode = acquireVsCodeApi();
