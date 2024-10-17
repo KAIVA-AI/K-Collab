@@ -77,7 +77,7 @@ class ZulipStore {
             const response = await this.zulipService.getWorkspaceStreams();
             runInAction(() => {
                 console.log("GET RESPOSE SUCCESS ", response)
-                this.streams = response;
+                this.streams = response?.streams;
                 this.loading = false;
             });
         } catch (err: any) {

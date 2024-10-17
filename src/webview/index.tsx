@@ -36,10 +36,9 @@ function App() {
     // ]);
 
     useEffect(() => {
-        console.log("BINGO")
         const handleMessage = (event: MessageEvent) => {
             const message = event.data;
-            console.log("APP REACT LISTENER step2");
+            console.log("APP REACT LISTENER step3");
 
             if (message.command === "loadChatPage") {
                 // handleLoginSuccess();
@@ -51,18 +50,18 @@ function App() {
                 // setRealm(message.realmString);
             }
 
-        //     // Check for accessToken and realmString
-        //     // if (message.accessToken && message.realmString) {  
-        //     //     console.log('Received accessToken:', message.accessToken);
-        //     //     console.log('Received realmString:', message.realmString);
+            //     // Check for accessToken and realmString
+            //     // if (message.accessToken && message.realmString) {  
+            //     //     console.log('Received accessToken:', message.accessToken);
+            //     //     console.log('Received realmString:', message.realmString);
 
-        //     //     // Set the login state
-        //     //     setIsLoggedIn(true);
-        //     //     setToken(message.accessToken);
-        //     //     setRealm(message.realmString);
-        //     // }
+            //     //     // Set the login state
+            //     //     setIsLoggedIn(true);
+            //     //     setToken(message.accessToken);
+            //     //     setRealm(message.realmString);
+            //     // }
 
-        //     // Handle message for loading the chat page
+            //     // Handle message for loading the chat page
 
         };
 
@@ -70,17 +69,20 @@ function App() {
         // window.addEventListener('message', handleMessage);
 
         console.log("APP REACT LISTTENSER step1")
+        // getData()
+
         window.addEventListener('message', event => {
             const message = event.data;
-            console.log("APP REACT LISTTENSER step2")
+            console.log("APP REACT LISTTENSER step2 ", message)
 
-            if (message.accessToken && message.realmString) {
+            if (message.command === "loadChatPage") {
                 // You can now use the accessToken and realmString to handle login
-                console.log('Received accessToken:', message.accessToken);
-                console.log('Received realmString:', message.realmString);
+                console.log('Received accessToken:', message.realm);
+                console.log('Received realmString:', message.token);
 
-                !isLoggedIn && setIsLoggedIn(true)
-                const zulipStore = new ZulipStore(message.realmString, message.accessToken);
+                setIsLoggedIn(true)
+                console.log("LOAD ZULIP STORE ", isLoggedIn)
+                const zulipStore = new ZulipStore(message.realm, message.token);
                 // After login success
                 zulipStore.initialize().then(() => {
                     // Navigate to ChatTopicList after initialization
@@ -104,8 +106,28 @@ function App() {
 
     }, []); // Empty array to ensure this effect runs only on component mount
 
+    // async function getData() {
+    //     console.log("EXAMPLE CALL API")
+    //     const url = "https://pjd-1.collab.vietis.com.vn:9981/api/v1/streams";
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: 'GET',
+    //             // credentials: 'include',
+    //             headers: {
+    //                 'Authorization': 'Basic aGFvLm5ndXllbmRhbmdAdmlldGlzLmNvbS52bjpTWUpxamw3VE12MnJSTENWNGFWMVBmbUtmOUNHcVhKaA== ',
+    //                 // 'Content-Type': 'application/json'
+    //             }});
+    //         if (!response.ok) {
+    //             throw new Error(`Response status: ${response.status}`);
+    //         }
 
-    
+    //         const json = await response.json();
+    //         console.log(json);
+    //     } catch (error: any) {
+    //         console.error(error.message);
+    //     }
+    // }
+
 
     const handleSelectTopic = (topic: IListTopic) => {
         console.log("Selected topic:", topic);
@@ -119,7 +141,7 @@ function App() {
         console.log("Delete topic:", topic);
     };
 
-    // console.log("CHECK STATUS PAGE login", isLoggedIn, "selectedTopic ", selectedTopic)
+    console.log("CHECK STATUS PAGE login", isLoggedIn, "selectedTopic ", selectedTopic)
 
     // useEffect(() => {
     //     console.log("APP REACT LISTTENSER step1")
@@ -140,7 +162,7 @@ function App() {
     //         }
     //     });
     //     // send message to extension
-    //     const handleMessage = (event: MessageEvent) => {
+        // const handleMessage = (event: MessageEvent) => {
     //         const message = event.data;
 
     //         if (message.command === "loadChatPage") {

@@ -61,7 +61,7 @@ export class ZulipService {
     try {
       // const slug = this.router.query.workspaceSlug || "";
       // if (!slug) throw "Error fetching zulip server.";
-      console.log("DATA API ", params, requestUrl, method);
+      console.log("DATA API ", params, requestUrl, method, this.realm_string);
       return api(
         requestUrl,
         { workspaceSlug: this.realm_string },
@@ -93,8 +93,8 @@ export class ZulipService {
   }
 
   // api calls
-  async getWorkspaceStreams(): Promise<[IStream]> {
-    const url = `/api/v1/streams`
+  async getWorkspaceStreams(): Promise<any> {
+    const url = `/api/v1/streams`;
     return this.zulipApi(url, "GET", {});
     // return this.get("/api/v1/streams", {})
     //   .then((response) => response?.streams)

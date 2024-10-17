@@ -68,17 +68,18 @@ export class ChatPanelProvider
         );
 
         
-        if (accessToken && realmString) {
-            this.handleAuthentication(webviewView, accessToken, realmString);
-            // this.handleLoginSuccess({ realm: realmString, accessToken: accessToken });
-
-        }
+        
         webview.html = ChatPanelProvider.#buildWebviewContents(
             webview,
             baseUri,
             accessToken,
             realmString
         );
+        if (accessToken && realmString) {
+            this.handleAuthentication(webviewView, accessToken, realmString);
+            // this.handleLoginSuccess({ realm: realmString, accessToken: accessToken });
+
+        }
         const chatService = sharedChatServiceImpl();
         chatService.attachClient(this);
 
@@ -199,17 +200,21 @@ export class ChatPanelProvider
 
         const nonce = getNonce();
 
+//                <meta http-equiv="Content-Security-Policy" content="style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+//<meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
+// font-src ${webview.cspSource}; style-src ${webview.cspSource} 'unsafe-inline' ; 
+// script-src 'nonce-${nonce}'; ">
+
         return `
         <!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${webview.cspSource}; style-src ${webview.cspSource} 'unsafe-inline' ; script-src 'nonce-${nonce}'; connect-src https://pjd-1.collab.vietis.com.vn:9981">
+                
+                <meta http-equiv="Content-Security-Policy" content="style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+
                 <title>Vietis Extension</title>
-                <script nonce="${nonce}">
-                    window.__codeCursorPageName = "chat";
-                </script>
                 <link href="${codiconsUri}" rel="stylesheet" />
             </head>
             <body>

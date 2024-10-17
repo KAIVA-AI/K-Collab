@@ -25,7 +25,6 @@ async function api(requestUrl: string, config: any, method: any, token: string,p
     // const workspaceSlug = config.workspaceSlug;
     // const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
     // const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-    console.log("API CALL ", config)
     baseUrl = getBaseUrl(config.workspaceSlug);
     console.log("BASE URL ", baseUrl);
     // token = chatServerMap[workspaceSlug][projectId]?.token;
@@ -67,7 +66,6 @@ async function api(requestUrl: string, config: any, method: any, token: string,p
     console.log("CALL API SUCCESS");
     return await response.json();
   } catch (e: any) {
-    console.log("BINGOOOOOOOOOOO ERRROR ", e)
     if (e.name === "AbortError") {
       console.info("Fetch aborted");
       return;
