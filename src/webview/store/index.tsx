@@ -1,7 +1,7 @@
 import { makeObservable, observable, action, runInAction } from 'mobx';
-import { IMessage, IListTopic, IStream } from '../constants/chatbox';
+import { IMessage, IListTopic, IStream, IZulipCurrentUser } from '../constants/chatbox';
 import { ZulipService } from '../services/message'; // Adjust path as necessary
-
+import RequestManager from '../lib/request-manage';
 class ZulipStore {
     // Observables
     messages: IMessage[] = [];
@@ -10,6 +10,9 @@ class ZulipStore {
     selectedStream: IStream | null = null;
     loading: boolean = false;
     error: string | null = null;
+    currentZulipUser: IZulipCurrentUser | null = null; // Store current user profile
+    eventReady: boolean = false;  // To manage event subscription readiness
+
 
     // Zulip service instance
     zulipService: ZulipService;
@@ -22,6 +25,8 @@ class ZulipStore {
             selectedStream: observable,
             loading: observable,
             error: observable,
+            currentZulipUser: observable,
+            eventReady: observable,
             fetchMessages: action,
             fetchTopics: action,
             fetchStreams: action,
@@ -150,10 +155,10 @@ class ZulipStore {
                 return;
             }
 
-            const topics = await this.zulipService.getTopics(generalStream.stream_id);
+            const response = await this.zulipService.getTopics(generalStream.stream_id);
             runInAction(() => {
                 this.selectedStream = generalStream;
-                this.topics = topics;
+                this.topics = response.topics;
                 this.loading = false;
             });
         } catch (error: any) {
@@ -162,6 +167,64 @@ class ZulipStore {
                 this.loading = false;
             });
         }
+    }
+    
+    // New action to handle login and event queue subscription
+    async loginZulip() {
+        try {
+            this.setEventReady(false); // Mark event as not ready at the start
+
+            // Cancel any inflight event requests
+            RequestManager.cancelRequest("/api/v1/events", "POST");
+
+
+            const userProfile = await this.zulipService.getZulipProfile();
+            if (!!userProfile.user_id && userProfile.is_active) {
+                runInAction(() => {
+                    this.currentZulipUser = userProfile;
+
+                    const userId = userProfile.user_id;
+                    this.zulipService.subscribeEventQueue(
+                        (e) => this.handleEventQueue(e, userId),
+                        () => this.setEventReady(true),
+                        (error) => this.subscribeEventErrorHandler(error),
+                        (unread) => this.formatUnreadResponse(unread, userId)
+                    );
+                });
+                return userProfile;
+            } else {
+                return Promise.reject(new Error("Login error, please check your username and password and try again!"));
+            }
+        } catch (error: any) {
+            runInAction(() => {
+                this.error = error.message;
+            });
+            return Promise.reject(new Error(`${error.message} ${error.stack}`));
+        }
+    }
+
+    // Helper function to mark event readiness
+    setEventReady(ready: boolean) {
+        this.eventReady = ready;
+    }
+
+    // Handle events from the queue (this logic needs to be defined as per your needs)
+    handleEventQueue(event: any, userId: number) {
+        // Handle incoming events like new messages
+        console.log('Event received:', event);
+        // Example: handle new messages or topic changes here
+    }
+
+    // Handle event queue subscription errors
+    subscribeEventErrorHandler(error: any) {
+        runInAction(() => {
+            this.error = error.message || "Event subscription error.";
+        });
+    }
+
+    // Format unread response (custom logic for unread messages)
+    formatUnreadResponse(unread: any, userId: number) {
+        // Implement logic to process unread messages if needed
     }
 
     // Orchestrating initialization of streams and topics for "general"

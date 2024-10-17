@@ -19,6 +19,18 @@ interface ChatTopicListProps {
 const ChatTopicList: React.FC<ChatTopicListProps> = ({ topics, onSelectTopic, onEditTopic, onDeleteTopic }) => {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editedTopicName, setEditedTopicName] = useState<string>("");
+    const [searchQuery, setSearchQuery] = useState('');
+
+
+    // Function to filter topics by name
+    const filteredTopics = topics.filter(topic =>
+        topic.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Handler for when user types in the search bar
+    const handleSearchChange = (e: any) => {
+        setSearchQuery(e.target.value);
+    };
 
     const handleEditClick = (index: number, currentName: string) => {
         setEditingIndex(index); // Set the topic to edit mode
@@ -33,17 +45,19 @@ const ChatTopicList: React.FC<ChatTopicListProps> = ({ topics, onSelectTopic, on
     };
 
     const [error, setError] = useState<string | null>(null); // Error state
-
+    console.log("GET TOPIC PAGE ", topics)
 
     return (
         <div className="chat-topic-list">
-            <input 
-                type="text" 
-                placeholder="Search chats..." 
-                className="search-bar" 
+            <input
+                type="text"
+                placeholder="Search chats..."
+                className="search-bar"
+                value={searchQuery}
+                onChange={handleSearchChange} // Update on typing
             />
             <ul className="topic-list">
-                {topics.map((topic, index) => (
+                {filteredTopics.map((topic, index) => (
                     <li key={index} className="topic-item">
                         <div className="topic-content" onClick={() => onSelectTopic(topic)}>
                             {editingIndex === index ? (
@@ -56,7 +70,7 @@ const ChatTopicList: React.FC<ChatTopicListProps> = ({ topics, onSelectTopic, on
                             ) : (
                                 <span className="topic-name">{topic.name}</span>
                             )}
-                            <span className="topic-timestamp">{topic.timestamp}</span>
+                            <span className="topic-timestamp">{topic.max_id}</span>
                         </div>
                         <div className="topic-actions">
                             {editingIndex === index ? (

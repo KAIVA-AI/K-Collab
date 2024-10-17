@@ -131,6 +131,7 @@ function App() {
 
     const handleSelectTopic = (topic: IListTopic) => {
         console.log("Selected topic:", topic);
+        setSelectedTopic(topic);
     };
 
     const handleEditTopic = (topic: IListTopic) => {

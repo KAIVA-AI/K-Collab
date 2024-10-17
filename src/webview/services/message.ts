@@ -106,7 +106,7 @@ export class ZulipService {
 
   async getTopics(streamId: string): Promise<any> {
     const url = `/api/v1/users/me/${streamId}/topics`;
-    return this.zulipApi(url, "GET", {})
+    return this.zulipApi(url, "GET", {});
     // return this.get(`/api/v1/users/me/${streamId}/topics`)
     //   .then((response) => response?.data)
     //   .catch((error) => {
