@@ -44,15 +44,6 @@
     "copy-icons": "cp src/webview/codicons/* dist/"
   },
   "contributes": {
-    "authentication": {
-      "sessions": [
-        {
-          "id": "vietis-idt",
-          "label": "vietis-idt",
-          "scheme": "vietis-idt"
-        }
-      ]
-    },
     "handlers": {
       "uri": [
         {
@@ -81,18 +72,22 @@
     },
     "commands": [
       {
-        "command": "extension.helloWorld",
+        "command": "vietis-idt.helloWorld",
         "title": "Hello World"
       },
       {
-        "command": "extension.chat.authenticateWithEmailPassword",
+        "command": "vietis-idt.chat.authenticateWithEmailPassword",
         "title": "Sign in Zulip with email and password",
         "category": "Chat"
       },
       {
-        "command": "myExtension.sayHello",
+        "command": "vietis-idt.sayHello",
         "title": "Say Hello"
-      }
+      },
+      {
+        "command": "vietis-idt.showChatTopicList",
+        "title": "Show Chat Topic List"
+      },
     ]
   }
 }

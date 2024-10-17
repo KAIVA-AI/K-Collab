@@ -103,6 +103,20 @@ export class ChatPanelProvider
         });
     }
 
+    private handleLoginSuccess(data: { accessToken: string; realm: string }) {
+        // Log the data for testing
+        console.log('Login successful! Access token:', data.accessToken);
+    
+        // Store the token or other necessary data for later use
+        this.#extensionContext.workspaceState.update('accessToken', data.accessToken);
+    
+        // Redirect to ChatTopicList before going to ChatPage
+        vscode.commands.executeCommand('vietis-idt.showChatTopicList'); // Custom command to open a new view or ChatTopicList
+    
+        // Optionally, you could trigger another command to go to the ChatPage after loading topics
+        // vscode.commands.executeCommand('myExtension.showChatPage');
+      }
+
     handleAuthentication(webview:vscode.WebviewView, token: string, realm: string) {
         if (token) {
           webview?.webview.postMessage({ command: 'loadChatPage', token, realm });
