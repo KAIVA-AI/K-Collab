@@ -123,6 +123,18 @@ export interface IRealm {
     sender_full_name: string;
     sub_messages: IMessage[];
   }
+
+
+  export interface IGetMsgAPIParams {
+    anchor: string, // optional by zulip default: "newest" | "oldest" | "first_unread"
+    num_before: number;
+    num_after: number;
+    narrow: any;
+    client_gravatar?: boolean;
+    apply_markdown?: boolean;
+    include_anchor?: boolean;
+    language?: string;
+  }
   
   export interface IZulipUser {
     email: string;

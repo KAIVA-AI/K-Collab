@@ -35,54 +35,38 @@ const BASE_DOMAIN = 'collab.vietis.com.vn:9981';
 
 
 export class ZulipService {
-  realm_string: any = undefined;
+  realm_string: string = '';
   token: string = "";
 
   constructor(realm: any, token: string) {
     makeObservable(this, {
-      realm_string: observable
+      realm_string: observable,
+      token: observable
     });
     this.realm_string = realm;
     this.token = token;
   }
   
   getZulipUrl(realm:string) {
-    // let url = '';
-    // try {
-    //   const slug = this.router.query.workspaceSlug || "";
-    //   const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
-    //   const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-    //   url = chatServerMap[slug][projectId]?.url;
-    // } catch (error) {
-    //   console.error("Error retrieving zulip url: " + error);
-    // }
     const formattedSubDomain = realm.endsWith('.') ? realm.slice(0, -1) : realm;
-
+    console.log("GET ZULIP URL ", `https://${formattedSubDomain}.${BASE_DOMAIN}`);
     return `https://${formattedSubDomain}.${BASE_DOMAIN}`;
   }
 
-  getZulipToken() {
-    // let token = '';
-    // try {
-    //   const slug = this.router.query.workspaceSlug || "";
-    //   const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
-    //   const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-    //   token = chatServerMap[slug][projectId]?.token;
-    // } catch (error) {
-    //   console.error("Error retrieving zulip token: " + error);
-    // }
-    return this.token;
-  }
+  // getZulipToken() {
+  //   return this.token;
+  // }
 
   zulipApi = async (requestUrl: string, method: any, params?: any) => {
     try {
       // const slug = this.router.query.workspaceSlug || "";
       // if (!slug) throw "Error fetching zulip server.";
-      console.log("DATA API ", params, requestUrl, method)
+      console.log("DATA API ", params, requestUrl, method, this.realm_string);
       return api(
         requestUrl,
         { workspaceSlug: this.realm_string },
         method,
+        this.token,
         params
       );
     } catch (error) {
@@ -92,8 +76,9 @@ export class ZulipService {
 
   // http methods
   async get(url: string, config = {}): Promise<any> {
-    const _token = this.getZulipToken();
+    const _token = this.token;
     if (!_token) return Promise.reject(_token);
+    console.log("CALL AXIOS")
     return axios({
       baseURL: this.getZulipUrl(this.realm_string),
       method: "get",
@@ -108,21 +93,25 @@ export class ZulipService {
   }
 
   // api calls
-  async getWorkspaceStreams(): Promise<IStream> {
-    return this.get("/api/v1/streams", {})
-      .then((response) => response?.data)
-      .catch((error) => {
-        if (error instanceof Error) throw error;
-        throw error?.response?.data;
-      });
+  async getWorkspaceStreams(): Promise<any> {
+    const url = `/api/v1/streams`;
+    return this.zulipApi(url, "GET", {});
+    // return this.get("/api/v1/streams", {})
+    //   .then((response) => response?.streams)
+    //   .catch((error) => {
+    //     if (error instanceof Error) throw error;
+    //     throw error?.response?.data;
+    //   });
   }
 
-  async getDetailTopic(topicId: string): Promise<any> {
-    return this.get(`/api/v1/topic/${topicId}`)
-      .then((response) => response?.data)
-      .catch((error) => {
-        throw error?.response?.data;
-      });
+  async getTopics(streamId: string): Promise<any> {
+    const url = `/api/v1/users/me/${streamId}/topics`;
+    return this.zulipApi(url, "GET", {});
+    // return this.get(`/api/v1/users/me/${streamId}/topics`)
+    //   .then((response) => response?.data)
+    //   .catch((error) => {
+    //     throw error?.response?.data;
+    //   });
   }
 
   async getMessages(params: any): Promise<any> {

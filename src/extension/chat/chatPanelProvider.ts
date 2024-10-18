@@ -10,8 +10,7 @@ import {
 import { MessageItemModel } from "../../common/chatService/model";
 
 export class ChatPanelProvider
-    implements vscode.WebviewViewProvider, ChatServiceClient
-{
+    implements vscode.WebviewViewProvider, ChatServiceClient {
     static readonly viewType = "chat";
 
     #view: vscode.WebviewView | null = null;
@@ -44,7 +43,6 @@ export class ChatPanelProvider
             }
         });
 
-        console.log("BINGO");
         const { extensionUri } = this.#extensionContext;
         const { webview } = webviewView;
         const baseUri = Utils.joinPath(extensionUri, "dist");
@@ -55,19 +53,22 @@ export class ChatPanelProvider
         const accessToken = this.#extensionContext.globalState.get<string>("accessToken") || '';
         const realmString = this.#extensionContext.globalState.get<string>("realm_string") || '';
         // Listen for messages from the webview
-        // webview.onDidReceiveMessage(
-        //     message => {
-        //     switch (message.command) {
-        //         case 'setAuthState':
-        //         // Use the token and redirect to the ChatPage inside the webview
-        //         this.handleAuthentication(webviewView, message.token, message.realm);
-        //         break;
-        //     }
-        //     },
-        //     undefined,
-        //     this.#extensionContext.subscriptions
-        // );
+        webview.onDidReceiveMessage(
+            message => {
+                console.log("message from react webview ", message);
+                switch (message.command) {
+                    case 'loadChatPage':
+                        // Use the token and redirect to the ChatPage inside the webview
+                        this.handleLoginSuccess({ realm: realmString, accessToken: accessToken });
+                        break;
+                }
+            },
+            undefined,
+            this.#extensionContext.subscriptions
+        );
 
+        
+        
         webview.html = ChatPanelProvider.#buildWebviewContents(
             webview,
             baseUri,
@@ -75,8 +76,9 @@ export class ChatPanelProvider
             realmString
         );
         if (accessToken && realmString) {
-            console.log("PROVIDER LOAD ", accessToken, realmString);
             this.handleAuthentication(webviewView, accessToken, realmString);
+            // this.handleLoginSuccess({ realm: realmString, accessToken: accessToken });
+
         }
         const chatService = sharedChatServiceImpl();
         chatService.attachClient(this);
@@ -106,24 +108,27 @@ export class ChatPanelProvider
     private handleLoginSuccess(data: { accessToken: string; realm: string }) {
         // Log the data for testing
         console.log('Login successful! Access token:', data.accessToken);
-    
+
         // Store the token or other necessary data for later use
         this.#extensionContext.workspaceState.update('accessToken', data.accessToken);
-    
+        this.#extensionContext.workspaceState.update('realmString', data.realm);
+
+
         // Redirect to ChatTopicList before going to ChatPage
-        vscode.commands.executeCommand('vietis-idt.showChatTopicList'); // Custom command to open a new view or ChatTopicList
-    
+        // vscode.commands.executeCommand('vietis.showChatTopicList'); // Custom command to open a new view or ChatTopicList
+
         // Optionally, you could trigger another command to go to the ChatPage after loading topics
         // vscode.commands.executeCommand('myExtension.showChatPage');
-      }
-
-    handleAuthentication(webview:vscode.WebviewView, token: string, realm: string) {
+    }
+    // send data to react webview
+    handleAuthentication(webview: vscode.WebviewView, token: string, realm: string) {
         if (token) {
-          webview?.webview.postMessage({ command: 'loadChatPage', token, realm });
+            console.log("chat provider load token ", token)
+            webview?.webview.postMessage({ command: 'loadChatPage', token, realm });
         } else {
-          vscode.window.showErrorMessage("Authentication failed. Please try again.");
+            vscode.window.showErrorMessage("Authentication failed. Please try again.");
         }
-      }
+    }
 
     handleReadyStateChange(isReady: boolean): void {
         const serviceManager = this.#serviceManager;
@@ -189,10 +194,16 @@ export class ChatPanelProvider
         const codiconsUri = webview.asWebviewUri(
             Utils.joinPath(baseUri, "codicon.css")
         );
-        console.log("scriptUri ", scriptUri);
-        console.log("codiconsUri ", codiconsUri);
+        // console.log("scriptUri ", scriptUri);
+        // console.log("codiconsUri ", codiconsUri);
+        console.log("START LOAD REACT APP ", webview.cspSource);
 
         const nonce = getNonce();
+
+//                <meta http-equiv="Content-Security-Policy" content="style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+//<meta http-equiv="Content-Security-Policy" content="default-src 'none'; 
+// font-src ${webview.cspSource}; style-src ${webview.cspSource} 'unsafe-inline' ; 
+// script-src 'nonce-${nonce}'; ">
 
         return `
         <!DOCTYPE html>
@@ -200,25 +211,15 @@ export class ChatPanelProvider
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src ${webview.cspSource}; style-src ${webview.cspSource} 'unsafe-inline' ; script-src 'nonce-${nonce}';">
-                <title>CodeCursor</title>
-                <script nonce="${nonce}">
-                    window.__codeCursorPageName = "chat";
-                </script>
+                
+                <meta http-equiv="Content-Security-Policy" content="font-src ${webview.cspSource}; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+
+                <title>Vietis Extension</title>
                 <link href="${codiconsUri}" rel="stylesheet" />
             </head>
             <body>
                 <div id="root"></div>
                 <script nonce="${nonce}" src="${scriptUri}"></script>
-                <script>
-                    const vscode = acquireVsCodeApi();
-                    
-                    // Send accessToken and realmString to the webview
-                    vscode.postMessage({
-                    accessToken: "${accessToken}",
-                    realmString: "${realmString}"
-                    });
-                </script>
             </body>
         </html>
         `;

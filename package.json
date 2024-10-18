@@ -48,7 +48,7 @@
       "uri": [
         {
           "scheme": "vscode",
-          "command": "vietis-idt.handleUri"
+          "command": "vietis.handleUri"
         }
       ]
     },
@@ -72,22 +72,22 @@
     },
     "commands": [
       {
-        "command": "vietis-idt.helloWorld",
+        "command": "vietis.helloWorld",
         "title": "Hello World"
       },
       {
-        "command": "vietis-idt.chat.authenticateWithEmailPassword",
+        "command": "vietis.chat.authenticateWithEmailPassword",
         "title": "Sign in Zulip with email and password",
         "category": "Chat"
       },
       {
-        "command": "vietis-idt.sayHello",
+        "command": "vietis.sayHello",
         "title": "Say Hello"
       },
       {
-        "command": "vietis-idt.showChatTopicList",
+        "command": "vietis.showChatTopicList",
         "title": "Show Chat Topic List"
-      },
+      }
     ]
   }
 }

@@ -18,14 +18,13 @@ function getBaseUrl(realm:string) {
   return `https://${formattedSubDomain}.${BASE_DOMAIN}`;
 }
 
-async function api(requestUrl: string, config: any, method: any, params?: any) {
+async function api(requestUrl: string, config: any, method: any, token: string,params?: any) {
   let baseUrl = '';
-  let token = '';
+  // let token = '';
   try {
     // const workspaceSlug = config.workspaceSlug;
     // const projectId = sessionStorage.getItem(PROJECT_ZULIP_SERVER_CURRENT) || "";
     // const chatServerMap = JSON.parse(localStorage.getItem(PROJECT_ZULIP_SERVER_MAP) || "{}");
-    console.log("API CALL ", config)
     baseUrl = getBaseUrl(config.workspaceSlug);
     console.log("BASE URL ", baseUrl);
     // token = chatServerMap[workspaceSlug][projectId]?.token;
@@ -40,6 +39,7 @@ async function api(requestUrl: string, config: any, method: any, params?: any) {
       Authorization: `Basic ${token}`,
     },
   };
+  console.log("OPTIONS ", options);
 
   if (method === 'POST') {
     options.body = new FormData();
@@ -63,6 +63,7 @@ async function api(requestUrl: string, config: any, method: any, params?: any) {
   });
 
   try {
+    console.log("CALL API SUCCESS");
     return await response.json();
   } catch (e: any) {
     if (e.name === "AbortError") {
