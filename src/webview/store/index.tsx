@@ -1,5 +1,6 @@
 import { makeObservable, observable, action, runInAction } from 'mobx';
 import { IMessage, IListTopic, IStream, IZulipCurrentUser } from '../constants/chatbox';
+import { IGetMsgAPIParams } from '../../common/chatService/model';
 import { ZulipService } from '../services/message'; // Adjust path as necessary
 import RequestManager from '../lib/request-manage';
 class ZulipStore {
@@ -41,11 +42,11 @@ class ZulipStore {
     }
 
     // Actions
-    async fetchMessages(streamId: string) {
+    async fetchMessages(params: IGetMsgAPIParams) {
         this.loading = true;
         this.error = null;
         try {
-            const response = await this.zulipService.getMessages({ stream_id: streamId });
+            const response = await this.zulipService.getMessages(params);
             runInAction(() => {
                 this.messages = response.messages;
                 this.loading = false;

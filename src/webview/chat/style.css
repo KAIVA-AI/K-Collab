@@ -390,3 +390,54 @@ html, body {
   .VSCodeButton:hover {
     background-color: var(--vscode-button-hoverBackground);
   }
+
+  .chat-root {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1e1e1e; /* Dark background */
+    color: #fff;
+    border-bottom: 1px solid #444; /* Subtle border */
+    font-size: 16px;
+}
+
+.chat-header h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid #fff;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.header-actions button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+}
+
+.header-actions button:hover {
+    color: #bbb; /* Lighter hover effect */
+}
+
+.header-actions .icon {
+    margin-right: 8px;
+}
