@@ -1,0 +1,8 @@
+{
+  "name": "@v-collab/vscode",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "vscode-uri": "^3.0.8"
+  }
+}

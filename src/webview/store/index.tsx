@@ -99,7 +99,7 @@ class ZulipStore {
         try {
             await this.zulipService.postMessages({ content, stream_id: streamId, topic });
             runInAction(() => {
-                this.fetchMessages(streamId);  // Refresh the messages after sending
+                // this.fetchMessages(streamId);  // Refresh the messages after sending
             });
         } catch (err: any) {
             runInAction(() => {
@@ -114,7 +114,7 @@ class ZulipStore {
         try {
             await this.zulipService.deleteMessage(messageId, {});
             runInAction(() => {
-                this.fetchMessages(streamId);  // Refresh messages after deletion
+                // this.fetchMessages(streamId);  // Refresh messages after deletion
             });
         } catch (err: any) {
             runInAction(() => {
@@ -127,7 +127,7 @@ class ZulipStore {
         try {
             await this.zulipService.editMessage(messageId, { content });
             runInAction(() => {
-                this.fetchMessages(streamId);  // Refresh the messages after editing
+                // this.fetchMessages(streamId);  // Refresh the messages after editing
             });
         } catch (err: any) {
             runInAction(() => {

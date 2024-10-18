@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import logo from "../assets/logo-zulip.svg"; // Import your logo image
-import loading from "../assets/loading.gif";
+// import logo from "../assets/logo-zulip.svg"; // Import your logo image
+// import loading from "../assets/loading.gif";
 import "./login.css";
 // import * as vscode from 'vscode';
 import { ZulipService } from "../services/message";

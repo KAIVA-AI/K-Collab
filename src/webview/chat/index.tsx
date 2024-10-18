@@ -223,30 +223,30 @@ export function ChatPage({ topic }: { topic: IListTopic }) {
     };
   };
 
-  const firstFetch = async () => {
-    if (!currentChatDetailId) return;
-    const _response = await fetchCall({
-      type: "first",
-      anchor: "0",
-      chatInfo: currentChatInfo
-    });
-    if (!_response) return;
-    setFetchStatus(
-      _response.fetch_status?.anchor ?
-        JSON.stringify({
-          found_oldest: _response.fetch_status?.found_oldest,
-          anchor: _response.fetch_status?.anchor,
-        })
-        : null
-    );
-    setGroupedMessages(_response.formatted);
-  };
+//   const firstFetch = async () => {
+//     if (!currentChatDetailId) return;
+//     const _response = await fetchCall({
+//       type: "first",
+//       anchor: "0",
+//       chatInfo: currentChatInfo
+//     });
+//     if (!_response) return;
+//     setFetchStatus(
+//       _response.fetch_status?.anchor ?
+//         JSON.stringify({
+//           found_oldest: _response.fetch_status?.found_oldest,
+//           anchor: _response.fetch_status?.anchor,
+//         })
+//         : null
+//     );
+//     setGroupedMessages(_response.formatted);
+//   };
 
 
 
     useEffect(() => {
         if (topic) {
-            setCurrentTopic(topic)
+            setCurrentTopic(topic.name)
         }
 
         // const serviceManager = getServiceManager();

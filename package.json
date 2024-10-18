@@ -9,6 +9,12 @@
   "engines": {
     "vscode": "^1.94.0"
   },
+  "packageManager": "yarn@1.22.22",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "icon": "public/icon.png",
   "categories": [
     "Other"
   ],
