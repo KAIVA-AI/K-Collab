@@ -104,6 +104,30 @@
         "command": "v-collab.command.generate-tests",
         "title": "Generate Tests",
         "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.new-topic",
+        "title": "New topic",
+        "icon": "$(add)",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.history",
+        "title": "History",
+        "icon": "$(history)",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.preview",
+        "title": "Preview",
+        "icon": "static/icon_preview_dark.svg",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.close",
+        "title": "Close",
+        "icon": "$(close)",
+        "category": "VCollab"
       }
     ],
     "submenus": [
@@ -152,6 +176,28 @@
         {
           "command": "v-collab.command.generate-tests",
           "group": "3_ask@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "v-collab.command.chat.new-topic",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@1"
+        },
+        {
+          "command": "v-collab.command.chat.history",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@2"
+        },
+        {
+          "command": "v-collab.command.chat.preview",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@3"
+        },
+        {
+          "command": "v-collab.command.chat.close",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@4"
         }
       ]
     }

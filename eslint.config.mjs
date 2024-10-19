@@ -9,7 +9,7 @@ export default [
     ignores: ['node_modules/**'],
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
   },
   {
     plugins: {
@@ -22,6 +22,7 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.node,
+        ...globals.browser,
       },
     },
 

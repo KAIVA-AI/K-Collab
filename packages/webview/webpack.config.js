@@ -9,7 +9,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     publicPath: publicUrl + '/',
-    filename: 'static/js/bundle.js',
+    filename: 'static/js/bundle.[contenthash].js',
+    clean: true,
   },
   devServer: {
     compress: true,
@@ -30,14 +31,33 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/, // Sử dụng style-loader, css-loader cho file .css
+        test: /\.css$/,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(svg|png|jpe?g|gif)$/i,
         use: [
           {
             loader: 'file-loader',
+          },
+        ],
+      },
+      {
+        test: /\.(ttf)$/i,
+        type: 'javascript/auto',
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: '[name].[hash].[ext]',
+              outputPath: 'static/fonts/',
+              publicPath: publicUrl + '/static/fonts/',
+              esModule: false,
+            },
           },
         ],
       },

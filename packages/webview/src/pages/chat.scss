@@ -1,0 +1,80 @@
+:root {
+  --main-background-color: #212121;
+  --main-border-color: #3C3C3C;
+  --main-foreground-color: var(--vscode-input-foreground);
+  --main-background-color: var(--vscode-input-background);
+  --main-border-color: var(--vscode-chat-requestBorder,var(--vscode-input-background,transparent));
+}
+
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .main-block {
+    flex-grow: 1;
+  }
+  .bottom-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 10px;
+    background-color: var(--main-background-color);
+    border: solid 1px var(--main-border-color);
+    border-radius: 5px;
+    padding: 8px;
+    .context-block {
+      display: flex;
+      gap: 5px;
+      .add-context {
+        cursor: pointer;
+        display: inline-flex;
+        padding: 2px;
+        border: solid 1px var(--main-border-color);
+        border-radius: 4px;
+      }
+      .context-list {
+        display: flex;
+        gap: 5px;
+        max-width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+        .context-file {
+          display: flex;
+          gap: 2px;
+          align-items: center;
+          padding: 0 2px;
+          border: solid 1px var(--main-border-color);
+          border-radius: 4px;
+          user-select: none;
+          .remove {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .input-block {
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        resize: none;
+        background-color: var(--main-background-color);
+        color: var(--main-foreground-color);
+        border: none;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    .action-block {
+      display: flex;
+      .action-left {
+        flex-grow: 1;
+        display: flex;
+      }
+      .action-icon {
+        cursor: pointer;
+        padding: 2px;
+      }
+    }
+  }
+}
