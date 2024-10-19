@@ -13,7 +13,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "icon": "public/icon.png",
+  "icon": "static/icon.png",
   "categories": [
     "Other"
   ],
@@ -45,11 +45,23 @@
     "copy-icons": "cp src/webview/codicons/* dist/"
   },
   "contributes": {
-    "commands": [
-      {
-        "command": "v-collab.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "v-collab_bar_chat",
+          "title": "Chat",
+          "icon": "static/icon_sidebar.svg"
+        }
+      ]
+    },
+    "views": {
+      "v-collab_bar_chat": [
+        {
+          "type": "webview",
+          "id": "chat",
+          "name": "Chat"
+        }
+      ]
+    }
   }
 }
