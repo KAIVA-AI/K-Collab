@@ -37,12 +37,10 @@
     "lint": "eslint src",
     "test": "vscode-test",
 
-    "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
-    "build": "webpack-dev-server --mode production",
-    "build-webview": "webpack --mode production --config webpack.webview.config.js",
-    "build-ext": "webpack --mode production",
-    "start-ext": "webpack serve --mode development",
-    "copy-icons": "cp src/webview/codicons/* dist/"
+    "start-webview": "yarn workspace @v-collab/webview start",
+    "start-wv": "yarn start-webview",
+    "build-webview": "yarn workspace @v-collab/webview build",
+    "build-wv": "yarn build-webview"
   },
   "contributes": {
     "viewsContainers": {

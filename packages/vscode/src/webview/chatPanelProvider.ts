@@ -5,7 +5,10 @@ export class ChatPanelProvider implements WebviewViewProvider {
 
   public resolveWebviewView(webviewView: WebviewView) {
     this.view = webviewView;
-    const url = 'https://www.google.com';
+    webviewView.webview.options = {
+      enableScripts: true,
+    };
+    const url = 'http://localhost:3000';
     fetch(url)
       .then(response => response.text())
       .then(html => {
