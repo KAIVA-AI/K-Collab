@@ -40,7 +40,6 @@
     "pretest": "yarn compile-tests && yarn compile && yarn lint",
     "lint": "eslint src",
     "test": "vscode-test",
-
     "start-webview": "yarn workspace @v-collab/webview start",
     "start-wv": "yarn start-webview",
     "build-webview": "yarn workspace @v-collab/webview build",
@@ -62,6 +61,97 @@
           "id": "v-collab_bar.chat",
           "type": "webview",
           "name": "Chat"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "v-collab.command.add-selection",
+        "title": "Add Selection to Chat",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.add-file",
+        "title": "Add File to Chat",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.explain",
+        "title": "Explain",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.improve",
+        "title": "Improve",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.enhance",
+        "title": "Enhance",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.review",
+        "title": "Review",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.generate-docs",
+        "title": "Generate Docs",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.generate-tests",
+        "title": "Generate Tests",
+        "category": "VCollab"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "v-collab.submenu.editor",
+        "label": "VCollab"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "v-collab.submenu.editor",
+          "group": "2_v-collab"
+        }
+      ],
+      "v-collab.submenu.editor": [
+        {
+          "command": "v-collab.command.add-selection",
+          "when": "editorHasSelection",
+          "group": "1_add@1"
+        },
+        {
+          "command": "v-collab.command.add-file",
+          "group": "1_add@2"
+        },
+        {
+          "command": "v-collab.command.explain",
+          "group": "2_ask@1"
+        },
+        {
+          "command": "v-collab.command.improve",
+          "group": "2_ask@2"
+        },
+        {
+          "command": "v-collab.command.enhance",
+          "group": "2_ask@3"
+        },
+        {
+          "command": "v-collab.command.review",
+          "group": "2_ask@4"
+        },
+        {
+          "command": "v-collab.command.generate-docs",
+          "group": "3_ask@1"
+        },
+        {
+          "command": "v-collab.command.generate-tests",
+          "group": "3_ask@1"
         }
       ]
     }
