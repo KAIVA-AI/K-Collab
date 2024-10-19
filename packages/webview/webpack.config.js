@@ -16,6 +16,8 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
     allowedHosts: 'all',
+    hot: false,
+    client: false,
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
