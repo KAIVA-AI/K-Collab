@@ -4,7 +4,7 @@ export class PreviewPanelProvider {
   private readonly panel: WebviewPanel;
   constructor() {
     this.panel = window.createWebviewPanel('chat', 'Chat', {
-      viewColumn: ViewColumn.One,
+      viewColumn: ViewColumn.Beside,
     });
   }
 

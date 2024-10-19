@@ -1,6 +1,8 @@
-import { Disposable, Uri, window } from 'vscode';
+import { Disposable, Uri, window, ExtensionContext } from 'vscode';
 
 export class UriHandler {
+  constructor(private context: ExtensionContext) {}
+
   #handleUri(uri: Uri) {
     console.log('Handling uri:', uri);
     // vscode.window.showInformationMessage('Handling uri: ' + uri);
@@ -10,12 +12,12 @@ export class UriHandler {
 
     if (accessToken) {
       // Store the token in the global state for later use
-      // context.globalState.update('accessToken', accessToken);
+      this.context.globalState.update('accessToken', accessToken);
     } else {
       window.showErrorMessage('Authentication failed!');
     }
     if (realm) {
-      // context.globalState.update('realm_string', realm);
+      this.context.globalState.update('realm_string', realm);
     }
     window.showInformationMessage(
       `${realm} Authentication successful! ${accessToken}`,

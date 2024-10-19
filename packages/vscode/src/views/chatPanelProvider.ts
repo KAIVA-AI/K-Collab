@@ -1,21 +1,25 @@
 import { WebviewViewProvider, WebviewView, window, Disposable } from 'vscode';
 
-export class ChatPanelProvider implements WebviewViewProvider {
+const VIEW_ID = 'v-collab_bar.chat';
+
+export class ChatPanelProvider implements WebviewViewProvider, Disposable {
   private view?: WebviewView;
 
   public async resolveWebviewView(webviewView: WebviewView) {
     this.view = webviewView;
-    webviewView.webview.options = {
+    this.view.webview.options = {
       enableScripts: true,
     };
-    webviewView.webview.html = '';
+    this.view.webview.html = '';
     const url = 'http://localhost:3000';
-    webviewView.webview.html = await fetch(url).then(response =>
-      response.text(),
-    );
+    this.view.webview.html = await fetch(url).then(response => response.text());
+  }
+
+  public dispose() {
+    //
   }
 
   public build(): Disposable {
-    return window.registerWebviewViewProvider('chat', this);
+    return window.registerWebviewViewProvider(VIEW_ID, this);
   }
 }

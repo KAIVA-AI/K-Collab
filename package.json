@@ -50,16 +50,16 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "v-collab_bar_chat",
-          "title": "Chat",
+          "id": "v-collab_bar",
+          "title": "VCollab",
           "icon": "static/icon_sidebar.svg"
         }
       ]
     },
     "views": {
-      "v-collab_bar_chat": [
+      "v-collab_bar": [
         {
-          "id": "chat",
+          "id": "v-collab_bar.chat",
           "type": "webview",
           "name": "Chat"
         }
