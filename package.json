@@ -4,6 +4,10 @@
   "description": "VIETIS AI powered collaborative chat for developers",
   "version": "1.0.2",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://repo.vietis.com.vn:8009/idt/v-collab-ide-ext"
+  },
   "publisher": "vietis",
   "engines": {
     "vscode": "^1.94.0"
@@ -27,10 +31,10 @@
   ],
   "main": "./dist/extension.js",
   "scripts": {
-    "vscode:prepublish": "yarn package",
-    "compile": "webpack",
+    "vscode:prepublish": "yarn compile",
+    "compile": "webpack --mode production --devtool hidden-source-map",
     "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "package": "vsce package",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "yarn compile-tests && yarn compile && yarn lint",
@@ -55,8 +59,8 @@
     "views": {
       "v-collab_bar_chat": [
         {
-          "type": "webview",
           "id": "chat",
+          "type": "webview",
           "name": "Chat"
         }
       ]

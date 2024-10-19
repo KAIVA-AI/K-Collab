@@ -1,1 +1,2 @@
-export * from './webview';
+export * from './views';
+export * from './handlers';
