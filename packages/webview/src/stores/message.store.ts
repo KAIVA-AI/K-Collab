@@ -1,47 +1,42 @@
-import { IMessage } from '../models';
-import { action, makeObservable, observable } from 'mobx';
+import { IMessage, IWebviewMessage, IZulipEvent } from '../models';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { RootStore } from '.';
 
 export class MessageStore {
   @observable messages: IMessage[] = [];
 
-  constructor() {
+  @computed get topicMessages() {
+    const topic = this.rootStore.topicStore.currentTopic;
+    if (!topic) {
+      return [];
+    }
+    return this.messages.filter(
+      m => m.stream_id === topic.stream_id && m.subject === topic.name,
+    );
+  }
+
+  constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
-  @action fakeData = () => {
-    this.messages = [
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message1',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message2',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message3',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message4',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-    ];
+  @action loadData = async () => {
+    const topic = this.rootStore.topicStore.currentTopic;
+    if (!topic) {
+      return;
+    }
+    this.messages = await this.rootStore.zulipService.getMessages(
+      topic.stream_id,
+      topic.name,
+    );
+  };
+
+  @action onMessageFromVSCode = (message: IWebviewMessage) => {
+    if (message.command === 'onZulipEventMessage') {
+      const event: IZulipEvent = message.data.event;
+      if (event.type === 'message' && event.message) {
+        this.messages.push(event.message);
+        // TODO scroll to bottom
+      }
+    }
   };
 }

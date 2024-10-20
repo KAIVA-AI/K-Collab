@@ -6,15 +6,17 @@ import {
   commands,
   env,
 } from 'vscode';
-import { ITopicFileInput, IWebviewMessage } from '@v-collab/common';
+import { ITopicFileInput, IWebviewMessage } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
+import { ZulipService, IZulipEvent } from '@v-collab/common';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
 export class ChatPanelProvider implements WebviewViewProvider, Disposable {
   private view?: WebviewView;
   readonly #webProvider: Disposable;
+  private zulipService: ZulipService;
 
   constructor(private rootStore: RootStore) {
     this.#webProvider = window.registerWebviewViewProvider(VIEW_ID, this, {
@@ -22,6 +24,11 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
         retainContextWhenHidden: true,
       },
     });
+    this.zulipService = new ZulipService(ZulipService.REALM_STRING);
+    this.zulipService.setBasicAuth(
+      ZulipService.USER_EMAIL,
+      ZulipService.USER_API_KEY,
+    );
   }
 
   public async resolveWebviewView(webviewView: WebviewView) {
@@ -37,9 +44,12 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
 
   public dispose() {
     this.#webProvider.dispose();
+    this.zulipService.removeEventListener(VIEW_ID);
   }
 
   public register(): Disposable {
+    this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
+    this.zulipService.subscribeEventQueue();
     return this.#webProvider;
   }
 
@@ -56,6 +66,17 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (message.command === 'copyMessage') {
       this.copyMessageToClipboard(message.data.content);
     }
+  };
+
+  #onZulipEventMessage = (event: IZulipEvent) => {
+    this.view?.webview.postMessage({
+      source: 'vscode',
+      store: 'MessageStore',
+      command: 'onZulipEventMessage',
+      data: {
+        event,
+      },
+    });
   };
 
   addFileToTopic = (file: ITopicFileInput) => {

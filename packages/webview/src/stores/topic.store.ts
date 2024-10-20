@@ -1,5 +1,4 @@
-import { IWebviewMessage, TopicFileInput } from '@v-collab/common';
-import { ITopic } from '../models';
+import { IWebviewMessage, TopicFileInput, ITopic } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 
@@ -11,14 +10,12 @@ export class TopicStore {
     makeObservable(this);
   }
 
-  @action fakeData = () => {
-    this.topics = [
-      {
-        name: 'topic1',
-        stream_id: '1',
-        file_inputs: [],
-      },
-    ];
+  @action loadData = async () => {
+    const channelId = this.rootStore.channelStore.currentChannel?.stream_id;
+    if (!channelId) {
+      return;
+    }
+    this.topics = await this.rootStore.zulipService.getTopics(channelId);
 
     this.currentTopic = this.topics[0];
   };

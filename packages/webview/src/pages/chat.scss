@@ -1,3 +1,5 @@
+@use '../assets/scss/zilip-codehilite.scss';
+
 :root {
   --vscode-interactive-result-editor-background-color: #1e1e1e;
 
@@ -58,6 +60,9 @@
           .message-code-action {
             display: flex;
           }
+        }
+        .rendered_markdown {
+          padding: 13px 0;
         }
       }
     }
