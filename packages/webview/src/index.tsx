@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ChatPage } from './pages/chat';
+import { ChatPage } from '@src/pages/chat';
 
-import './index.css';
+import '@src/index.css';
 import '@vscode/codicons/dist/codicon.css';
 
 function App() {
