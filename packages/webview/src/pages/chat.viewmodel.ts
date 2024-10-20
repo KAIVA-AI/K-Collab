@@ -59,7 +59,7 @@ export class ChatViewModel {
 
   @action sendMessage = async () => {
     try {
-      const inputValue = this.prompt;
+      const inputValue = `@**VietIS-Coding** ${this.prompt}`;
       this.filterMention = undefined;
       this.prompt = '';
 
@@ -67,8 +67,8 @@ export class ChatViewModel {
 
       // extract values
       const _chatType: 'topic' | 'dm' = 'topic';
-      const subject = 'same2';
-      const targetId = 21;
+      const targetId = this.rootStore.topicStore.currentTopic?.stream_id || 0;
+      const subject = this.rootStore.topicStore.currentTopic?.name || '';
       if (_chatType !== 'topic' && _chatType !== 'dm') {
         throw new Error('Invalid chat type');
       }

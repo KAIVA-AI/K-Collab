@@ -21,9 +21,11 @@ export class AddFileCommand {
     }
     let file = path.basename(editor.document.fileName);
     const filepath = editor.document.uri.path;
+    const content = editor.document.getText();
     this.rootStore.chatPanelProvider.addFileToTopic({
       name: file,
       path: filepath,
+      content,
     });
   };
 }

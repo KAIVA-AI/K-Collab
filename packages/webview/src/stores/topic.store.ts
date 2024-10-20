@@ -47,6 +47,14 @@ export class TopicStore {
         }
         this.currentTopic?.file_inputs?.push(file);
       }
+
+      if (this.currentTopic?.name) {
+        this.rootStore.zulipService.addFile(
+          this.currentTopic?.name,
+          file.path,
+          file.content ?? '',
+        );
+      }
     }
   };
 

@@ -1,19 +1,24 @@
 import { useRootStore } from '../../stores';
-import { Observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { ChatMessageItem } from './chat-message-item';
+import { useEffect, useRef } from 'react';
 
-export const ChatMainComponent = () => {
+export const ChatMainComponent = observer(() => {
   const { messageStore } = useRootStore();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      const lastMessage = messagesEndRef.current.lastElementChild;
+      lastMessage?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messageStore.topicMessages]);
 
   return (
-    <Observer>
-      {() => (
-        <div className="main-block">
-          {messageStore.topicMessages.map((message, index) => (
-            <ChatMessageItem key={index} message={message} />
-          ))}
-        </div>
-      )}
-    </Observer>
+    <div className="main-block" ref={messagesEndRef}>
+      {messageStore.topicMessages.map((message, index) => (
+        <ChatMessageItem key={index} message={message} />
+      ))}
+    </div>
   );
-};
+});

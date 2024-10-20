@@ -10,18 +10,21 @@ export interface ITopicFileInput {
   path: string;
   start?: number;
   end?: number;
+  content?: string;
 }
 export class TopicFileInput {
   name: string;
   path: string;
   start?: number;
   end?: number;
+  content?: string;
 
   constructor(data: ITopicFileInput) {
     this.name = data.name;
     this.path = data.path;
     this.start = data.start;
     this.end = data.end;
+    this.content = data.content;
   }
 
   get isFile(): boolean {
