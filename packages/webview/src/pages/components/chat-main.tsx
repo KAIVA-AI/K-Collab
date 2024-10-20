@@ -9,7 +9,7 @@ export const ChatMainComponent = () => {
     <Observer>
       {() => (
         <div className="main-block">
-          {messageStore.messages.map((message, index) => (
+          {messageStore.topicMessages.map((message, index) => (
             <ChatMessageItem key={index} message={message} />
           ))}
         </div>

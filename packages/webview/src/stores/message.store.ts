@@ -1,9 +1,19 @@
 import { IMessage, IWebviewMessage, IZulipEvent } from '../models';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 
 export class MessageStore {
   @observable messages: IMessage[] = [];
+
+  @computed get topicMessages() {
+    const topic = this.rootStore.topicStore.currentTopic;
+    if (!topic) {
+      return [];
+    }
+    return this.messages.filter(
+      m => m.stream_id === topic.stream_id && m.subject === topic.name,
+    );
+  }
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
