@@ -16,8 +16,6 @@ export class TopicStore {
       return;
     }
     this.topics = await this.rootStore.zulipService.getTopics(channelId);
-
-    this.currentTopic = this.topics[0];
   };
 
   @action onMessageFromVSCode = (message: IWebviewMessage) => {
@@ -55,6 +53,8 @@ export class TopicStore {
           file.content ?? '',
         );
       }
+    } else if (message.command === 'backToTopicPage') {
+      this.currentTopic = undefined;
     }
   };
 
@@ -77,5 +77,10 @@ export class TopicStore {
     if (index !== undefined && index !== -1) {
       this.currentTopic?.file_inputs?.splice(index, 1);
     }
+  };
+
+  @action selectTopic = (topic: ITopic) => {
+    this.currentTopic = topic;
+    this.rootStore.messageStore.loadData();
   };
 }

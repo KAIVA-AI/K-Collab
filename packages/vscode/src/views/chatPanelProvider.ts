@@ -119,4 +119,13 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
   copyMessageToClipboard = (message: string) => {
     env.clipboard.writeText(message);
   };
+
+  backToTopicPage = () => {
+    this.view?.webview.postMessage({
+      source: 'vscode',
+      store: 'TopicStore',
+      command: 'backToTopicPage',
+      data: {},
+    });
+  };
 }
