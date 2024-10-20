@@ -1,5 +1,6 @@
 import { Observer } from 'mobx-react';
 import { useRootStore } from '../../stores';
+import { ChatInputComponent } from './chat-input';
 
 export const ChatBottomComponent = () => {
   const { chatViewModel, topicStore } = useRootStore();
@@ -33,11 +34,7 @@ export const ChatBottomComponent = () => {
             </div>
           </div>
           <div className="input-block">
-            <textarea
-              onChange={chatViewModel.onChangePrompt}
-              placeholder={`Talk about the...`}
-              value={chatViewModel.prompt}
-            />
+            <ChatInputComponent />
           </div>
           <div className="action-block">
             <div className="action-left">

@@ -6,6 +6,7 @@ import { TopicStore } from './topic.store';
 import { action } from 'mobx';
 import { ChatViewModel } from '../pages/chat.viewmodel';
 import { IWebviewMessage } from '@v-collab/common';
+import { ZulipStore } from './zulip.store';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -20,6 +21,8 @@ export class RootStore {
   topicStore = new TopicStore(this);
   messageStore = new MessageStore();
   chatViewModel = new ChatViewModel(this);
+
+  zulipStore = new ZulipStore();
 
   constructor() {
     this.registerVSCodeListener();

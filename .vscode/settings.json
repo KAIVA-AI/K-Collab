@@ -27,6 +27,7 @@
   "typescript.tsc.autoDetect": "off",
   "cSpell.words": [
     "codicon",
-    "vcollab"
+    "vcollab",
+    "Zulip"
   ]
 }

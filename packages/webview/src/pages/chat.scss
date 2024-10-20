@@ -1,9 +1,12 @@
 :root {
-  --main-background-color: #212121;
-  --main-border-color: #3C3C3C;
+  // --input-background-color: #212121;
+  // --main-border-color: #3C3C3C;
+
   --main-foreground-color: var(--vscode-input-foreground);
-  --main-background-color: var(--vscode-input-background);
+  --main-background-color: var(--vscode-sideBar-background);
+  --input-background-color: var(--vscode-input-background);
   --main-border-color: var(--vscode-chat-requestBorder,var(--vscode-input-background,transparent));
+  --mention-highlight: #2A2D2E;
 }
 
 .chat-page {
@@ -18,7 +21,7 @@
     flex-direction: column;
     gap: 6px;
     margin: 10px;
-    background-color: var(--main-background-color);
+    background-color: var(--input-background-color);
     border: solid 1px var(--main-border-color);
     border-radius: 5px;
     padding: 8px;
@@ -54,11 +57,29 @@
       }
     }
     .input-block {
+      position: relative;
+      .mention-list {
+        position: absolute;
+        width: 100%;
+        height: fit-content;
+        bottom: calc(100% + .3rem);
+        background-color: var(--main-background-color);
+        border: solid 1px var(--main-border-color);
+        user-select: none;
+        border-radius: 3px;
+        .mention-item {
+          padding: 2px;
+          cursor: pointer;
+          &:hover {
+            background-color: var(--mention-highlight);
+          }
+        }
+      }
       textarea {
         width: 100%;
         box-sizing: border-box;
         resize: none;
-        background-color: var(--main-background-color);
+        background-color: var(--input-background-color);
         color: var(--main-foreground-color);
         border: none;
         &:focus {
