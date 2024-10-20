@@ -4,6 +4,11 @@ import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
+// hotfix globals bug
+const globalBrowser = globals.browser;
+delete globalBrowser['AudioWorkletGlobalScope '];
+globalBrowser['AudioWorkletGlobalScope'] = false;
+
 export default [
   {
     ignores: ['node_modules/**'],
@@ -22,7 +27,7 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.node,
-        ...globals.browser,
+        ...globalBrowser,
       },
     },
 
