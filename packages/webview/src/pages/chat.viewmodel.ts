@@ -1,4 +1,5 @@
 import { RootStore } from '../stores';
+import { IZulipSendMessageParams } from '../models';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, KeyboardEvent } from 'react';
 import { debounce } from 'lodash';
@@ -66,35 +67,39 @@ export class ChatViewModel {
 
       // extract values
       const _chatType: 'topic' | 'dm' = 'topic';
-      const subject = 'topic name';
-      const targetId = 0;
+      const subject = 'same2';
+      const targetId = 21;
+      if (_chatType !== 'topic' && _chatType !== 'dm') {
+        throw new Error('Invalid chat type');
+      }
+      let params: IZulipSendMessageParams | undefined = undefined;
 
-      const _params =
-        _chatType === 'topic'
-          ? {
-              type: 'stream',
-              to: targetId,
-              topic: subject,
-              content: inputValue,
-            }
-          : _chatType === 'dm'
-            ? {
-                type: 'direct',
-                to: targetId,
-                content: inputValue,
-              }
-            : null;
+      if (_chatType === 'topic') {
+        params = {
+          type: 'stream',
+          to: targetId,
+          topic: subject,
+          content: inputValue,
+        };
+      } else if (_chatType === 'dm') {
+        params = {
+          type: 'direct',
+          to: targetId,
+          content: inputValue,
+        };
+      }
 
       this.rootStore.messageStore.messages.push({
         id: 1,
-        topic_id: '1',
+        stream_id: 1,
+        subject: 'topic',
         content: inputValue,
         sender_full_name: 'sender1',
-        sender_email: '',
         timestamp: Date.now(),
       });
-      const response: any =
-        await this.rootStore.zulipStore.sendMessage(_params);
+      const response: any = await this.rootStore.zulipService.sendMessage(
+        params!,
+      );
 
       return response;
     } catch (error) {
@@ -252,19 +257,25 @@ export class ChatViewModel {
   };
 
   @action clickInsertMessage = (content: string) => {
+    var tempElement = document.createElement('pre');
+    tempElement.innerHTML = content;
+    const text = tempElement.textContent || tempElement.innerText || '';
     this.rootStore.postMessageToVSCode({
       command: 'insertMessage',
       data: {
-        content,
+        content: text,
       },
     });
   };
 
   @action clickCopyMessage = (content: string) => {
+    var tempElement = document.createElement('pre');
+    tempElement.innerHTML = content;
+    const text = tempElement.textContent || tempElement.innerText || '';
     this.rootStore.postMessageToVSCode({
       command: 'copyMessage',
       data: {
-        content,
+        content: text,
       },
     });
   };

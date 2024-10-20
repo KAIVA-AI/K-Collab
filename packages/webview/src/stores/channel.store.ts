@@ -1,23 +1,21 @@
 import { IChannel } from '../models';
 import { action, makeObservable, observable } from 'mobx';
+import { RootStore } from '.';
+import { ZulipService } from '@v-collab/common';
 
 export class ChannelStore {
   @observable channels: IChannel[] = [];
   @observable currentChannel?: IChannel;
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
-  @action fakeData = () => {
-    this.channels = [
-      {
-        stream_id: '1',
-        realm_string: 'pjd-1',
-        name: 'general',
-      },
-    ];
+  @action loadData = async () => {
+    this.channels = await this.rootStore.zulipService.getChannels();
 
-    this.currentChannel = this.channels[0];
+    this.currentChannel = this.channels.find(
+      c => c.name === ZulipService.CHANNEL_BACKEND,
+    );
   };
 }

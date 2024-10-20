@@ -1,3 +1,4 @@
+import { ZulipService } from '@v-collab/common';
 import { IRealm } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 
@@ -8,9 +9,9 @@ export class RealmStore {
     makeObservable(this);
   }
 
-  @action fakeData = () => {
+  @action loadData = async () => {
     this.currentRealm = {
-      realm_string: 'pjd-1',
+      realm_string: ZulipService.REALM_STRING,
     };
   };
 }

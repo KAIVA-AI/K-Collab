@@ -16,8 +16,9 @@ export const ChatInputMentionComponent = () => {
         >
           <div className="mention-group">
             {chatViewModel.hasSlashCommand ? (
-              chatViewModel.filteredSlashCommands.map(command => (
+              chatViewModel.filteredSlashCommands.map((command, index) => (
                 <div
+                  key={index}
                   className="mention-item"
                   onClick={() => {
                     chatViewModel.handleSelectMention(command);
@@ -31,8 +32,9 @@ export const ChatInputMentionComponent = () => {
             )}
           </div>
           <div className="mention-group">
-            {chatViewModel.filteredUserMentions.map(command => (
+            {chatViewModel.filteredUserMentions.map((command, index) => (
               <div
+                key={index}
                 className="mention-item"
                 onClick={() => {
                   chatViewModel.handleSelectMention(command);

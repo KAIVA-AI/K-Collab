@@ -22,6 +22,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
+    fallback: {
+      buffer: require.resolve('buffer'),
+    },
   },
   module: {
     rules: [
@@ -85,6 +88,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.PUBLIC_URL': JSON.stringify(publicUrl),
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
 };

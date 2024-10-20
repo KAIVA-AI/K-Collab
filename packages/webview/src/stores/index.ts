@@ -5,8 +5,8 @@ import { MessageStore } from './message.store';
 import { TopicStore } from './topic.store';
 import { action } from 'mobx';
 import { ChatViewModel } from '../pages/chat.viewmodel';
-import { IWebviewMessage } from '@v-collab/common';
-import { ZulipStore } from './zulip.store';
+import { IWebviewMessage } from '../models';
+import { ZulipService } from '@v-collab/common';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -14,22 +14,41 @@ declare function acquireVsCodeApi(): {
   setState: (state: any) => void;
 };
 
+const getVSCodeApi = () => {
+  if (typeof acquireVsCodeApi === 'undefined') {
+    return {
+      postMessage: () => {},
+      getState: () => {},
+      setState: () => {},
+    };
+  }
+  return acquireVsCodeApi();
+};
+
 export class RootStore {
-  private vscode = acquireVsCodeApi();
+  private vscode = getVSCodeApi();
   realmStore = new RealmStore();
-  channelStore = new ChannelStore();
+  channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);
-  messageStore = new MessageStore();
+  messageStore = new MessageStore(this);
   chatViewModel = new ChatViewModel(this);
 
-  zulipStore = new ZulipStore();
+  zulipService: ZulipService;
 
   constructor() {
-    this.registerVSCodeListener();
-    this.fakeData();
+    this.zulipService = new ZulipService(ZulipService.REALM_STRING);
+    this.zulipService.setBasicAuth(
+      ZulipService.USER_EMAIL,
+      ZulipService.USER_API_KEY,
+    );
   }
 
-  registerVSCodeListener = () => {
+  @action init = () => {
+    this.registerVSCodeListener();
+    this.loadData();
+  };
+
+  private registerVSCodeListener = () => {
     if (!(window as any).isRegistered) {
       window.addEventListener('message', event => {
         const message: IWebviewMessage = event?.data as IWebviewMessage;
@@ -42,17 +61,17 @@ export class RootStore {
     }
   };
 
+  private loadData = async () => {
+    await this.realmStore.loadData();
+    await this.channelStore.loadData();
+    await this.topicStore.loadData();
+    await this.messageStore.loadData();
+  };
+
   @action onMessageFromVSCode = (message: IWebviewMessage) => {
     if (message.store === 'TopicStore') {
       this.topicStore.onMessageFromVSCode(message);
     }
-  };
-
-  @action fakeData = () => {
-    this.realmStore.fakeData();
-    this.channelStore.fakeData();
-    this.topicStore.fakeData();
-    this.messageStore.fakeData();
   };
 
   @action postMessageToVSCode = async (message: IWebviewMessage) => {

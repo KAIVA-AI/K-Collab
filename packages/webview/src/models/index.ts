@@ -1,3 +1,3 @@
+export * from '@v-collab/common/src/models';
 export * from './message';
-export * from './topic';
 export * from './user';

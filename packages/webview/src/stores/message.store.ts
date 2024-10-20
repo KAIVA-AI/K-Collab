@@ -1,47 +1,22 @@
 import { IMessage } from '../models';
 import { action, makeObservable, observable } from 'mobx';
+import { RootStore } from '.';
 
 export class MessageStore {
   @observable messages: IMessage[] = [];
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
     makeObservable(this);
   }
 
-  @action fakeData = () => {
-    this.messages = [
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message1',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message2',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message3',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-      {
-        id: 1,
-        topic_id: '1',
-        content: 'message4',
-        sender_full_name: 'sender1',
-        sender_email: '',
-        timestamp: Date.now(),
-      },
-    ];
+  @action loadData = async () => {
+    const topic = this.rootStore.topicStore.currentTopic;
+    if (!topic) {
+      return;
+    }
+    this.messages = await this.rootStore.zulipService.getMessages(
+      topic.stream_id,
+      topic.name,
+    );
   };
 }

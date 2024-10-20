@@ -6,15 +6,17 @@ import {
   commands,
   env,
 } from 'vscode';
-import { ITopicFileInput, IWebviewMessage } from '@v-collab/common';
+import { ITopicFileInput, IWebviewMessage } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
+import { ZulipService } from '@v-collab/common';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
 export class ChatPanelProvider implements WebviewViewProvider, Disposable {
   private view?: WebviewView;
   readonly #webProvider: Disposable;
+  private zulipService: ZulipService;
 
   constructor(private rootStore: RootStore) {
     this.#webProvider = window.registerWebviewViewProvider(VIEW_ID, this, {
@@ -22,6 +24,11 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
         retainContextWhenHidden: true,
       },
     });
+    this.zulipService = new ZulipService(ZulipService.REALM_STRING);
+    this.zulipService.setBasicAuth(
+      ZulipService.USER_EMAIL,
+      ZulipService.USER_API_KEY,
+    );
   }
 
   public async resolveWebviewView(webviewView: WebviewView) {
@@ -40,6 +47,7 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
   }
 
   public register(): Disposable {
+    this.zulipService.subscribeEventQueue();
     return this.#webProvider;
   }
 

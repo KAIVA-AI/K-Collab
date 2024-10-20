@@ -1,0 +1,49 @@
+// Media query breakpoints according to Bootstrap 4.5
+$xs: 0px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+// Breakpoints for mobile devices used by Google Chrome as of Version 86
+$ml: 425px; // Mobile large
+$mm: 375px; // Mobile medium
+$ms: 320px; // Mobile small
+
+// Breakpoints for middle column
+$mc: 849px; // Middle column as wide as it appears after the `sm` breakpoint
+
+// Breakpoints for showing and hiding compose buttons which do not always fit in
+// a single row below the compose box
+$cb1: 1314px;
+$cb2: 1072px;
+$cb3: 860px;
+$cb4: 750px;
+$cb5: 504px;
+
+// Exported variables
+$xs_min: $xs;
+$sm_min: $sm;
+$md_min: $md;
+$mc_min: $mc;
+$lg_min: $lg;
+$xl_min: $xl;
+$ml_min: $ml;
+$mm_min: $mm;
+$ms_min: $ms;
+$cb1_min: $cb1;
+$cb2_min: $cb2;
+$cb3_min: $cb3;
+$cb4_min: $cb4;
+$cb5_min: $cb5;
+$short_navbar_cutoff_height: 600px;
+
+$xs: $xs;
+$sm: $sm;
+$md: $md;
+$mc: $mc;
+$lg: $lg;
+$xl: $xl;
+$ml: $ml;
+$mm: $mm;
+$ms: $ms;

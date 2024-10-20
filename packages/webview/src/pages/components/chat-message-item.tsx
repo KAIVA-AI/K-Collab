@@ -36,7 +36,10 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
                 onClick={() => chatViewModel.clickCopyMessage(message.content)}
               />
             </div>
-            <pre>{message.content}</pre>
+            <div
+              dangerouslySetInnerHTML={{ __html: message.content }}
+              className="rendered_markdown"
+            ></div>
           </div>
         </div>
       )}
