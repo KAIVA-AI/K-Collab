@@ -1,5 +1,12 @@
 import { IChannel, IMessage, ITopic, IZulipSendMessageParams } from '../models';
-import { IUnread, IZulipEvent } from '../models/event';
+import {
+  IEventListener,
+  IEventListeners,
+  IUnread,
+  IUnreadListener,
+  IUnreadListeners,
+  IZulipEvent,
+} from '../models';
 
 const ZULIP_PROTOCOL = 'https://';
 const ZULIP_BASE_DOMAIN = 'collab.vietis.com.vn:9981';
@@ -24,6 +31,9 @@ export class ZulipService {
   static BOT_CODING = 'VietIS-Coding';
 
   private token: string = '';
+  private eventListeners: IEventListeners = {};
+  private unreadListeners: IUnreadListeners = {};
+
   get isAuthorized() {
     return !!this.token;
   }
@@ -252,6 +262,9 @@ export class ZulipService {
 
   private deliveryUnreadMessages = async (unreadMsgs: IUnread) => {
     DEBUG && console.log('deliveryUnreadMessages', unreadMsgs);
+    Object.values(this.unreadListeners).forEach(listener => {
+      listener(unreadMsgs);
+    });
   };
 
   private deliveryEvent = async (event: IZulipEvent) => {
@@ -259,5 +272,24 @@ export class ZulipService {
       return;
     }
     DEBUG && console.log('deliveryEvent', event);
+    Object.values(this.eventListeners).forEach(listener => {
+      listener(event);
+    });
+  };
+
+  addEventListener = (key: string, listener: IEventListener) => {
+    this.eventListeners[key] = listener;
+  };
+
+  removeEventListener = (key: string) => {
+    delete this.eventListeners[key];
+  };
+
+  addUnreadListener = (key: string, listener: IUnreadListener) => {
+    this.unreadListeners[key] = listener;
+  };
+
+  removeUnreadListener = (key: string) => {
+    delete this.unreadListeners[key];
   };
 }

@@ -89,19 +89,7 @@ export class ChatViewModel {
         };
       }
 
-      this.rootStore.messageStore.messages.push({
-        id: 1,
-        stream_id: 1,
-        subject: 'topic',
-        content: inputValue,
-        sender_full_name: 'sender1',
-        timestamp: Date.now(),
-      });
-      const response: any = await this.rootStore.zulipService.sendMessage(
-        params!,
-      );
-
-      return response;
+      return this.rootStore.zulipService.sendMessage(params!);
     } catch (error) {
       console.error('Error sending message', error);
     } finally {

@@ -6,3 +6,4 @@ export interface IWebviewMessage {
 }
 
 export * from './message';
+export * from './event';

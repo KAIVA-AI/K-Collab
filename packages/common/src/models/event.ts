@@ -149,3 +149,12 @@ interface IDmHuddle {
   user_ids_string: string; // joined array of ids: "26,27,28,30"
   unread_message_ids: number[];
 }
+
+export type IEventListener = (event: IZulipEvent) => void;
+export type IUnreadListener = (unread: IUnread) => void;
+export interface IEventListeners {
+  [key: string]: IEventListener;
+}
+export interface IUnreadListeners {
+  [key: string]: IUnreadListener;
+}

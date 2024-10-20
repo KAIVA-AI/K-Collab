@@ -72,6 +72,9 @@ export class RootStore {
     if (message.store === 'TopicStore') {
       this.topicStore.onMessageFromVSCode(message);
     }
+    if (message.store === 'MessageStore') {
+      this.messageStore.onMessageFromVSCode(message);
+    }
   };
 
   @action postMessageToVSCode = async (message: IWebviewMessage) => {
