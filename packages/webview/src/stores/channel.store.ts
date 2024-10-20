@@ -1,4 +1,4 @@
-import { IChannel } from '@src/models';
+import { IChannel } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 
 export class ChannelStore {

@@ -1,4 +1,4 @@
-import { useRootStore } from '@src/stores';
+import { useRootStore } from '../../stores';
 import { Observer } from 'mobx-react';
 
 export const ChatMainComponent = () => {

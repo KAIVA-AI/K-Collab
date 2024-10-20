@@ -1,8 +1,8 @@
 import { Observer } from 'mobx-react';
-import { useRootStore } from '@src/stores';
+import { useRootStore } from '../../stores';
 
 export const ChatBottomComponent = () => {
-  const { chatViewModel } = useRootStore();
+  const { chatViewModel, topicStore } = useRootStore();
 
   return (
     <Observer>
@@ -10,29 +10,26 @@ export const ChatBottomComponent = () => {
         <div className="bottom-block">
           <div className="context-block">
             <div className="add-context">
-              <i className="codicon codicon-add" />
+              <i
+                className="codicon codicon-add"
+                onClick={() => topicStore.selectAddContextMethod()}
+              />
             </div>
             <div className="context-list">
-              <div className="context-file">
-                <span>index.ts</span>
-                <i className="remove codicon codicon-close" />
-              </div>
-              <div className="context-file">
-                <span>index.ts</span>
-                <i className="remove codicon codicon-close" />
-              </div>
-              <div className="context-file">
-                <span>index.ts</span>
-                <i className="remove codicon codicon-close" />
-              </div>
-              <div className="context-file">
-                <span>index.ts</span>
-                <i className="remove codicon codicon-close" />
-              </div>
-              <div className="context-file">
-                <span>index.ts</span>
-                <i className="remove codicon codicon-close" />
-              </div>
+              {topicStore.currentTopic?.file_inputs?.map((file, index) => (
+                <div className="context-file" key={index}>
+                  <span>{file.name}</span>
+                  {file.isSelection && (
+                    <span>
+                      :{file.start}-{file.end}
+                    </span>
+                  )}
+                  <i
+                    className="remove codicon codicon-close"
+                    onClick={() => topicStore.onRemoveFile(file)}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="input-block">

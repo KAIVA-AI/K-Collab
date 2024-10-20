@@ -1,4 +1,4 @@
-import { RootStore } from '@src/stores';
+import { RootStore } from '../stores';
 import { action, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler } from 'react';
 

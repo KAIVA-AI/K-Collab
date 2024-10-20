@@ -6,10 +6,6 @@ export interface IChannel {
   realm_string: string;
   name: string;
 }
-export interface ITopic {
-  name: string;
-  stream_id: string;
-}
 export interface IMessage {
   id: number;
   topic_id: string;

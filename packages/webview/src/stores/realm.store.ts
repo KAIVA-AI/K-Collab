@@ -1,4 +1,4 @@
-import { IRealm } from '@src/models';
+import { IRealm } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 
 export class RealmStore {

@@ -1,4 +1,4 @@
-import { IMessage } from '@src/models';
+import { IMessage } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 
 export class MessageStore {

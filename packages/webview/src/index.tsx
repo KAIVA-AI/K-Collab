@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ChatPage } from '@src/pages/chat';
+import { ChatPage } from './pages/chat';
+import { enableLogging } from 'mobx-logger';
 
-import '@src/index.css';
+import './index.css';
 import '@vscode/codicons/dist/codicon.css';
+
+enableLogging();
 
 function App() {
   // TODO router client side not working yet because webview alway using route /, switch using server side rendering

@@ -1,7 +1,11 @@
 import { Disposable, Uri, window, ExtensionContext } from 'vscode';
+import { RootStore } from '../stores';
 
 export class UriHandler {
-  constructor(private context: ExtensionContext) {}
+  constructor(
+    private rootStore: RootStore,
+    private context: ExtensionContext,
+  ) {}
 
   #handleUri(uri: Uri) {
     console.log('Handling uri:', uri);
