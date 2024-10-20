@@ -250,4 +250,22 @@ export class ChatViewModel {
     this.prompt = `${first}${second}${third}`;
     target && target.focus();
   };
+
+  @action clickInsertMessage = (content: string) => {
+    this.rootStore.postMessageToVSCode({
+      command: 'insertMessage',
+      data: {
+        content,
+      },
+    });
+  };
+
+  @action clickCopyMessage = (content: string) => {
+    this.rootStore.postMessageToVSCode({
+      command: 'copyMessage',
+      data: {
+        content,
+      },
+    });
+  };
 }

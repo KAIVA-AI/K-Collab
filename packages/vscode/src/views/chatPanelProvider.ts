@@ -4,6 +4,7 @@ import {
   window,
   Disposable,
   commands,
+  env,
 } from 'vscode';
 import { ITopicFileInput, IWebviewMessage } from '@v-collab/common';
 import { RootStore } from '../stores';
@@ -50,6 +51,12 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (message.command === 'selectAddContextMethod') {
       this.selectAddContextMethod();
     }
+    if (message.command === 'insertMessage') {
+      this.insertMessageToEditor(message.data.content);
+    }
+    if (message.command === 'copyMessage') {
+      this.copyMessageToClipboard(message.data.content);
+    }
   };
 
   addFileToTopic = (file: ITopicFileInput) => {
@@ -78,5 +85,18 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (selection === AddFileCommand.COMMAND_TITLE) {
       commands.executeCommand(AddFileCommand.COMMAND_ID);
     }
+  };
+
+  insertMessageToEditor = (message: string) => {
+    const editor = window.activeTextEditor;
+    if (editor) {
+      editor.edit(editBuilder => {
+        editBuilder.insert(editor.selection.start, message);
+      });
+    }
+  };
+
+  copyMessageToClipboard = (message: string) => {
+    env.clipboard.writeText(message);
   };
 }

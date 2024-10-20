@@ -56,6 +56,9 @@ export class RootStore {
   };
 
   @action postMessageToVSCode = async (message: IWebviewMessage) => {
+    if (!message.source) {
+      message.source = 'webview';
+    }
     this.vscode.postMessage(message);
   };
 }

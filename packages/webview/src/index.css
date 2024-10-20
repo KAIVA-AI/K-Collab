@@ -22,3 +22,6 @@ code {
 .hidden {
   display: none;
 }
+.c-pointer {
+  cursor: pointer;
+}

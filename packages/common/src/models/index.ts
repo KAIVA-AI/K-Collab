@@ -1,5 +1,5 @@
 export interface IWebviewMessage {
-  source: string;
+  source?: string;
   store?: string;
   command: string;
   data: any;
