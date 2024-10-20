@@ -1,0 +1,36 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+/dictionaries/*
+!/dictionaries/default_user.xml
+
+# IntelliJ IDEA
+*.iml
+*.iws
+/out/
+
+# User-specific configurations
+/caches/
+/libraries/
+/tasks.xml
+/compiler.xml
+/copyright/profiles_settings.xml
+/encodings.xml
+/misc.xml
+/modules.xml
+/scopes/scope_settings.xml
+/vcs.xml
+/jsLibraryMappings.xml
+/datasources.xml
+/dataSources.ids
+/sqlDataSources.xml
+/dynamic.xml
+/uiDesigner.xml
+/assetWizardSettings.xml
+/gradle.xml
+/jarRepositories.xml
+/navEditor.xml
+/other.xml

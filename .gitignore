@@ -1,7 +1,4 @@
-out
-dist
-node_modules
 .DS_Store
-.vscode-test/
+node_modules
+dist
 *.vsix
-.idea/

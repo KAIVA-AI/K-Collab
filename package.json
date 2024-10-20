@@ -4,8 +4,11 @@
   "description": "VIETIS AI powered collaborative chat for developers",
   "version": "1.0.2",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://repo.vietis.com.vn:8009/idt/v-collab-ide-ext"
+  },
   "publisher": "vietis",
-  "main": "./dist/extension.js",
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -14,7 +17,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "icon": "public/icon.png",
+  "icon": "static/icon.png",
   "categories": [
     "Other"
   ],
@@ -26,68 +29,177 @@
     "onLanguage",
     "onUri"
   ],
+  "main": "./dist/extension.js",
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "vscode:prepublish": "yarn compile",
+    "compile": "webpack --mode production --devtool hidden-source-map",
+    "watch": "webpack --watch",
+    "package": "vsce package",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "pretest": "yarn compile-tests && yarn compile && yarn lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "start-live": "webpack-dev-server --mode development --open --hot --config webpack.webview.config.js",
-    "build": "webpack-dev-server --mode production",
-    "build-webview": "webpack --mode production --config webpack.webview.config.js",
-    "build-ext": "webpack --mode production",
-    "watch": "webpack --watch",
-    "start-ext": "webpack serve --mode development",
-    "copy-icons": "cp src/webview/codicons/* dist/"
+    "start-webview": "yarn workspace @v-collab/webview start",
+    "start-wv": "yarn start-webview",
+    "build-webview": "yarn workspace @v-collab/webview build",
+    "build-wv": "yarn build-webview"
   },
   "contributes": {
-    "handlers": {
-      "uri": [
-        {
-          "scheme": "vscode",
-          "command": "vietis.handleUri"
-        }
-      ]
-    },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "cest_la_vie",
-          "title": "Chat",
-          "icon": "logo.svg"
+          "id": "v-collab_bar",
+          "title": "VCollab",
+          "icon": "static/icon_sidebar.svg"
         }
       ]
     },
     "views": {
-      "cest_la_vie": [
+      "v-collab_bar": [
         {
+          "id": "v-collab_bar.chat",
           "type": "webview",
-          "id": "chat",
           "name": "Chat"
         }
       ]
     },
     "commands": [
       {
-        "command": "vietis.helloWorld",
-        "title": "Hello World"
+        "command": "v-collab.command.add-selection",
+        "title": "Add Selection to Chat",
+        "category": "VCollab"
       },
       {
-        "command": "vietis.chat.authenticateWithEmailPassword",
-        "title": "Sign in Zulip with email and password",
-        "category": "Chat"
+        "command": "v-collab.command.add-file",
+        "title": "Add File to Chat",
+        "category": "VCollab"
       },
       {
-        "command": "vietis.sayHello",
-        "title": "Say Hello"
+        "command": "v-collab.command.explain",
+        "title": "Explain",
+        "category": "VCollab"
       },
       {
-        "command": "vietis.showChatTopicList",
-        "title": "Show Chat Topic List"
+        "command": "v-collab.command.improve",
+        "title": "Improve",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.enhance",
+        "title": "Enhance",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.review",
+        "title": "Review",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.generate-docs",
+        "title": "Generate Docs",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.generate-tests",
+        "title": "Generate Tests",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.new-topic",
+        "title": "New topic",
+        "icon": "$(add)",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.history",
+        "title": "History",
+        "icon": "$(history)",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.preview",
+        "title": "Preview",
+        "icon": "static/icon_preview_dark.svg",
+        "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.chat.close",
+        "title": "Close",
+        "icon": "$(close)",
+        "category": "VCollab"
       }
-    ]
+    ],
+    "submenus": [
+      {
+        "id": "v-collab.submenu.editor",
+        "label": "VCollab"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "submenu": "v-collab.submenu.editor",
+          "group": "2_v-collab"
+        }
+      ],
+      "v-collab.submenu.editor": [
+        {
+          "command": "v-collab.command.add-selection",
+          "when": "editorHasSelection",
+          "group": "1_add@1"
+        },
+        {
+          "command": "v-collab.command.add-file",
+          "group": "1_add@2"
+        },
+        {
+          "command": "v-collab.command.explain",
+          "group": "2_ask@1"
+        },
+        {
+          "command": "v-collab.command.improve",
+          "group": "2_ask@2"
+        },
+        {
+          "command": "v-collab.command.enhance",
+          "group": "2_ask@3"
+        },
+        {
+          "command": "v-collab.command.review",
+          "group": "2_ask@4"
+        },
+        {
+          "command": "v-collab.command.generate-docs",
+          "group": "3_ask@1"
+        },
+        {
+          "command": "v-collab.command.generate-tests",
+          "group": "3_ask@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "v-collab.command.chat.new-topic",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@1"
+        },
+        {
+          "command": "v-collab.command.chat.history",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@2"
+        },
+        {
+          "command": "v-collab.command.chat.preview",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@3"
+        },
+        {
+          "command": "v-collab.command.chat.close",
+          "when": "view == v-collab_bar.chat",
+          "group": "navigation@4"
+        }
+      ]
+    }
   }
 }
