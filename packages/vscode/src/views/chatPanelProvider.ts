@@ -75,7 +75,7 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (selection === AddSelectionCommand.COMMAND_TITLE) {
       commands.executeCommand(AddSelectionCommand.COMMAND_ID);
     }
-    if (selection === AddSelectionCommand.COMMAND_TITLE) {
+    if (selection === AddFileCommand.COMMAND_TITLE) {
       commands.executeCommand(AddFileCommand.COMMAND_ID);
     }
   };
