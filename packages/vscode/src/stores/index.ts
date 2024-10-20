@@ -1,8 +1,7 @@
 import { ExtensionContext } from 'vscode';
 import { ChatPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
-import { AddSelectionCommand } from '../commands/addSelectionCommand';
-import { AddFileCommand } from '../commands/addFileCommand';
+import { AddFileCommand, AddSelectionCommand } from '../commands';
 
 export class RootStore {
   chatPanelProvider: ChatPanelProvider;

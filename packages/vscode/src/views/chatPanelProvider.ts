@@ -8,8 +8,7 @@ import {
 } from 'vscode';
 import { ITopicFileInput, IWebviewMessage } from '@v-collab/common';
 import { RootStore } from '../stores';
-import { AddFileCommand } from '../commands/addFileCommand';
-import { AddSelectionCommand } from '../commands/addSelectionCommand';
+import { AddFileCommand, AddSelectionCommand } from '../commands';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
