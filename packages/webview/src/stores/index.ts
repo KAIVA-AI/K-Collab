@@ -3,7 +3,7 @@ import { RealmStore } from './realm.store';
 import { ChannelStore } from './channel.store';
 import { MessageStore } from './message.store';
 import { TopicStore } from './topic.store';
-import { action } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
 import { ZulipService } from '@v-collab/common';
@@ -35,7 +35,16 @@ export class RootStore {
 
   zulipService: ZulipService;
 
+  @observable count = 0;
+  @action increment = () => {
+    this.count++;
+  };
+  @action decrement = () => {
+    this.count--;
+  };
+
   constructor() {
+    makeObservable(this);
     this.zulipService = new ZulipService(ZulipService.REALM_STRING);
     this.zulipService.setBasicAuth(
       ZulipService.USER_EMAIL,
@@ -85,7 +94,7 @@ export class RootStore {
   };
 }
 
-const rootStore = new RootStore();
+export const rootStore = new RootStore();
 const rootStoreContext = createContext(rootStore);
 export const useRootStore = () => {
   const store = useContext(rootStoreContext);
