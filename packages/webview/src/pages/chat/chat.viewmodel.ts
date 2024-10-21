@@ -18,6 +18,8 @@ export class ChatViewModel {
   @observable prompt = '';
   @observable filterMention?: string = undefined;
   @observable sending = false;
+  @observable eventFocusInput = false;
+
   // TODO: refactor
   private debounceDetectMention = debounce(
     (e: KeyboardEvent<HTMLTextAreaElement>) => {

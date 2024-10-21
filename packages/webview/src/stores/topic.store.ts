@@ -44,6 +44,7 @@ export class TopicStore {
         name: data.topic,
         file_inputs: [],
       };
+      this.rootStore.chatViewModel.eventFocusInput = true;
       if (data.file) {
         await this.addFileToTopic(new TopicFileInput(data.file));
       }

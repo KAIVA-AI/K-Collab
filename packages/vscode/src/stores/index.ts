@@ -4,9 +4,11 @@ import { UriHandler } from '../handlers';
 import {
   AddFileCommand,
   AddSelectionCommand,
+  AskAICommand,
   ExplainCommand,
   HistoryCommand,
   ImproveCommand,
+  ReviewCommand,
 } from '../commands';
 
 export class RootStore {
@@ -18,6 +20,8 @@ export class RootStore {
   historyCommand: HistoryCommand = new HistoryCommand(this);
   explainCommand: ExplainCommand = new ExplainCommand(this);
   improveCommand: ImproveCommand = new ImproveCommand(this);
+  askAICommand: AskAICommand = new AskAICommand(this);
+  reviewCommand: ReviewCommand = new ReviewCommand(this);
 
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
@@ -36,5 +40,7 @@ export class RootStore {
     this.context.subscriptions.push(this.historyCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
+    this.context.subscriptions.push(this.askAICommand.register());
+    this.context.subscriptions.push(this.reviewCommand.register());
   };
 }
