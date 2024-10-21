@@ -6,6 +6,7 @@ import {
   AddSelectionCommand,
   ExplainCommand,
   HistoryCommand,
+  ImproveCommand,
 } from '../commands';
 
 export class RootStore {
@@ -16,6 +17,7 @@ export class RootStore {
   addFileCommand: AddFileCommand;
   historyCommand: HistoryCommand = new HistoryCommand(this);
   explainCommand: ExplainCommand = new ExplainCommand(this);
+  improveCommand: ImproveCommand = new ImproveCommand(this);
 
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
@@ -33,5 +35,6 @@ export class RootStore {
     this.context.subscriptions.push(this.addFileCommand.register());
     this.context.subscriptions.push(this.historyCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
+    this.context.subscriptions.push(this.improveCommand.register());
   };
 }
