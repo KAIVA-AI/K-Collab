@@ -4,6 +4,7 @@ import { UriHandler } from '../handlers';
 import {
   AddFileCommand,
   AddSelectionCommand,
+  ExplainCommand,
   HistoryCommand,
 } from '../commands';
 
@@ -14,6 +15,7 @@ export class RootStore {
   addSelectionCommand: AddSelectionCommand;
   addFileCommand: AddFileCommand;
   historyCommand: HistoryCommand = new HistoryCommand(this);
+  explainCommand: ExplainCommand = new ExplainCommand(this);
 
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
@@ -30,5 +32,6 @@ export class RootStore {
     this.context.subscriptions.push(this.addSelectionCommand.register());
     this.context.subscriptions.push(this.addFileCommand.register());
     this.context.subscriptions.push(this.historyCommand.register());
+    this.context.subscriptions.push(this.explainCommand.register());
   };
 }

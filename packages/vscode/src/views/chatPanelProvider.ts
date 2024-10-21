@@ -128,4 +128,25 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
       data: {},
     });
   };
+
+  startNewTopic = ({
+    topic,
+    file,
+    content,
+  }: {
+    topic: string;
+    file?: ITopicFileInput;
+    content?: string;
+  }) => {
+    this.view?.webview.postMessage({
+      source: 'vscode',
+      store: 'TopicStore',
+      command: 'startNewTopic',
+      data: {
+        topic,
+        file,
+        content,
+      },
+    });
+  };
 }

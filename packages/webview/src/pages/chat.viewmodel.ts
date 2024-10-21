@@ -3,6 +3,7 @@ import { IZulipSendMessageParams } from '../models';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, KeyboardEvent } from 'react';
 import { debounce } from 'lodash';
+import { ZulipService } from '@v-collab/common';
 
 const slashCommands = [
   //
@@ -59,7 +60,7 @@ export class ChatViewModel {
 
   @action sendMessage = async () => {
     try {
-      const inputValue = `@**VietIS-Coding** ${this.prompt}`;
+      const inputValue = `@**${ZulipService.BOT_CODING}** ${this.prompt}`;
       this.filterMention = undefined;
       this.prompt = '';
 
