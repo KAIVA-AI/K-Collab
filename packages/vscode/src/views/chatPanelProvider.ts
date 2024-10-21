@@ -37,7 +37,7 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
       enableScripts: true,
     };
     this.view.webview.html = '';
-    const url = 'http://localhost:3000';
+    const url = 'https://ide-ext.collab.vietis.com.vn:9981';
     this.view.webview.onDidReceiveMessage(this.#onMessageFromWebview);
     this.view.webview.html = await fetch(url).then(response => response.text());
   }

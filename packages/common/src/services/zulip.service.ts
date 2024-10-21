@@ -22,8 +22,8 @@ interface RequestInit {
 export class ZulipService {
   // TODO hardcode
   static REALM_STRING = 'pjd-2';
-  static USER_EMAIL = 'hao.nguyendang@vietis.com.vn';
-  static USER_API_KEY = 'nrwprKKNKehffJNqMOXIdBponTLjQOph';
+  static USER_EMAIL = 'giang.nguyen@vietis.com.vn';
+  static USER_API_KEY = 'NNO6rkLX95xWaFD9EsBpoTKv9MygIDqb';
   static CHANNEL_BACKEND = 'Coding-Backend';
   static CHANNEL_FRONTEND = 'Coding-Frontend';
   static CHANNEL_DB = 'Coding-DB';
