@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { ChatPage } from './pages/chat';
+import { ChatPage } from './pages/chat/chat';
 import { enableLogging } from 'mobx-logger';
 import { useRootStore } from './stores';
 
 import './index.css';
 import '@vscode/codicons/dist/codicon.css';
 import { Observer } from 'mobx-react';
-import { TopicPage } from './pages/topic';
+import { TopicPage } from './pages/topic/topic';
 
 enableLogging();
 

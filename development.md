@@ -7,6 +7,7 @@
 ## Installation
 ```sh
 yarn
+yarn start-wv
 ```
 
 ## Run dev

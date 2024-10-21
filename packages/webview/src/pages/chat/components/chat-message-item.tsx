@@ -1,6 +1,6 @@
 import { Observer } from 'mobx-react';
-import { IMessage } from '../../models';
-import { useRootStore } from '../../stores';
+import { IMessage } from '../../../models';
+import { useRootStore } from '../../../stores';
 import { useEffect } from 'react';
 
 export const ChatMessageItem = (props: { message: IMessage }) => {

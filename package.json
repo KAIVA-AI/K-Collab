@@ -66,6 +66,11 @@
     },
     "commands": [
       {
+        "command": "v-collab.command.ask-ai",
+        "title": "Ask VietIS-Coding",
+        "category": "VCollab"
+      },
+      {
         "command": "v-collab.command.add-selection",
         "title": "Add Selection to Chat",
         "category": "VCollab"
@@ -145,37 +150,30 @@
       ],
       "v-collab.submenu.editor": [
         {
+          "command": "v-collab.command.ask-ai",
+          "when": "editorHasSelection",
+          "group": "1_ask@1"
+        },
+        {
           "command": "v-collab.command.add-selection",
           "when": "editorHasSelection",
-          "group": "1_add@1"
+          "group": "2_add@1"
         },
         {
           "command": "v-collab.command.add-file",
-          "group": "1_add@2"
+          "group": "2_add@2"
         },
         {
           "command": "v-collab.command.explain",
-          "group": "2_ask@1"
+          "group": "3_ask@1"
         },
         {
           "command": "v-collab.command.improve",
-          "group": "2_ask@2"
-        },
-        {
-          "command": "v-collab.command.enhance",
-          "group": "2_ask@3"
+          "group": "3_ask@2"
         },
         {
           "command": "v-collab.command.review",
-          "group": "2_ask@4"
-        },
-        {
-          "command": "v-collab.command.generate-docs",
-          "group": "3_ask@1"
-        },
-        {
-          "command": "v-collab.command.generate-tests",
-          "group": "3_ask@1"
+          "group": "3_ask@4"
         }
       ],
       "view/title": [

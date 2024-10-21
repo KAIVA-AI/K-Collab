@@ -1,5 +1,5 @@
-import { RootStore } from '../stores';
-import { IZulipSendMessageParams } from '../models';
+import { RootStore } from '../../stores';
+import { IZulipSendMessageParams } from '../../models';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, KeyboardEvent } from 'react';
 import { debounce } from 'lodash';
@@ -18,6 +18,8 @@ export class ChatViewModel {
   @observable prompt = '';
   @observable filterMention?: string = undefined;
   @observable sending = false;
+  @observable eventFocusInput = false;
+
   // TODO: refactor
   private debounceDetectMention = debounce(
     (e: KeyboardEvent<HTMLTextAreaElement>) => {
