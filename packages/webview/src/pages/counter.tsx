@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React from 'react';
-import { RootStore } from 'src/stores';
+import { RootStore } from '../stores';
 
 @inject('rootStore')
 @observer

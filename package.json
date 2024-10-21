@@ -151,6 +151,7 @@
       "editor/context": [
         {
           "submenu": "v-collab.submenu.editor",
+          "when": "resourceScheme == file",
           "group": "2_v-collab"
         }
       ],

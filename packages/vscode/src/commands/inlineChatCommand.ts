@@ -21,6 +21,10 @@ export class InlineChatCommand {
     const editor = window.visibleTextEditors.find(
       editor => editor.document.uri.path === reply.thread.uri.path,
     );
+    if (editor?.document.uri.scheme === 'output') {
+      const content = editor?.document.getText();
+      console.log(content);
+    }
     const content = editor?.document.getText(reply.thread.range);
     this.rootStore.chatPanelProvider.startNewTopic({
       topic: `ask-${new Date().getTime()}`,
