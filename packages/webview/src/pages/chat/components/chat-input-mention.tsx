@@ -1,6 +1,6 @@
 import { Observer } from 'mobx-react';
 import clsx from 'clsx';
-import { useRootStore } from '../../stores';
+import { useRootStore } from '../../../stores';
 
 export const ChatInputMentionComponent = () => {
   const { chatViewModel } = useRootStore();

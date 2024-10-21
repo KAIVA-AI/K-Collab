@@ -4,7 +4,7 @@ import { ChannelStore } from './channel.store';
 import { MessageStore } from './message.store';
 import { TopicStore } from './topic.store';
 import { action } from 'mobx';
-import { ChatViewModel } from '../pages/chat.viewmodel';
+import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
 import { ZulipService } from '@v-collab/common';
 

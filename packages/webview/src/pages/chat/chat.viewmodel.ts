@@ -1,5 +1,5 @@
-import { RootStore } from '../stores';
-import { IZulipSendMessageParams } from '../models';
+import { RootStore } from '../../stores';
+import { IZulipSendMessageParams } from '../../models';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, KeyboardEvent } from 'react';
 import { debounce } from 'lodash';
