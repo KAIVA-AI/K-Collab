@@ -133,6 +133,12 @@
         "title": "Close",
         "icon": "$(close)",
         "category": "VCollab"
+      },
+      {
+        "command": "v-collab.command.inline.chat",
+        "title": "Ask VietIS-Coding",
+        "category": "VCollab",
+				"enablement": "!commentIsEmpty"
       }
     ],
     "submenus": [
@@ -196,6 +202,13 @@
           "command": "v-collab.command.chat.close",
           "when": "view == v-collab_bar.chat",
           "group": "navigation@4"
+        }
+      ],
+      "comments/commentThread/context": [
+        {
+          "command": "v-collab.command.inline.chat",
+          "group": "inline",
+          "when": "commentController == comment-sample"
         }
       ]
     }
