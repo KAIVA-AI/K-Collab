@@ -1,7 +1,13 @@
 import { ExtensionContext } from 'vscode';
 import { ChatPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
-import { AddFileCommand, AddSelectionCommand } from '../commands';
+import {
+  AddFileCommand,
+  AddSelectionCommand,
+  ExplainCommand,
+  HistoryCommand,
+  ImproveCommand,
+} from '../commands';
 
 export class RootStore {
   chatPanelProvider: ChatPanelProvider;
@@ -9,6 +15,9 @@ export class RootStore {
   // commands
   addSelectionCommand: AddSelectionCommand;
   addFileCommand: AddFileCommand;
+  historyCommand: HistoryCommand = new HistoryCommand(this);
+  explainCommand: ExplainCommand = new ExplainCommand(this);
+  improveCommand: ImproveCommand = new ImproveCommand(this);
 
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
@@ -24,5 +33,8 @@ export class RootStore {
     // commands
     this.context.subscriptions.push(this.addSelectionCommand.register());
     this.context.subscriptions.push(this.addFileCommand.register());
+    this.context.subscriptions.push(this.historyCommand.register());
+    this.context.subscriptions.push(this.explainCommand.register());
+    this.context.subscriptions.push(this.improveCommand.register());
   };
 }

@@ -23,11 +23,13 @@ export class AddSelectionCommand {
     const filepath = editor.document.uri.path;
     const lineStart = editor.selection.start.line + 1;
     const lineEnd = editor.selection.end.line + 1;
+    const content = editor.document.getText(editor.selection);
     this.rootStore.chatPanelProvider.addFileToTopic({
       name: file,
       path: filepath,
       start: lineStart,
       end: lineEnd,
+      content,
     });
   };
 }

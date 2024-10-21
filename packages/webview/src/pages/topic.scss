@@ -1,0 +1,27 @@
+:root {
+  --vscode-interactive-result-editor-background-color: #1e1e1e;
+
+  // --input-background-color: #212121;
+  // --main-border-color: #3C3C3C;
+
+  --main-foreground-color: var(--vscode-input-foreground);
+  --main-background-color: var(--vscode-sideBar-background);
+  --input-background-color: var(--vscode-input-background);
+  --main-border-color: var(--vscode-chat-requestBorder,var(--vscode-input-background,transparent));
+  --mention-highlight: #2A2D2E;
+}
+
+.topic-page {
+  user-select: none;
+  .topic-list {
+    border-radius: 3px;
+    .topic-item {
+      border: solid 1px var(--main-border-color);
+      padding: 2px;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--mention-highlight);
+      }
+    }
+  }
+}

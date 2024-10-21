@@ -24,8 +24,7 @@ export class ZulipService {
   static REALM_STRING = 'pjd-2';
   static USER_EMAIL = 'hao.nguyendang@vietis.com.vn';
   static USER_API_KEY = 'nrwprKKNKehffJNqMOXIdBponTLjQOph';
-  // static CHANNEL_BACKEND = 'Coding-Backend';
-  static CHANNEL_BACKEND = 'Draft Issue';
+  static CHANNEL_BACKEND = 'Coding-Backend';
   static CHANNEL_FRONTEND = 'Coding-Frontend';
   static CHANNEL_DB = 'Coding-DB';
   static BOT_CODING = 'VietIS-Coding';
@@ -291,5 +290,17 @@ export class ZulipService {
 
   removeUnreadListener = (key: string) => {
     delete this.unreadListeners[key];
+  };
+
+  addFile = async (topic: string, path: string, content: string) => {
+    const formData = {
+      external_id: topic,
+      path: path,
+      content: content,
+    };
+    return this.sendRequest({
+      path: 'assistant/add-file',
+      formData,
+    });
   };
 }
