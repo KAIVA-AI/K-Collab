@@ -21,12 +21,12 @@ export class ChatViewModel {
   @observable eventFocusInput = false;
 
   // TODO: refactor
-  private debounceDetectMention = debounce(
-    (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      this.detectMention(e);
-    },
-    200,
-  );
+  // private debounceDetectMention = debounce(
+  //   (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  //     this.detectMention(e);
+  //   },
+  //   200,
+  // );
 
   @computed get isShowMentionBox() {
     return this.filterMention !== undefined;
@@ -100,65 +100,66 @@ export class ChatViewModel {
     }
   };
 
-  @action detectMention = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (typeof this.filterMention === 'string') {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  // @action detectMention = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  //   if (typeof this.filterMention === 'string') {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   }
 
-    const target = e.target as HTMLTextAreaElement;
-    const value = target.value || '';
+  //   const target = e.target as HTMLTextAreaElement;
+  //   const value = target.value || '';
 
-    const containsMention = value.includes('@') || value.includes('/');
-    if (!containsMention) {
-      this.filterMention = undefined;
-      return;
-    }
+  //   const containsMention = value.includes('@') || value.includes('/');
+  //   if (!containsMention) {
+  //     this.filterMention = undefined;
+  //     return;
+  //   }
 
-    const cursorPosition = target.selectionStart;
-    if (cursorPosition === null) return;
+  //   const cursorPosition = target.selectionStart;
+  //   if (cursorPosition === null) return;
 
-    const atIndexes = Array.from(value).reduce<number[]>((acc, char, index) => {
-      if (char === '@' || char === '/') acc.push(index);
-      return acc;
-    }, []);
+  //   const atIndexes = Array.from(value).reduce<number[]>((acc, char, index) => {
+  //     if (char === '@' || char === '/') acc.push(index);
+  //     return acc;
+  //   }, []);
 
-    if (atIndexes.includes(cursorPosition - 1)) {
-      this.filterMention = '';
-      // mentionRef.current.onKeyDown(e);
-    } else {
-      let mentionFound = false;
-      for (const atIndex of atIndexes) {
-        if (atIndex < cursorPosition) {
-          const mentionText =
-            value
-              .slice(atIndex + 1, cursorPosition)
-              .match(/^[^\s\n\r]*$/)?.[0] || null;
-          if (
-            mentionText &&
-            !mentionText.startsWith('**') &&
-            !mentionText.endsWith('**')
-          ) {
-            this.filterMention = mentionText;
-            // mentionRef.current.onKeyDown(e);
-            mentionFound = true;
-            break;
-          }
-        }
-      }
-      if (!mentionFound) {
-        this.filterMention = undefined;
-      }
-    }
-  };
+  //   if (atIndexes.includes(cursorPosition - 1)) {
+  //     this.filterMention = '';
+  //     console.log('input filter ', this.filterMention);
+  //   } else {
+  //     let mentionFound = false;
+  //     for (const atIndex of atIndexes) {
+  //       if (atIndex < cursorPosition) {
+  //         const mentionText =
+  //           value
+  //             .slice(atIndex + 1, cursorPosition)
+  //             .match(/^[^\s\n\r]*$/)?.[0] || null;
+  //         if (
+  //           mentionText &&
+  //           !mentionText.startsWith('/') &&
+  //           !mentionText.endsWith('**')
+  //         ) {
+  //           this.filterMention = mentionText;
+  //           console.log('input filter 2', this.filterMention);
+  //           mentionFound = true;
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     if (!mentionFound) {
+  //       this.filterMention = undefined;
+  //     }
+  //   }
+  // };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log('cHAT VIEW MODEL get ');
     if (!e || !e.target) return;
     if (this.isShowMentionBox && e.key === 'Escape') {
       this.filterMention = undefined;
       return;
     }
-    this.debounceDetectMention(e);
+    // this.debounceDetectMention(e);
     if (
       this.isShowMentionBox &&
       (e.key === 'ArrowLeft' ||
@@ -168,6 +169,7 @@ export class ChatViewModel {
         e.key === 'Enter')
     ) {
       e.preventDefault();
+      console.log('cHAT VIEW MODEL get ', e.key);
       // TODO not implemented select by keyboard
       // if (e.key === 'Enter') {
       //   // const mentionItem: IZulipUser | null =
@@ -224,7 +226,7 @@ export class ChatViewModel {
     // !todo: refactor function logic later
     const _item = select || '';
     const _filter = this.filterMention || '';
-
+    console.log('_filter ', _filter);
     const temp = this.prompt;
     const target = document.getElementById(
       'chatbox__input',
@@ -235,7 +237,7 @@ export class ChatViewModel {
     const _cursorPosition: number | null = target.selectionStart;
 
     if (!_cursorPosition) return;
-
+    console.log(temp, _cursorPosition, _filter);
     const first = temp
       ? temp.slice(0, _cursorPosition - (_filter?.length || 0))
       : '';
@@ -244,6 +246,9 @@ export class ChatViewModel {
     const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
 
     this.prompt = `${first}${second}${third}`;
+    console.log(
+      `onclick handle mention command ${temp} : ${first} : ${second}: ${third}`,
+    );
     target && target.focus();
   };
 
