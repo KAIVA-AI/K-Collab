@@ -4,7 +4,7 @@ import {
   ITopic,
   ITopicFileInput,
 } from '../models';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
 import { ZulipService } from '@v-collab/common';
 
@@ -21,7 +21,10 @@ export class TopicStore {
     if (!channelId) {
       return;
     }
-    this.topics = await this.rootStore.zulipService.getTopics(channelId);
+    const topics = await this.rootStore.zulipService.getTopics(channelId);
+    runInAction(() => {
+      this.topics = topics;
+    });
   };
 
   @action onMessageFromVSCode = async (message: IWebviewMessage) => {
