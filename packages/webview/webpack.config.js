@@ -9,7 +9,7 @@ const publicUrl = process.env.PUBLIC_URL || 'http://localhost:3000';
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, '../../dist/webview'),
     publicPath: publicUrl + '/',
     filename: 'static/js/bundle.[contenthash].js',
     clean: true,

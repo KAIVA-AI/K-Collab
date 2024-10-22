@@ -53,7 +53,7 @@ export class ZulipService {
     method?: string;
     formData?: any;
     queryParams?: any;
-  }) => {
+  }): Promise<any> => {
     try {
       let url = this.buildUrl(path);
       const headers = new Headers();

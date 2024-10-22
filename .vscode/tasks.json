@@ -5,7 +5,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "watch",
+      "script": "start-vscode",
       "problemMatcher": "$ts-webpack-watch",
       "isBackground": true,
       "presentation": {
@@ -17,12 +17,12 @@
         "isDefault": true
       },
       "dependsOn": [
-        "npm: start-wv"
+        "npm: start-webview"
       ]
     },
     {
       "type": "npm",
-      "script": "start-wv",
+      "script": "start-webview",
       "problemMatcher": "$ts-webpack-watch",
       "isBackground": true,
       "presentation": {
@@ -30,25 +30,6 @@
         "group": "watchers"
       },
       "group": "build"
-    },
-    {
-      "type": "npm",
-      "script": "watch-tests",
-      "problemMatcher": "$tsc-watch",
-      "isBackground": true,
-      "presentation": {
-        "reveal": "never",
-        "group": "watchers"
-      },
-      "group": "build"
-    },
-    {
-      "label": "tasks: watch-tests",
-      "dependsOn": [
-        "npm: watch",
-        "npm: watch-tests"
-      ],
-      "problemMatcher": []
     }
   ]
 }
