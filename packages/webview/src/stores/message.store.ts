@@ -1,5 +1,11 @@
 import { IMessage, IWebviewMessage, IZulipEvent } from '../models';
-import { action, computed, makeObservable, observable } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { RootStore } from '.';
 
 export class MessageStore {
@@ -24,10 +30,13 @@ export class MessageStore {
     if (!topic) {
       return;
     }
-    this.messages = await this.rootStore.zulipService.getMessages(
+    const messages = await this.rootStore.zulipService.getMessages(
       topic.stream_id,
       topic.name,
     );
+    runInAction(() => {
+      this.messages = messages;
+    });
   };
 
   @action onMessageFromVSCode = (message: IWebviewMessage) => {

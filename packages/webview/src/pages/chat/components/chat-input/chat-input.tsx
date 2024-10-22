@@ -1,44 +1,53 @@
-import { inject, observer, Provider } from 'mobx-react';
+import { inject, Observer, Provider } from 'mobx-react';
 import { ChatInputMentionComponent } from './chat-input-mention';
-import { Component, RefObject } from 'react';
+import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
+import { IReactionDisposer, autorun, reaction } from 'mobx';
 
 interface IProps extends BaseComponentProps {
-  chatInputRef?: RefObject<ChatInputComponent>;
   onSendMessage: (inputValue?: string) => Promise<void>;
 }
 
 @inject('rootStore')
-@observer
 export class ChatInputComponent extends Component<IProps> {
   private viewModel = new ChatInputViewModel();
-  get rootStore() {
+  private disposers: IReactionDisposer[] = [];
+
+  private get rootStore() {
     return this.props.rootStore!;
   }
-  get chatViewModel() {
+  private get chatViewModel() {
     return this.rootStore.chatViewModel;
   }
 
   componentDidMount(): void {
-    if (this.chatViewModel.eventFocusInput) {
-      this.viewModel.inputRef.current?.focus();
-      this.chatViewModel.eventFocusInput = false;
-    }
+    this.disposers.push(
+      autorun(() => {
+        if (this.chatViewModel.eventFocusInput) {
+          this.viewModel.inputRef.current?.focus();
+          this.chatViewModel.eventFocusInput = false;
+        }
+      }),
+      reaction(
+        () => this.viewModel.sendingInputValue,
+        () => {
+          if (this.viewModel.sendingInputValue !== undefined) {
+            const inputValue = this.viewModel.sendingInputValue;
+            this.viewModel.sendingInputValue = undefined;
+            this.props.onSendMessage(inputValue).finally(() => {
+              this.viewModel.sending = false;
+            });
+          }
+        },
+      ),
+    );
   }
 
-  componentDidUpdate(): void {
-    if (this.viewModel.sendingInputValue !== undefined) {
-      const inputValue = this.viewModel.sendingInputValue;
-      this.viewModel.sendingInputValue = undefined;
-      this.props.onSendMessage(inputValue).finally(() => {
-        this.viewModel.sending = false;
-      });
-    }
-    if (this.chatViewModel.eventFocusInput) {
-      this.viewModel.inputRef.current?.focus();
-      this.chatViewModel.eventFocusInput = false;
-    }
+  componentWillUnmount() {
+    this.disposers.forEach(disposer => {
+      disposer();
+    });
   }
 
   onSubmitInput = () => {
@@ -49,20 +58,24 @@ export class ChatInputComponent extends Component<IProps> {
     return (
       <Provider viewModel={this.viewModel}>
         <ChatInputMentionComponent />
-        <textarea
-          id="chatbox__input"
-          ref={this.viewModel.inputRef}
-          value={this.viewModel.prompt}
-          placeholder={`Talk about the...`}
-          onChange={e => {
-            this.viewModel.onChangePrompt(e);
-            // handleTyping();
-          }}
-          onPaste={() => {
-            // handlePasteFile
-          }}
-          onKeyDown={this.viewModel.handleKeyDown}
-        />
+        <Observer>
+          {() => (
+            <textarea
+              id="chatbox__input"
+              ref={this.viewModel.inputRef}
+              value={this.viewModel.prompt}
+              placeholder={`Talk about the...`}
+              onChange={e => {
+                this.viewModel.onChangePrompt(e);
+                // handleTyping();
+              }}
+              onPaste={() => {
+                // handlePasteFile
+              }}
+              onKeyDown={this.viewModel.handleKeyDown}
+            />
+          )}
+        </Observer>
       </Provider>
     );
   }
