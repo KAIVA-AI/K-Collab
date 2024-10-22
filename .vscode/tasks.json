@@ -15,7 +15,21 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "dependsOn": [
+        "npm: start-wv"
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "start-wv",
+      "problemMatcher": "$ts-webpack-watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "group": "watchers"
+      },
+      "group": "build"
     },
     {
       "type": "npm",

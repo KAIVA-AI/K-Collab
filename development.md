@@ -1,4 +1,4 @@
-# VCollab VSCode Extension
+# V-Collab VSCode Extension
 
 ## System Requirements
 - Node.js 18+
@@ -6,6 +6,8 @@
 
 ## Installation
 ```sh
+cp .env.example .env
+
 yarn
 yarn start-wv
 ```

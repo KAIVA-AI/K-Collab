@@ -3,10 +3,10 @@ import { RealmStore } from './realm.store';
 import { ChannelStore } from './channel.store';
 import { MessageStore } from './message.store';
 import { TopicStore } from './topic.store';
-import { action } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
-import { ZulipService } from '@v-collab/common';
+import { Constants, ZulipService } from '@v-collab/common';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -36,10 +36,11 @@ export class RootStore {
   zulipService: ZulipService;
 
   constructor() {
-    this.zulipService = new ZulipService(ZulipService.REALM_STRING);
+    makeObservable(this);
+    this.zulipService = new ZulipService(Constants.REALM_STRING);
     this.zulipService.setBasicAuth(
-      ZulipService.USER_EMAIL,
-      ZulipService.USER_API_KEY,
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
     );
   }
 
@@ -85,7 +86,7 @@ export class RootStore {
   };
 }
 
-const rootStore = new RootStore();
+export const rootStore = new RootStore();
 const rootStoreContext = createContext(rootStore);
 export const useRootStore = () => {
   const store = useContext(rootStoreContext);

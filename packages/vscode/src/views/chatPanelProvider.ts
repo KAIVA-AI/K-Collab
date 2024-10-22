@@ -9,7 +9,7 @@ import {
 import { ITopicFileInput, IWebviewMessage } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
-import { ZulipService, IZulipEvent } from '@v-collab/common';
+import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
@@ -24,10 +24,10 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
         retainContextWhenHidden: true,
       },
     });
-    this.zulipService = new ZulipService(ZulipService.REALM_STRING);
+    this.zulipService = new ZulipService(Constants.REALM_STRING);
     this.zulipService.setBasicAuth(
-      ZulipService.USER_EMAIL,
-      ZulipService.USER_API_KEY,
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
     );
   }
 
@@ -37,7 +37,7 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
       enableScripts: true,
     };
     this.view.webview.html = '';
-    const url = 'http://localhost:3000';
+    const url = `${Constants.WEB_URL}/?nonce=${Date.now()}`;
     this.view.webview.onDidReceiveMessage(this.#onMessageFromWebview);
     this.view.webview.html = await fetch(url).then(response => response.text());
   }

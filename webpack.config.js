@@ -3,6 +3,9 @@
 'use strict';
 
 const path = require('path');
+const webpack = require('webpack');
+require('dotenv').config();
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -44,5 +47,15 @@ const extensionConfig = {
   infrastructureLogging: {
     level: 'log', // enables logging required for problem matchers
   },
+  plugins: [
+    new NodePolyfillPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.REALM_STRING': JSON.stringify(process.env.REALM_STRING),
+      'process.env.USER_EMAIL': JSON.stringify(process.env.USER_EMAIL),
+      'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),
+
+      'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+    }),
+  ],
 };
 module.exports = [extensionConfig];

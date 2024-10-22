@@ -20,15 +20,6 @@ interface RequestInit {
 }
 
 export class ZulipService {
-  // TODO hardcode
-  static REALM_STRING = 'pjd-2';
-  static USER_EMAIL = 'hao.nguyendang@vietis.com.vn';
-  static USER_API_KEY = 'nrwprKKNKehffJNqMOXIdBponTLjQOph';
-  static CHANNEL_BACKEND = 'Coding-Backend';
-  static CHANNEL_FRONTEND = 'Coding-Frontend';
-  static CHANNEL_DB = 'Coding-DB';
-  static BOT_CODING = 'VietIS-Coding';
-
   private token: string = '';
   private eventListeners: IEventListeners = {};
   private unreadListeners: IUnreadListeners = {};
