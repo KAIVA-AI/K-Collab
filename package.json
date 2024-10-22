@@ -140,7 +140,7 @@
       "editor/context": [
         {
           "submenu": "v-collab.submenu.editor",
-          "when": "resourceScheme == file",
+          "when": "resourceScheme != output",
           "group": "2_v-collab"
         }
       ],

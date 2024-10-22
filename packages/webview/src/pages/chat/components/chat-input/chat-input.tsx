@@ -30,6 +30,15 @@ export class ChatInputComponent extends Component<IProps> {
         }
       }),
       reaction(
+        () => this.chatViewModel.eventFocusInput,
+        () => {
+          if (this.chatViewModel.eventFocusInput) {
+            this.viewModel.inputRef.current?.focus();
+            this.chatViewModel.eventFocusInput = false;
+          }
+        },
+      ),
+      reaction(
         () => this.viewModel.sendingInputValue,
         () => {
           if (this.viewModel.sendingInputValue !== undefined) {
