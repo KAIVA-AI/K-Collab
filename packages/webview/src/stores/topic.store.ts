@@ -120,6 +120,7 @@ export class TopicStore {
 
   @action selectTopic = (topic: ITopic) => {
     this.currentTopic = topic;
+    this.rootStore.chatViewModel.eventFocusInput = true;
     this.rootStore.messageStore.loadData();
   };
 }

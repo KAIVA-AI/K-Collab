@@ -128,14 +128,10 @@
         .mention-item {
           padding: 2px;
           cursor: pointer;
-          &:hover {
+          &:hover, &.selected {
             background-color: var(--mention-highlight);
           }
         }
-        .mention-item.selected {
-          background-color: var(--mention-highlight);
-        }
-        
       }
       textarea {
         width: 100%;

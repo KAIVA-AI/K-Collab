@@ -1,9 +1,11 @@
 import { Observer } from 'mobx-react';
 import { useRootStore } from '../../../stores';
 import { ChatInputComponent } from './chat-input';
+import { useRef } from 'react';
 
 export const ChatBottomComponent = () => {
   const { chatViewModel, topicStore } = useRootStore();
+  const chatInputRef = useRef<ChatInputComponent>(null);
 
   return (
     <Observer>
@@ -34,7 +36,10 @@ export const ChatBottomComponent = () => {
             </div>
           </div>
           <div className="input-block">
-            <ChatInputComponent />
+            <ChatInputComponent
+              chatInputRef={chatInputRef}
+              onSendMessage={chatViewModel.onSendMessage}
+            />
           </div>
           <div className="action-block">
             <div className="action-left">
@@ -43,7 +48,10 @@ export const ChatBottomComponent = () => {
               </div>
             </div>
             <div className="action-right">
-              <div className="action-icon" onClick={chatViewModel.sendMessage}>
+              <div
+                className="action-icon"
+                onClick={chatInputRef.current?.onSubmitInput}
+              >
                 <i className="codicon codicon-send" />
               </div>
             </div>
