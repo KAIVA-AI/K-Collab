@@ -1,4 +1,4 @@
-# VCollab VSCode Extension
+# V-Collab VSCode Extension
 
 ## System Requirements
 - Node.js 18+
