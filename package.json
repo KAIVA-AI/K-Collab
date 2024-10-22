@@ -66,11 +66,6 @@
     },
     "commands": [
       {
-        "command": "v-collab.command.ask-ai",
-        "title": "Ask VietIS-Coding",
-        "category": "VCollab"
-      },
-      {
         "command": "v-collab.command.add-selection",
         "title": "Add Selection to Chat",
         "category": "VCollab"
@@ -156,11 +151,6 @@
         }
       ],
       "v-collab.submenu.editor": [
-        {
-          "command": "v-collab.command.ask-ai",
-          "when": "editorHasSelection",
-          "group": "1_ask@1"
-        },
         {
           "command": "v-collab.command.add-selection",
           "when": "editorHasSelection",
