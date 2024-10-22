@@ -6,6 +6,8 @@
 
 ## Installation
 ```sh
+cp .env.example .env
+
 yarn
 yarn start-wv
 ```

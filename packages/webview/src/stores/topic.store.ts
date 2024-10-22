@@ -6,7 +6,7 @@ import {
 } from '../models';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
-import { ZulipService } from '@v-collab/common';
+import { Constants } from '@v-collab/common';
 
 export class TopicStore {
   @observable topics: ITopic[] = [];
@@ -56,7 +56,7 @@ export class TopicStore {
           type: 'stream',
           to: this.rootStore.channelStore.currentChannel?.stream_id ?? 0,
           topic: data.topic,
-          content: `@**${ZulipService.BOT_CODING}** ${data.content}`,
+          content: `@**${Constants.BOT_CODING}** ${data.content}`,
         });
       }
     }

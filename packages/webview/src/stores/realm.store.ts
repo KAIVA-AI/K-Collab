@@ -1,4 +1,4 @@
-import { ZulipService } from '@v-collab/common';
+import { Constants } from '@v-collab/common';
 import { IRealm } from '../models';
 import { action, makeObservable, observable } from 'mobx';
 
@@ -11,7 +11,7 @@ export class RealmStore {
 
   @action loadData = async () => {
     this.currentRealm = {
-      realm_string: ZulipService.REALM_STRING,
+      realm_string: Constants.REALM_STRING,
     };
   };
 }

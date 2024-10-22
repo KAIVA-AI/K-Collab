@@ -133,7 +133,7 @@
         "command": "v-collab.command.inline.chat",
         "title": "Ask VietIS-Coding",
         "category": "V-Collab",
-				"enablement": "!commentIsEmpty"
+        "enablement": "!commentIsEmpty"
       }
     ],
     "submenus": [
