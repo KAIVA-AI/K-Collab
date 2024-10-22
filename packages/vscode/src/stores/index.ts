@@ -12,6 +12,7 @@ import {
   InlineChatCommand,
 } from '../commands';
 import { EditorCommentProvider } from '../providers';
+import { Logger } from '../utils/logger';
 
 export class RootStore {
   // providers
@@ -39,6 +40,7 @@ export class RootStore {
   }
 
   register = () => {
+    Logger.register();
     // providers
     this.context.subscriptions.push(this.editorCommentProvider.register());
     // views
