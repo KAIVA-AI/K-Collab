@@ -125,6 +125,10 @@
             background-color: var(--mention-highlight);
           }
         }
+        .mention-item.selected {
+          background-color: var(--mention-highlight);
+        }
+        
       }
       textarea {
         width: 100%;
