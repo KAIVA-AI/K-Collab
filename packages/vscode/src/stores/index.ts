@@ -11,9 +11,14 @@ import {
   ReviewCommand,
   InlineChatCommand,
 } from '../commands';
+import { EditorCommentProvider } from '../providers';
 
 export class RootStore {
+  // providers
+  editorCommentProvider = new EditorCommentProvider(this);
+  // views
   chatPanelProvider: ChatPanelProvider;
+  // handlers
   uriHandler: UriHandler;
   // commands
   addSelectionCommand: AddSelectionCommand;
@@ -34,7 +39,11 @@ export class RootStore {
   }
 
   register = () => {
+    // providers
+    this.context.subscriptions.push(this.editorCommentProvider.register());
+    // views
     this.context.subscriptions.push(this.chatPanelProvider.register());
+    // handlers
     this.context.subscriptions.push(this.uriHandler.register());
     // commands
     this.context.subscriptions.push(this.addSelectionCommand.register());

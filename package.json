@@ -199,7 +199,7 @@
         {
           "command": "v-collab.command.inline.chat",
           "group": "inline",
-          "when": "commentController == comment-sample"
+          "when": "commentController == v-collab.comment.ask"
         }
       ]
     }
