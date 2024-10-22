@@ -128,7 +128,7 @@
         .mention-item {
           padding: 2px;
           cursor: pointer;
-          &:hover {
+          &:hover, &.selected {
             background-color: var(--mention-highlight);
           }
         }

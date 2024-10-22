@@ -30,6 +30,7 @@ export class TopicStore {
   @action onMessageFromVSCode = async (message: IWebviewMessage) => {
     if (message.command === 'addFileToTopic') {
       const file: TopicFileInput = new TopicFileInput(message.data.file);
+      this.rootStore.chatViewModel.eventFocusInput = true;
       return this.addFileToTopic(file);
     }
     if (message.command === 'backToTopicPage') {
@@ -120,6 +121,7 @@ export class TopicStore {
 
   @action selectTopic = (topic: ITopic) => {
     this.currentTopic = topic;
+    this.rootStore.chatViewModel.eventFocusInput = true;
     this.rootStore.messageStore.loadData();
   };
 }

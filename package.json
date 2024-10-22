@@ -29,21 +29,15 @@
     "onLanguage",
     "onUri"
   ],
-  "main": "./dist/extension.js",
+  "main": "./dist/vscode/extension.js",
   "scripts": {
-    "vscode:prepublish": "yarn compile",
-    "compile": "webpack --mode production --devtool hidden-source-map",
-    "watch": "webpack --watch",
-    "package": "vsce package",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "yarn compile-tests && yarn compile && yarn lint",
     "lint": "eslint src",
-    "test": "vscode-test",
     "start-webview": "yarn workspace @v-collab/webview start",
-    "start-wv": "yarn start-webview",
+    "start-vscode": "yarn workspace @v-collab/vscode start",
     "build-webview": "yarn workspace @v-collab/webview build",
-    "build-wv": "yarn build-webview"
+    "build-vscode": "yarn workspace @v-collab/vscode build",
+    "prepackage": "yarn build-vscode",
+    "package": "vsce package"
   },
   "contributes": {
     "viewsContainers": {
@@ -146,7 +140,7 @@
       "editor/context": [
         {
           "submenu": "v-collab.submenu.editor",
-          "when": "resourceScheme == file",
+          "when": "resourceScheme != output",
           "group": "2_v-collab"
         }
       ],
