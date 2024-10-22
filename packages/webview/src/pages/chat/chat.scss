@@ -1,4 +1,4 @@
-@use '../assets/scss/zilip-codehilite.scss';
+@use '../../assets/scss/zilip-codehilite.scss';
 
 :root {
   --vscode-interactive-result-editor-background-color: #1e1e1e;
@@ -45,24 +45,31 @@
         }
       }
       .message-content {
-        position: relative;
-        border: solid 1px var(--main-border-color);
-        background-color: var(--vscode-interactive-result-editor-background-color);
-        border-radius: 4px;
         padding: 0 6px;
-        .message-code-action {
-          position: absolute;
-          display: none;
-          right: 0;
-          gap: 3px;
-        }
-        &:hover {
-          .message-code-action {
-            display: flex;
-          }
-        }
+        border: solid 1px var(--main-border-color);
+        border-radius: 6px;
         .rendered_markdown {
           padding: 13px 0;
+        }
+        div.codehilite {
+          position: relative;
+          border: solid 1px var(--main-border-color) !important;
+          background-color: var(--vscode-interactive-result-editor-background-color) !important;
+          border-radius: 6px;
+          padding: 13px 0 0 0;
+          margin: 8px 0;
+          .message-code-action {
+            position: absolute;
+            display: none;
+            right: 0;
+            top: 0;
+            gap: 3px;
+          }
+          &:hover {
+            .message-code-action {
+              display: flex;
+            }
+          }
         }
       }
     }

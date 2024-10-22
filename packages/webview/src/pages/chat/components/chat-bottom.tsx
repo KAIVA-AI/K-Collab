@@ -1,5 +1,5 @@
 import { Observer } from 'mobx-react';
-import { useRootStore } from '../../stores';
+import { useRootStore } from '../../../stores';
 import { ChatInputComponent } from './chat-input';
 
 export const ChatBottomComponent = () => {

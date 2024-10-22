@@ -1,6 +1,6 @@
 import { Observer, observer } from 'mobx-react';
 import clsx from 'clsx';
-import { useRootStore } from '../../stores';
+import { useRootStore } from '../../../stores';
 import React, {
   useState,
   useRef,

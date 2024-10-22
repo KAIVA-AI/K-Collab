@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+require('dotenv').config();
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost:3000';
 
@@ -83,10 +85,15 @@ module.exports = {
     ],
   },
   plugins: [
+    new NodePolyfillPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
     new webpack.DefinePlugin({
+      'process.env.REALM_STRING': JSON.stringify(process.env.REALM_STRING),
+      'process.env.USER_EMAIL': JSON.stringify(process.env.USER_EMAIL),
+      'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),
+
       'process.env.PUBLIC_URL': JSON.stringify(publicUrl),
     }),
     new webpack.ProvidePlugin({

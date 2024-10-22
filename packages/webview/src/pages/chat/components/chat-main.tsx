@@ -1,4 +1,4 @@
-import { useRootStore } from '../../stores';
+import { useRootStore } from '../../../stores';
 import { observer } from 'mobx-react';
 import { ChatMessageItem } from './chat-message-item';
 import { useEffect, useRef } from 'react';

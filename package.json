@@ -1,6 +1,6 @@
 {
   "name": "v-collab",
-  "displayName": "VCollab",
+  "displayName": "V-Collab",
   "description": "VIETIS AI powered collaborative chat for developers",
   "version": "1.0.2",
   "license": "MIT",
@@ -50,7 +50,7 @@
       "activitybar": [
         {
           "id": "v-collab_bar",
-          "title": "VCollab",
+          "title": "V-Collab",
           "icon": "static/icon_sidebar.svg"
         }
       ]
@@ -68,78 +68,85 @@
       {
         "command": "v-collab.command.add-selection",
         "title": "Add Selection to Chat",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.add-file",
         "title": "Add File to Chat",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.explain",
         "title": "Explain",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.improve",
         "title": "Improve",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.enhance",
         "title": "Enhance",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.review",
         "title": "Review",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.generate-docs",
         "title": "Generate Docs",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.generate-tests",
         "title": "Generate Tests",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.chat.new-topic",
         "title": "New topic",
         "icon": "$(add)",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.chat.history",
         "title": "History",
         "icon": "$(history)",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.chat.preview",
         "title": "Preview",
         "icon": "static/icon_preview_dark.svg",
-        "category": "VCollab"
+        "category": "V-Collab"
       },
       {
         "command": "v-collab.command.chat.close",
         "title": "Close",
         "icon": "$(close)",
-        "category": "VCollab"
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.inline.chat",
+        "title": "Ask VietIS-Coding",
+        "category": "V-Collab",
+        "enablement": "!commentIsEmpty"
       }
     ],
     "submenus": [
       {
         "id": "v-collab.submenu.editor",
-        "label": "VCollab"
+        "label": "V-Collab"
       }
     ],
     "menus": {
       "editor/context": [
         {
           "submenu": "v-collab.submenu.editor",
+          "when": "resourceScheme == file",
           "group": "2_v-collab"
         }
       ],
@@ -147,35 +154,23 @@
         {
           "command": "v-collab.command.add-selection",
           "when": "editorHasSelection",
-          "group": "1_add@1"
+          "group": "2_add@1"
         },
         {
           "command": "v-collab.command.add-file",
-          "group": "1_add@2"
+          "group": "2_add@2"
         },
         {
           "command": "v-collab.command.explain",
-          "group": "2_ask@1"
+          "group": "3_ask@1"
         },
         {
           "command": "v-collab.command.improve",
-          "group": "2_ask@2"
-        },
-        {
-          "command": "v-collab.command.enhance",
-          "group": "2_ask@3"
+          "group": "3_ask@2"
         },
         {
           "command": "v-collab.command.review",
-          "group": "2_ask@4"
-        },
-        {
-          "command": "v-collab.command.generate-docs",
-          "group": "3_ask@1"
-        },
-        {
-          "command": "v-collab.command.generate-tests",
-          "group": "3_ask@1"
+          "group": "3_ask@4"
         }
       ],
       "view/title": [
@@ -198,6 +193,13 @@
           "command": "v-collab.command.chat.close",
           "when": "view == v-collab_bar.chat",
           "group": "navigation@4"
+        }
+      ],
+      "comments/commentThread/context": [
+        {
+          "command": "v-collab.command.inline.chat",
+          "group": "inline",
+          "when": "commentController == v-collab.comment.ask"
         }
       ]
     }
