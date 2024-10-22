@@ -8,7 +8,6 @@ import './index.css';
 import '@vscode/codicons/dist/codicon.css';
 import { Observer, Provider } from 'mobx-react';
 import { TopicPage } from './pages/topic/topic';
-import { CounterPage } from './pages/counter';
 
 enableLogging();
 
@@ -37,9 +36,6 @@ root.render(
   //   <App />
   // </React.StrictMode>,
   <Provider rootStore={rootStore}>
-    <>
-      <CounterPage />
-      <App />
-    </>
+    <App />
   </Provider>,
 );
