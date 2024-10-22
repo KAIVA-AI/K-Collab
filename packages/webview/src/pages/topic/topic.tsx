@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import './topic.scss';
 import { Component } from 'react';
-import { BaseComponentProps } from 'src/models/base';
+import { BaseComponentProps } from '../../models/base';
 
 @inject('rootStore')
 @observer
