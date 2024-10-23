@@ -7,7 +7,6 @@ const slashCommands = [
   //
   'explain',
   'improve',
-  'enhance',
   'review',
 ];
 const userMentions: string[] = [];
