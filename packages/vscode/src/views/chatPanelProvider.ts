@@ -66,6 +66,17 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (message.command === 'copyMessage') {
       this.copyMessageToClipboard(message.data.content);
     }
+    if (message.command === 'getExtensionVersion') {
+      this.view?.webview.postMessage({
+        source: 'vscode',
+        store: 'RootStore',
+        command: 'webviewCallbackKey',
+        webviewCallbackKey: message.webviewCallbackKey,
+        data: {
+          version: this.rootStore.extensionVersion(),
+        },
+      });
+    }
   };
 
   #onZulipEventMessage = (event: IZulipEvent) => {
