@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     rootStore.init();
   }, []);
+  // TODO version check
 
   // TODO router client side not working yet because webview alway using route /, switch using server side rendering
   return (
