@@ -15,8 +15,9 @@ export class InlineChatCommand {
   #execute = (reply: CommentReply) => {
     const filepath = reply.thread.uri.path;
     const filename = path.basename(filepath);
-    const lineStart = reply.thread.range.start.line + 1;
-    const lineEnd = reply.thread.range.end.line + 1;
+    let lineStart: number | undefined = undefined;
+    let lineEnd: number | undefined = undefined;
+    let content = '';
     const editor = window.visibleTextEditors.find(
       editor => editor.document.uri.path === reply.thread.uri.path,
     );
@@ -24,7 +25,15 @@ export class InlineChatCommand {
     // if (editor?.document.uri.scheme === 'output') {
     //   const content = editor?.document.getText();
     // }
-    const content = editor?.document.getText(reply.thread.range);
+    // TODO not work as expected yet
+    if (editor?.selection.isEmpty) {
+      // TODO select this line instead of the whole file
+      content = editor.document.getText();
+    } else {
+      lineStart = reply.thread.range.start.line + 1;
+      lineEnd = reply.thread.range.end.line + 1;
+      content = editor?.document.getText(reply.thread.range) ?? '';
+    }
     this.rootStore.chatPanelProvider.startNewTopic({
       topic: `ask-${new Date().getTime()}`,
       file: {
