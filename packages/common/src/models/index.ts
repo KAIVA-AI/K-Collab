@@ -2,7 +2,9 @@ export interface IWebviewMessage {
   source?: string;
   store?: string;
   command: string;
-  data: any;
+  data?: any;
+  hasReturn?: boolean;
+  webviewCallbackKey?: string;
 }
 
 export * from './message';

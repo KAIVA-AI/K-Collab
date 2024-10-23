@@ -3,10 +3,17 @@ import { RealmStore } from './realm.store';
 import { ChannelStore } from './channel.store';
 import { MessageStore } from './message.store';
 import { TopicStore } from './topic.store';
-import { action, makeObservable } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
 import { Constants, ZulipService } from '@v-collab/common';
+import { v4 as uuidV4 } from 'uuid';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -35,6 +42,17 @@ export class RootStore {
 
   zulipService: ZulipService;
 
+  @observable webviewVersion = '1.0.0';
+  @observable extensionVersion = '';
+  @observable wakedUp = false;
+
+  @computed get isVersionMismatch() {
+    return this.webviewVersion !== this.extensionVersion;
+  }
+  @computed get linkToDownload() {
+    return `${Constants.WEB_URL}/vscode/v-collab-${this.webviewVersion}.vsix`;
+  }
+
   constructor() {
     makeObservable(this);
     this.zulipService = new ZulipService(Constants.REALM_STRING);
@@ -44,12 +62,28 @@ export class RootStore {
     );
   }
 
-  @action init = () => {
-    this.registerVSCodeListener();
-    this.loadData();
+  @action init = async () => {
+    await this.registerVSCodeListener();
+    await this.checkExtensionVersion();
+    await this.loadData();
+    runInAction(() => {
+      this.wakedUp = true;
+    });
   };
 
-  private registerVSCodeListener = () => {
+  @action private checkExtensionVersion = async () => {
+    this.webviewVersion = Constants.WEB_VERSION;
+    const extensionVersion = await this.postMessageToVSCode({
+      command: 'getExtensionVersion',
+      hasReturn: true,
+    });
+    extensionVersion &&
+      runInAction(() => {
+        this.extensionVersion = extensionVersion.data.version;
+      });
+  };
+
+  private registerVSCodeListener = async () => {
     if (!(window as any).isRegistered) {
       window.addEventListener('message', event => {
         const message: IWebviewMessage = event?.data as IWebviewMessage;
@@ -70,6 +104,10 @@ export class RootStore {
   };
 
   @action onMessageFromVSCode = (message: IWebviewMessage) => {
+    if (message.webviewCallbackKey) {
+      (window as any)[message.webviewCallbackKey](message);
+      return;
+    }
     if (message.store === 'TopicStore') {
       this.topicStore.onMessageFromVSCode(message);
     }
@@ -78,11 +116,31 @@ export class RootStore {
     }
   };
 
-  @action postMessageToVSCode = async (message: IWebviewMessage) => {
+  @action postMessageToVSCode = async (
+    message: IWebviewMessage,
+  ): Promise<IWebviewMessage | undefined> => {
     if (!message.source) {
       message.source = 'webview';
     }
-    this.vscode.postMessage(message);
+    if (!message.hasReturn) {
+      this.vscode.postMessage(message);
+      return;
+    }
+    let completed = false;
+    return new Promise(resolve => {
+      const id = uuidV4().split('-').join('');
+      message.webviewCallbackKey = `webviewCallback${id}`;
+      (window as any)[message.webviewCallbackKey] = (
+        event: IWebviewMessage,
+      ) => {
+        completed = true;
+        resolve(event);
+      };
+      this.vscode.postMessage(message);
+      setTimeout(() => {
+        if (!completed) resolve(undefined);
+      }, 30000);
+    });
   };
 }
 
