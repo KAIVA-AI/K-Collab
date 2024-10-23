@@ -139,7 +139,7 @@ export class RootStore {
       this.vscode.postMessage(message);
       setTimeout(() => {
         if (!completed) resolve(undefined);
-      }, 30000);
+      }, 1000);
     });
   };
 }
