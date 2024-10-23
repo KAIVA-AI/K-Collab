@@ -143,6 +143,11 @@
         "title": "Ask VietIS-Coding",
         "category": "V-Collab",
         "enablement": "!commentIsEmpty"
+      },
+      {
+        "command": "v-collab.command.ask-ai",
+        "title": "Ask VietIS-Coding",
+        "category": "V-Collab"
       }
     ],
     "submenus": [
@@ -196,6 +201,10 @@
         {
           "command": "v-collab.command.coding.review",
           "group": "3_ask@3"
+        },
+        {
+          "command": "v-collab.command.ask-ai",
+          "group": "4_ask@1"
         }
       ],
       "view/title": [

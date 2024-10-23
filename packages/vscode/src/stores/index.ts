@@ -60,7 +60,7 @@ export class RootStore {
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
-    // this.context.subscriptions.push(this.askAICommand.register());
+    this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
   };
 }

@@ -19,9 +19,17 @@ export class AskAICommand {
     }
     let file = path.basename(editor.document.fileName);
     const filepath = editor.document.uri.path;
-    const lineStart = editor.selection.start.line + 1;
-    const lineEnd = editor.selection.end.line + 1;
-    const content = editor.document.getText(editor.selection);
+    let lineStart: number | undefined = undefined;
+    let lineEnd: number | undefined = undefined;
+    let content = '';
+    // if no selecting, get the whole line
+    if (editor.selection.isEmpty) {
+      content = editor.document.getText();
+    } else {
+      lineStart = editor.selection.start.line + 1;
+      lineEnd = editor.selection.end.line + 1;
+      content = editor.document.getText(editor.selection);
+    }
     this.rootStore.chatPanelProvider.startNewTopic({
       topic: `ask-${new Date().getTime()}`,
       file: {
