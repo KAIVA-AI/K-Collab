@@ -70,33 +70,48 @@
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.explain",
-        "title": "Explain",
+        "command": "v-collab.command.coding.gen-code",
+        "title": "Generate Code",
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.improve",
-        "title": "Improve",
+        "command": "v-collab.command.coding.gen-test",
+        "title": "Generate Test",
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.enhance",
-        "title": "Enhance",
-        "category": "V-Collab"
-      },
-      {
-        "command": "v-collab.command.review",
-        "title": "Review",
-        "category": "V-Collab"
-      },
-      {
-        "command": "v-collab.command.generate-docs",
+        "command": "v-collab.command.coding.gen-docs",
         "title": "Generate Docs",
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.generate-tests",
-        "title": "Generate Tests",
+        "command": "v-collab.command.coding.debug",
+        "title": "Debug",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.porting",
+        "title": "Porting",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.explain",
+        "title": "Explain",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.improve",
+        "title": "Improve",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.enhance",
+        "title": "Enhance",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.review",
+        "title": "Review",
         "category": "V-Collab"
       },
       {
@@ -148,23 +163,39 @@
         {
           "command": "v-collab.command.add-selection",
           "when": "editorHasSelection",
-          "group": "2_add@1"
+          "group": "1_add@1"
         },
         {
           "command": "v-collab.command.add-file",
-          "group": "2_add@2"
+          "group": "1_add@2"
         },
         {
-          "command": "v-collab.command.explain",
+          "command": "v-collab.command.coding.gen-code",
+          "group": "2_code@1"
+        },
+        {
+          "command": "v-collab.command.coding.gen-test",
+          "group": "2_code@2"
+        },
+        {
+          "command": "v-collab.command.coding.debug",
+          "group": "2_code@3"
+        },
+        {
+          "command": "v-collab.command.coding.porting",
+          "group": "2_code@4"
+        },
+        {
+          "command": "v-collab.command.coding.explain",
           "group": "3_ask@1"
         },
         {
-          "command": "v-collab.command.improve",
+          "command": "v-collab.command.coding.improve",
           "group": "3_ask@2"
         },
         {
-          "command": "v-collab.command.review",
-          "group": "3_ask@4"
+          "command": "v-collab.command.coding.review",
+          "group": "3_ask@3"
         }
       ],
       "view/title": [

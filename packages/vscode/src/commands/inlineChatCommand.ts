@@ -13,7 +13,6 @@ export class InlineChatCommand {
   };
 
   #execute = (reply: CommentReply) => {
-    console.log('InlineChatCommand#execute', reply);
     const filepath = reply.thread.uri.path;
     const filename = path.basename(filepath);
     const lineStart = reply.thread.range.start.line + 1;
@@ -21,10 +20,10 @@ export class InlineChatCommand {
     const editor = window.visibleTextEditors.find(
       editor => editor.document.uri.path === reply.thread.uri.path,
     );
-    if (editor?.document.uri.scheme === 'output') {
-      const content = editor?.document.getText();
-      console.log(content);
-    }
+    // not yet support output channel
+    // if (editor?.document.uri.scheme === 'output') {
+    //   const content = editor?.document.getText();
+    // }
     const content = editor?.document.getText(reply.thread.range);
     this.rootStore.chatPanelProvider.startNewTopic({
       topic: `ask-${new Date().getTime()}`,

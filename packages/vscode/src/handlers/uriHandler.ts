@@ -1,5 +1,6 @@
 import { Disposable, Uri, window, ExtensionContext } from 'vscode';
 import { RootStore } from '../stores';
+import { Logger } from 'src/utils/logger';
 
 export class UriHandler {
   constructor(
@@ -8,7 +9,7 @@ export class UriHandler {
   ) {}
 
   #handleUri(uri: Uri) {
-    console.log('Handling uri:', uri);
+    Logger.log(`Handling uri: ${uri}`);
     // vscode.window.showInformationMessage('Handling uri: ' + uri);
     const queryParams = new URLSearchParams(uri.query);
     const accessToken = queryParams.get('token'); // Assuming token is returned as a query param
