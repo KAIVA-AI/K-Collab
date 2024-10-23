@@ -5,10 +5,8 @@ import {
   AddFileCommand,
   AddSelectionCommand,
   AskAICommand,
-  ExplainCommand,
+  CodingCommand,
   HistoryCommand,
-  ImproveCommand,
-  ReviewCommand,
   InlineChatCommand,
 } from '../commands';
 import { EditorCommentProvider } from '../providers';
@@ -25,10 +23,14 @@ export class RootStore {
   addSelectionCommand: AddSelectionCommand;
   addFileCommand: AddFileCommand;
   historyCommand: HistoryCommand = new HistoryCommand(this);
-  explainCommand: ExplainCommand = new ExplainCommand(this);
-  improveCommand: ImproveCommand = new ImproveCommand(this);
+  genCodeCommand: CodingCommand = new CodingCommand(this, 'gen-code');
+  genTestCommand: CodingCommand = new CodingCommand(this, 'gen-test');
+  debugCommand: CodingCommand = new CodingCommand(this, 'debug');
+  portingCommand: CodingCommand = new CodingCommand(this, 'porting');
+  explainCommand: CodingCommand = new CodingCommand(this, 'explain');
+  improveCommand: CodingCommand = new CodingCommand(this, 'improve');
+  reviewCommand: CodingCommand = new CodingCommand(this, 'review');
   askAICommand: AskAICommand = new AskAICommand(this);
-  reviewCommand: ReviewCommand = new ReviewCommand(this);
   inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
 
   constructor(private context: ExtensionContext) {
@@ -51,10 +53,14 @@ export class RootStore {
     this.context.subscriptions.push(this.addSelectionCommand.register());
     this.context.subscriptions.push(this.addFileCommand.register());
     this.context.subscriptions.push(this.historyCommand.register());
+    this.context.subscriptions.push(this.genCodeCommand.register());
+    this.context.subscriptions.push(this.genTestCommand.register());
+    this.context.subscriptions.push(this.debugCommand.register());
+    this.context.subscriptions.push(this.portingCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
-    // this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
+    this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
   };
 }

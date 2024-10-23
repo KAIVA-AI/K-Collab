@@ -5,6 +5,10 @@ import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
 
 const slashCommands = [
   //
+  'gen-code',
+  'gen-test',
+  'debug',
+  'porting',
   'explain',
   'improve',
   'review',

@@ -26,6 +26,9 @@ const extensionConfig = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      src: path.resolve(__dirname, 'src'),
+    },
   },
   module: {
     rules: [

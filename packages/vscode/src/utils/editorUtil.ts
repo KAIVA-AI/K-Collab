@@ -20,7 +20,7 @@ export class EditorUtil implements Disposable {
 
   private async onChangeSelection(e: TextEditorSelectionChangeEvent) {
     const hasSelection = !e.selections[0].isEmpty;
-    // console.log(hasSelection, e.selections);
+    // Logger.log(hasSelection, e.selections);
     this.decorationType?.dispose();
     this.decorationType = window.createTextEditorDecorationType({
       gutterIconPath: Uri.file(this.context.asAbsolutePath('static/icon.png')),

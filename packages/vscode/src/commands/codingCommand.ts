@@ -2,14 +2,20 @@ import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../stores';
 import path from 'path';
 
-const COMMAND_ID = 'v-collab.command.ask-ai';
+const COMMAND_ID = 'v-collab.command.coding';
 
-export class AskAICommand {
+export class CodingCommand {
   static COMMAND_ID = COMMAND_ID;
-  constructor(private rootStore: RootStore) {}
+  constructor(
+    private rootStore: RootStore,
+    private subCommand: string,
+  ) {}
 
   register = (): Disposable => {
-    return commands.registerCommand(COMMAND_ID, this.#execute);
+    return commands.registerCommand(
+      `${COMMAND_ID}.${this.subCommand}`,
+      this.#execute,
+    );
   };
 
   #execute = () => {
@@ -31,7 +37,7 @@ export class AskAICommand {
       content = editor.document.getText(editor.selection);
     }
     this.rootStore.chatPanelProvider.startNewTopic({
-      topic: `ask-${new Date().getTime()}`,
+      topic: `${this.subCommand}-${new Date().getTime()}`,
       file: {
         name: file,
         path: filepath,
@@ -39,6 +45,7 @@ export class AskAICommand {
         end: lineEnd,
         content,
       },
+      content: `/${this.subCommand}`,
     });
   };
 }
