@@ -1,13 +1,14 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { ChatPage } from './pages/chat/chat';
+import { Observer, Provider } from 'mobx-react';
 import { enableLogging } from 'mobx-logger';
 import { useRootStore, rootStore } from './stores';
 
 import './index.css';
 import '@vscode/codicons/dist/codicon.css';
-import { Observer, Provider } from 'mobx-react';
-import { TopicPage } from './pages/topic/topic';
+
+const TopicPage = lazy(() => import('./pages/topic/topic'));
+const ChatPage = lazy(() => import('./pages/chat/chat'));
 
 enableLogging();
 
@@ -22,7 +23,9 @@ function App() {
   return (
     <Observer>
       {() => (
-        <>{rootStore.topicStore.currentTopic ? <ChatPage /> : <TopicPage />}</>
+        <Suspense>
+          {rootStore.topicStore.currentTopic ? <ChatPage /> : <TopicPage />}
+        </Suspense>
       )}
     </Observer>
   );

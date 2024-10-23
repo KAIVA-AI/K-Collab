@@ -1,11 +1,12 @@
 import { inject, observer } from 'mobx-react';
-import './topic.scss';
 import { Component } from 'react';
 import { BaseComponentProps } from '../../models/base';
 
+import './topic.scss';
+
 @inject('rootStore')
 @observer
-export class TopicPage extends Component<BaseComponentProps> {
+class TopicPage extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
   }
@@ -34,3 +35,5 @@ export class TopicPage extends Component<BaseComponentProps> {
     );
   }
 }
+
+export default TopicPage;
