@@ -16,7 +16,7 @@ export class TopicPage extends Component<BaseComponentProps> {
   render() {
     return (
       <div className="topic-page">
-        <span>Topics</span>
+        <span>Topic list:</span>
         <div className="topic-list">
           {this.topicStore.topics.map((topic, index) => (
             <div
