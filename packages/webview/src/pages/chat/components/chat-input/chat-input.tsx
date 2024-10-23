@@ -3,7 +3,7 @@ import { ChatInputMentionComponent } from './chat-input-mention';
 import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
-import { IReactionDisposer, autorun, reaction } from 'mobx';
+import { IReactionDisposer, reaction } from 'mobx';
 
 interface IProps extends BaseComponentProps {
   onSendMessage: (inputValue?: string) => Promise<void>;
@@ -23,12 +23,6 @@ export class ChatInputComponent extends Component<IProps> {
 
   componentDidMount(): void {
     this.disposers.push(
-      autorun(() => {
-        if (this.chatViewModel.eventFocusInput) {
-          this.viewModel.inputRef.current?.focus();
-          this.chatViewModel.eventFocusInput = false;
-        }
-      }),
       reaction(
         () => this.chatViewModel.eventFocusInput,
         () => {
@@ -37,6 +31,7 @@ export class ChatInputComponent extends Component<IProps> {
             this.chatViewModel.eventFocusInput = false;
           }
         },
+        { fireImmediately: true },
       ),
       reaction(
         () => this.viewModel.sendingInputValue,
@@ -49,6 +44,7 @@ export class ChatInputComponent extends Component<IProps> {
             });
           }
         },
+        { fireImmediately: true },
       ),
     );
   }
