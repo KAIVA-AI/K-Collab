@@ -25,3 +25,18 @@ code {
 .c-pointer {
   cursor: pointer;
 }
+.d-flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.f-g-6px {
+  gap: 6px;
+}
+.mb-6px {
+  margin-bottom: 6px;
+}

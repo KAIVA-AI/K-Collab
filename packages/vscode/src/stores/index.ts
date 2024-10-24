@@ -36,6 +36,10 @@ export class RootStore {
   askAICommand: AskAICommand = new AskAICommand(this);
   inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
 
+  get extensionVersion(): string {
+    return this.context.extension.packageJSON.version;
+  }
+
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
     this.uriHandler = new UriHandler(this, context);
@@ -66,10 +70,6 @@ export class RootStore {
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
-  };
-
-  extensionVersion = () => {
-    return this.context.extension.packageJSON.version;
   };
 
   registerPanel = (panel: WebviewPanel) => {

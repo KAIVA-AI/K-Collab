@@ -1,6 +1,7 @@
 import {
   WebviewViewProvider,
   WebviewView,
+  Webview,
   window,
   Disposable,
   commands,
@@ -22,13 +23,15 @@ import * as fs from 'fs';
 const VIEW_ID = 'v-collab_bar.chat';
 
 export class ChatPanelProvider
-  implements WebviewViewProvider, IBaseWebview, Disposable
+  extends IBaseWebview
+  implements WebviewViewProvider
 {
-  private view?: WebviewView;
+  private view?: Webview;
   readonly #webProvider: Disposable;
   private zulipService: ZulipService;
 
-  constructor(private rootStore: RootStore) {
+  constructor(public rootStore: RootStore) {
+    super(rootStore);
     this.#webProvider = window.registerWebviewViewProvider(VIEW_ID, this, {
       webviewOptions: {
         retainContextWhenHidden: true,
@@ -41,58 +44,29 @@ export class ChatPanelProvider
     );
   }
 
-  public async resolveWebviewView(webviewView: WebviewView) {
-    this.view = webviewView;
-    this.view.webview.options = {
-      enableScripts: true,
-    };
-    this.view.webview.html = '';
-    const url = `${Constants.WEB_URL}/?nonce=${Date.now()}`;
-    this.view.webview.onDidReceiveMessage(this.#onMessageFromWebview);
-    this.view.webview.html = await fetch(url).then(response => response.text());
+  async resolveWebviewView(webviewView: WebviewView) {
+    this.view = webviewView.webview;
+    this.loadWebview();
   }
 
-  public dispose() {
-    this.#webProvider.dispose();
-    this.zulipService.removeEventListener(VIEW_ID);
-  }
-
-  public register(): Disposable {
+  register = (): Disposable => {
     this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
     this.zulipService.subscribeEventQueue();
     return this.#webProvider;
-  }
-
-  #onMessageFromWebview = (message: IWebviewMessage) => {
-    if (message?.source !== 'webview') {
-      return;
-    }
-    if (message.command === 'selectAddContextMethod') {
-      this.selectAddContextMethod();
-    }
-    if (message.command === 'applyMessage') {
-      this.applyMessageToEditor(message.data.content);
-    }
-    if (message.command === 'insertMessage') {
-      this.insertMessageToEditor(message.data.content);
-    }
-    if (message.command === 'copyMessage') {
-      this.copyMessageToClipboard(message.data.content);
-    }
-    if (message.command === 'getExtensionVersion') {
-      this.getExtensionVersion(message);
-    }
-    if (message.command === 'openInputFile') {
-      this.openInputFile(message.data.file);
-    }
-    if (message.command === 'getPageRouter') {
-      this.getPageRouter(message);
-    }
   };
 
+  getWebview = () => this.view!;
+  getPageRouter = () => 'chat-panel';
+  messageHandler = () => ({
+    selectAddContextMethod: this.selectAddContextMethod,
+    previewChange: this.previewChange,
+    insertMessage: this.insertMessageToEditor,
+    copyMessage: this.copyMessageToClipboard,
+    openInputFile: this.openInputFile,
+  });
+
   #onZulipEventMessage = (event: IZulipEvent) => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
+    this.postMessageToWebview({
       store: 'MessageStore',
       command: 'onZulipEventMessage',
       data: {
@@ -102,8 +76,7 @@ export class ChatPanelProvider
   };
 
   addFileToTopic = (file: ITopicFileInput) => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
+    this.postMessageToWebview({
       store: 'TopicStore',
       command: 'addFileToTopic',
       data: {
@@ -112,7 +85,7 @@ export class ChatPanelProvider
     });
   };
 
-  selectAddContextMethod = async () => {
+  private selectAddContextMethod = async () => {
     const options = [];
     const editor = window.activeTextEditor;
     const hasSelection = !editor?.selection.isEmpty;
@@ -129,20 +102,36 @@ export class ChatPanelProvider
     }
   };
 
-  applyMessageToEditor = async (message: string) => {
-    this.rootStore.previewPanelProvider.show(message);
-    // console.log(message);
-    // commands.executeCommand(
-    //   'vscode.diff',
-    //   Uri.file(
-    //     '/Volumes/VietIS/VietIS/VietIS/VCollab/SourcesVCollab/code/vscode/packages/vscode/src/views/chatPanelProvider.ts',
-    //   ),
-    //   Uri.file(
-    //     '/Volumes/VietIS/VietIS/VietIS/VCollab/SourcesVCollab/code/vscode/packages/vscode/src/views/previewPanelProvider.ts',
-    //   ),
-    //   'Review changes in chatPanelProvider.ts',
-    // );
-    // clone file to temp file, apply message to selection in temp file, show diff with original file
+  private previewChange = async (message: IWebviewMessage) => {
+    const editor = window.activeTextEditor;
+    if (!editor) {
+      window.showErrorMessage('No active editor found');
+      return;
+    }
+    const newContent: string = message.data.content;
+    let lineStart: number = 1;
+    let lineEnd: number = 1;
+    let oldContent = '';
+    // if no selecting, get the whole line
+    if (editor.selection.isEmpty) {
+      lineStart = 1;
+      lineEnd = editor.document.lineCount;
+      oldContent = editor.document.getText();
+    } else {
+      lineStart = editor.selection.start.line + 1;
+      lineEnd = editor.selection.end.line + 1;
+      oldContent = editor.document.getText(editor.selection);
+    }
+    this.rootStore.previewPanelProvider.show(
+      editor.document.uri.path,
+      oldContent,
+      newContent,
+      lineStart,
+      lineEnd,
+    );
+  };
+
+  private previewChangeUsingVSCodeDiff = async (message: string) => {
     const editor = window.activeTextEditor;
     if (!editor) {
       window.showErrorMessage('No active editor found');
@@ -152,11 +141,35 @@ export class ChatPanelProvider
     const selection = editor.selection;
 
     const tempFilePath = await this.cloneFileToTemp(originalFilePath);
-    await this.applyMessageToSelection(tempFilePath, message, selection);
-    await this.showDiff(originalFilePath, tempFilePath);
+    await this.previewChangeApplyMessageToSelection(
+      tempFilePath,
+      message,
+      selection,
+    );
+    await this.showDiffUsingVSCodeDiff(originalFilePath, tempFilePath);
   };
 
-  cloneFileToTemp = async (originalFilePath: string): Promise<string> => {
+  private previewChangeUsingScm = async (message: string) => {
+    const editor = window.activeTextEditor;
+    if (!editor) {
+      window.showErrorMessage('No active editor found');
+      return;
+    }
+    const originalFilePath = editor.document.uri.fsPath;
+    const selection = editor.selection;
+
+    const tempFilePath = await this.cloneFileToTemp(originalFilePath);
+    await this.previewChangeApplyMessageToSelection(
+      tempFilePath,
+      message,
+      selection,
+    );
+    await this.showDiffUsingScm(originalFilePath, tempFilePath);
+  };
+
+  private cloneFileToTemp = async (
+    originalFilePath: string,
+  ): Promise<string> => {
     const tempFilePath = path.join(
       os.tmpdir(),
       path.basename(originalFilePath),
@@ -166,7 +179,7 @@ export class ChatPanelProvider
     return tempFilePath;
   };
 
-  applyMessageToSelection = async (
+  private previewChangeApplyMessageToSelection = async (
     tempFilePath: string,
     message: string,
     selection: Selection,
@@ -187,12 +200,23 @@ export class ChatPanelProvider
     await fs.promises.writeFile(tempFilePath, newContent, 'utf8');
   };
 
-  showDiff = async (originalFilePath: string, tempFilePath: string) => {
+  private showDiffUsingVSCodeDiff = async (
+    originalFilePath: string,
+    tempFilePath: string,
+  ) => {
     const title = `Review changes in ${path.basename(originalFilePath)}`;
     const originalUri = Uri.file(originalFilePath);
     const tempUri = Uri.file(tempFilePath);
-    // await commands.executeCommand('vscode.diff', originalUri, tempUri, title);
+    await commands.executeCommand('vscode.diff', originalUri, tempUri, title);
+  };
 
+  private showDiffUsingScm = async (
+    originalFilePath: string,
+    tempFilePath: string,
+  ) => {
+    const title = `Review changes in ${path.basename(originalFilePath)}`;
+    const originalUri = Uri.file(originalFilePath);
+    const tempUri = Uri.file(tempFilePath);
     const vcollabScm = scm.createSourceControl('v-collab', 'v-collab');
     const index = vcollabScm.createResourceGroup('index', 'Index');
     index.resourceStates = [{ resourceUri: originalUri }];
@@ -205,24 +229,21 @@ export class ChatPanelProvider
     vcollabScm.inputBox.enabled = false;
   };
 
-  insertMessageToEditor = (message: string) => {
-    // TODO wait for preview panel to be implemented
-    // this.rootStore.previewPanelProvider.show(message);
+  private insertMessageToEditor = (message: IWebviewMessage) => {
     const editor = window.activeTextEditor;
     if (editor) {
       editor.edit(editBuilder => {
-        editBuilder.insert(editor.selection.start, message);
+        editBuilder.insert(editor.selection.start, message.data.content);
       });
     }
   };
 
-  copyMessageToClipboard = (message: string) => {
-    env.clipboard.writeText(message);
+  private copyMessageToClipboard = (message: IWebviewMessage) => {
+    env.clipboard.writeText(message.data.content);
   };
 
   backToTopicPage = () => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
+    this.postMessageToWebview({
       store: 'TopicStore',
       command: 'backToTopicPage',
       data: {},
@@ -238,8 +259,7 @@ export class ChatPanelProvider
     file?: ITopicFileInput;
     content?: string;
   }) => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
+    this.postMessageToWebview({
       store: 'TopicStore',
       command: 'startNewTopic',
       data: {
@@ -250,9 +270,9 @@ export class ChatPanelProvider
     });
   };
 
-  openInputFile = async (f: ITopicFileInput) => {
+  private openInputFile = async (message: IWebviewMessage) => {
     try {
-      const file = new TopicFileInput(f);
+      const file = new TopicFileInput(message.data.file as ITopicFileInput);
       const document = await workspace.openTextDocument(file.path);
       window.showTextDocument(document);
       if (file.isSelection) {
@@ -266,29 +286,5 @@ export class ChatPanelProvider
     } catch {
       // file not found
     }
-  };
-
-  getExtensionVersion = (message: IWebviewMessage) => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
-      store: 'RootStore',
-      command: 'webviewCallbackKey',
-      webviewCallbackKey: message.webviewCallbackKey,
-      data: {
-        version: this.rootStore.extensionVersion(),
-      },
-    });
-  };
-
-  getPageRouter = (message: IWebviewMessage) => {
-    this.view?.webview.postMessage({
-      source: 'vscode',
-      store: 'RootStore',
-      command: 'webviewCallbackKey',
-      webviewCallbackKey: message.webviewCallbackKey,
-      data: {
-        pageRouter: 'chat-panel',
-      },
-    });
   };
 }

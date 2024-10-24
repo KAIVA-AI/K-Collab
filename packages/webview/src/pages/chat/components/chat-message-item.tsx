@@ -18,12 +18,12 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         const codeAction = document.createElement('div');
         codeAction.className = 'message-code-action';
 
-        const applyIcon = document.createElement('i');
-        applyIcon.className =
+        const previewIcon = document.createElement('i');
+        previewIcon.className =
           'c-pointer codicon codicon-git-pull-request-go-to-changes';
-        applyIcon.onclick = () =>
-          chatViewModel.clickApplyMessage(preCode?.innerHTML || '');
-        codeAction.appendChild(applyIcon);
+        previewIcon.onclick = () =>
+          chatViewModel.clickPreviewChange(preCode?.innerHTML || '');
+        codeAction.appendChild(previewIcon);
 
         const insertIcon = document.createElement('i');
         insertIcon.className = 'c-pointer codicon codicon-insert';

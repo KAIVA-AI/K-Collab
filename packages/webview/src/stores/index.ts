@@ -32,6 +32,11 @@ const getVSCodeApi = () => {
   return acquireVsCodeApi();
 };
 
+type IWebviewMessageHandler = (message: IWebviewMessage) => void;
+interface IWebviewMessageHandlerMap {
+  [key: string]: IWebviewMessageHandler;
+}
+
 export class RootStore {
   private vscode = getVSCodeApi();
   realmStore = new RealmStore();
@@ -39,13 +44,19 @@ export class RootStore {
   topicStore = new TopicStore(this);
   messageStore = new MessageStore(this);
   chatViewModel = new ChatViewModel(this);
+  private eventListeners: IWebviewMessageHandlerMap = {};
 
   zulipService: ZulipService;
 
+  @observable currentTheme = 'dark';
   @observable webviewVersion = '1.0.0';
   @observable extensionVersion = '';
   @observable wakedUp = false;
   @observable pageRouter = 'chat-panel';
+
+  @computed get useDarkTheme() {
+    return this.currentTheme === 'dark';
+  }
 
   @computed get isVersionMismatch() {
     return this.webviewVersion !== this.extensionVersion;
@@ -69,6 +80,9 @@ export class RootStore {
     await this.getPageRouter();
     runInAction(() => {
       this.wakedUp = true;
+    });
+    this.postMessageToVSCode({
+      command: 'webviewWakedUp',
     });
     this.loadData();
   };
@@ -116,17 +130,29 @@ export class RootStore {
     await this.messageStore.loadData();
   };
 
+  addEventListener = (key: string, listener: IWebviewMessageHandler) => {
+    this.eventListeners[key] = listener;
+  };
+
   @action onMessageFromVSCode = (message: IWebviewMessage) => {
+    if (message.command === 'updateWebviewTheme') {
+      this.currentTheme = message.data.theme;
+      return;
+    }
     if (message.webviewCallbackKey) {
       (window as any)[message.webviewCallbackKey](message);
       return;
     }
     if (message.store === 'TopicStore') {
       this.topicStore.onMessageFromVSCode(message);
+      return;
     }
     if (message.store === 'MessageStore') {
       this.messageStore.onMessageFromVSCode(message);
+      return;
     }
+    const handler = this.eventListeners[message.store || ''];
+    handler && handler(message);
   };
 
   @action postMessageToVSCode = async (
