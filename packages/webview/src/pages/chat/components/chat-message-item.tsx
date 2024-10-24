@@ -17,16 +17,26 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         const preCode = codehilite.querySelector('pre');
         const codeAction = document.createElement('div');
         codeAction.className = 'message-code-action';
+
+        const applyIcon = document.createElement('i');
+        applyIcon.className =
+          'c-pointer codicon codicon-git-pull-request-go-to-changes';
+        applyIcon.onclick = () =>
+          chatViewModel.clickApplyMessage(preCode?.innerHTML || '');
+        codeAction.appendChild(applyIcon);
+
         const insertIcon = document.createElement('i');
         insertIcon.className = 'c-pointer codicon codicon-insert';
         insertIcon.onclick = () =>
           chatViewModel.clickInsertMessage(preCode?.innerHTML || '');
         codeAction.appendChild(insertIcon);
+
         const copyIcon = document.createElement('i');
         copyIcon.className = 'c-pointer codicon codicon-copy';
         copyIcon.onclick = () =>
           chatViewModel.clickCopyMessage(preCode?.innerHTML || '');
         codeAction.appendChild(copyIcon);
+
         codehilite.prepend(codeAction);
       });
     }

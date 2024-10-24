@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import { Component, lazy } from 'react';
 import { BaseComponentProps } from './models/base';
+import ReactDiffViewer from 'react-diff-viewer';
 
 const LoadingPage = lazy(() => import('./pages/bootstrap/loading'));
 const VersionPage = lazy(() => import('./pages/bootstrap/version'));
@@ -31,9 +32,36 @@ class App extends Component<BaseComponentProps> {
     if (this.rootStore.pageRouter === 'chat-panel') {
       return <>{this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />}</>;
     }
+    const oldCode = `
+const a = 10
+const b = 10
+const c = () => console.log('foo')
+
+if(a > 10) {
+  console.log('bar')
+}
+
+console.log('done')
+`;
+    const newCode = `
+const a = 10
+const boo = 10
+
+if(a === 10) {
+  console.log('bar')
+}
+`;
     return (
       <>
-        <div>Preview Diff before apply</div>
+        <div>
+          <ReactDiffViewer
+            oldValue={oldCode}
+            newValue={newCode}
+            splitView={true}
+            useDarkTheme={true}
+            linesOffset={16}
+          />
+        </div>
       </>
     );
   }
