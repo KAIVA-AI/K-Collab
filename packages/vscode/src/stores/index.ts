@@ -1,5 +1,5 @@
-import { ExtensionContext } from 'vscode';
-import { ChatPanelProvider } from '../views';
+import { ExtensionContext, WebviewPanel } from 'vscode';
+import { ChatPanelProvider, PreviewPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
 import {
   AddFileCommand,
@@ -17,6 +17,7 @@ export class RootStore {
   editorCommentProvider = new EditorCommentProvider(this);
   // views
   chatPanelProvider: ChatPanelProvider;
+  previewPanelProvider: PreviewPanelProvider = new PreviewPanelProvider(this);
   // handlers
   uriHandler: UriHandler;
   // commands
@@ -66,5 +67,9 @@ export class RootStore {
 
   extensionVersion = () => {
     return this.context.extension.packageJSON.version;
+  };
+
+  registerPanel = (panel: WebviewPanel) => {
+    this.context.subscriptions.push(panel);
   };
 }

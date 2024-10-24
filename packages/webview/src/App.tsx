@@ -28,7 +28,14 @@ class App extends Component<BaseComponentProps> {
     if (this.rootStore.isVersionMismatch) {
       return <VersionPage />;
     }
-    return <>{this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />}</>;
+    if (this.rootStore.pageRouter === 'chat-panel') {
+      return <>{this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />}</>;
+    }
+    return (
+      <>
+        <div>Preview Diff before apply</div>
+      </>
+    );
   }
 }
 export default App;
