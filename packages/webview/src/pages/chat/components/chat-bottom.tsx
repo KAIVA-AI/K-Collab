@@ -35,12 +35,17 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
           <div className="context-list">
             {this.topicStore.currentTopic?.file_inputs?.map((file, index) => (
               <div className="context-file" key={index}>
-                <span>{file.name}</span>
-                {file.isSelection && (
-                  <span>
-                    :{file.start}-{file.end}
-                  </span>
-                )}
+                <div
+                  className="file c-pointer"
+                  onClick={() => this.chatViewModel.openInputFile(file)}
+                >
+                  <span>{file.name}</span>
+                  {file.isSelection && (
+                    <span>
+                      :{file.start}-{file.end}
+                    </span>
+                  )}
+                </div>
                 <i
                   className="remove codicon codicon-close"
                   onClick={() => this.topicStore.onRemoveFile(file)}

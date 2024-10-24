@@ -1,4 +1,4 @@
-import { IZulipSendMessageParams } from '@v-collab/common';
+import { IZulipSendMessageParams, TopicFileInput } from '@v-collab/common';
 import { RootStore } from '../../stores';
 import { action, makeObservable, observable } from 'mobx';
 
@@ -66,5 +66,14 @@ export class ChatViewModel {
     } catch (error) {
       console.error('Error sending message', error);
     }
+  };
+
+  @action openInputFile = (file: TopicFileInput) => {
+    this.rootStore.postMessageToVSCode({
+      command: 'openInputFile',
+      data: {
+        file,
+      },
+    });
   };
 }
