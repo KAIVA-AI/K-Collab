@@ -20,6 +20,7 @@ const extensionConfig = {
     path: path.resolve(__dirname, '../../dist/vscode'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
   },
   externals: {
     vscode: 'commonjs vscode',
