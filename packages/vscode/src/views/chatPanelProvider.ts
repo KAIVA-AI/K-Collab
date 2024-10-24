@@ -5,8 +5,10 @@ import {
   Disposable,
   commands,
   env,
+  workspace,
+  Selection,
 } from 'vscode';
-import { ITopicFileInput, IWebviewMessage } from '../models';
+import { ITopicFileInput, IWebviewMessage, TopicFileInput } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
 import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
@@ -76,6 +78,9 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
           version: this.rootStore.extensionVersion(),
         },
       });
+    }
+    if (message.command === 'openInputFile') {
+      this.openInputFile(message.data.file);
     }
   };
 
@@ -159,5 +164,23 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
         content,
       },
     });
+  };
+
+  openInputFile = async (f: ITopicFileInput) => {
+    const file = new TopicFileInput(f);
+    const document = await workspace.openTextDocument(file.path);
+    window.showTextDocument(document);
+    console.log('document', document);
+    console.log('file', file);
+    if (file.isSelection) {
+      const editor = window.activeTextEditor;
+      console.log('editor', editor);
+      if (editor) {
+        const start = document.lineAt(Math.max(0, Number(file.start) - 1));
+        const end = document.lineAt(Math.max(0, Number(file.end) - 1));
+        editor.selection = new Selection(start.range.start, end.range.end);
+        console.log('editor.selection', editor.selection);
+      }
+    }
   };
 }
