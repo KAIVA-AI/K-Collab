@@ -9,16 +9,16 @@ import {
   workspace,
   Selection,
   Uri,
-  scm,
+  Range,
+  ViewColumn,
 } from 'vscode';
 import { ITopicFileInput, IWebviewMessage, TopicFileInput } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
 import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
 import { IBaseWebview } from './baseWebview';
-import * as os from 'os';
 import * as path from 'path';
-import * as fs from 'fs';
+import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
@@ -109,124 +109,62 @@ export class ChatPanelProvider
       return;
     }
     const newContent: string = message.data.content;
-    let lineStart: number = 1;
-    let lineEnd: number = 1;
+    let startLine: number = 1;
+    let endLine: number = 1;
     let oldContent = '';
     // if no selecting, get the whole line
     if (editor.selection.isEmpty) {
-      lineStart = 1;
-      lineEnd = editor.document.lineCount;
+      startLine = 1;
+      endLine = editor.document.lineCount;
       oldContent = editor.document.getText();
     } else {
-      lineStart = editor.selection.start.line + 1;
-      lineEnd = editor.selection.end.line + 1;
-      oldContent = editor.document.getText(editor.selection);
+      startLine = editor.selection.start.line + 1;
+      endLine = editor.selection.end.line + 1;
+      const lineStart = editor.document.lineAt(startLine - 1).range.start;
+      const lineEnd = editor.document.lineAt(endLine - 1).range.end;
+      oldContent = editor.document.getText(new Range(lineStart, lineEnd));
     }
-    this.rootStore.previewPanelProvider.show(
-      editor.document.uri.path,
+    this.showDiffUsingVSCodeDiff(
+      editor.document.uri,
       oldContent,
       newContent,
-      lineStart,
-      lineEnd,
+      startLine,
+      endLine,
     );
-  };
-
-  private previewChangeUsingVSCodeDiff = async (message: string) => {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-      window.showErrorMessage('No active editor found');
-      return;
-    }
-    const originalFilePath = editor.document.uri.fsPath;
-    const selection = editor.selection;
-
-    const tempFilePath = await this.cloneFileToTemp(originalFilePath);
-    await this.previewChangeApplyMessageToSelection(
-      tempFilePath,
-      message,
-      selection,
-    );
-    await this.showDiffUsingVSCodeDiff(originalFilePath, tempFilePath);
-  };
-
-  private previewChangeUsingScm = async (message: string) => {
-    const editor = window.activeTextEditor;
-    if (!editor) {
-      window.showErrorMessage('No active editor found');
-      return;
-    }
-    const originalFilePath = editor.document.uri.fsPath;
-    const selection = editor.selection;
-
-    const tempFilePath = await this.cloneFileToTemp(originalFilePath);
-    await this.previewChangeApplyMessageToSelection(
-      tempFilePath,
-      message,
-      selection,
-    );
-    await this.showDiffUsingScm(originalFilePath, tempFilePath);
-  };
-
-  private cloneFileToTemp = async (
-    originalFilePath: string,
-  ): Promise<string> => {
-    const tempFilePath = path.join(
-      os.tmpdir(),
-      path.basename(originalFilePath),
-    );
-    const fileContent = fs.readFileSync(originalFilePath, 'utf8');
-    await fs.promises.writeFile(tempFilePath, fileContent, 'utf8');
-    return tempFilePath;
-  };
-
-  private previewChangeApplyMessageToSelection = async (
-    tempFilePath: string,
-    message: string,
-    selection: Selection,
-  ) => {
-    const fileContent = await fs.promises.readFile(tempFilePath, 'utf8');
-    const lines = fileContent.split('\n');
-    const startLine = selection.start.line;
-    // const endLine = selection.end.line;
-    const startChar = selection.start.character;
-    const endChar = selection.end.character;
-
-    lines[startLine] =
-      lines[startLine].substring(0, startChar) +
-      message +
-      lines[startLine].substring(endChar);
-
-    const newContent = lines.join('\n');
-    await fs.promises.writeFile(tempFilePath, newContent, 'utf8');
   };
 
   private showDiffUsingVSCodeDiff = async (
-    originalFilePath: string,
-    tempFilePath: string,
+    originUri: Uri,
+    oldContent: string,
+    newContent: string,
+    startLine: number,
+    endLine: number,
   ) => {
-    const title = `Review changes in ${path.basename(originalFilePath)}`;
-    const originalUri = Uri.file(originalFilePath);
-    const tempUri = Uri.file(tempFilePath);
-    await commands.executeCommand('vscode.diff', originalUri, tempUri, title);
-  };
+    const fileName = path.basename(originUri.fsPath);
+    const title = `Review changes in ${fileName}`;
+    const fileId = `${Date.now()}_${fileName}`;
+    this.rootStore.memoryFileProvider.addDocument(
+      fileId.toString(),
+      originUri,
+      oldContent,
+      newContent,
+      startLine,
+      endLine,
+    );
+    const tempOldUri = MemoryFileProvider.getUri(fileId.toString(), 'orig');
+    const tempNewUri = MemoryFileProvider.getUri(fileId.toString(), 'new');
 
-  private showDiffUsingScm = async (
-    originalFilePath: string,
-    tempFilePath: string,
-  ) => {
-    const title = `Review changes in ${path.basename(originalFilePath)}`;
-    const originalUri = Uri.file(originalFilePath);
-    const tempUri = Uri.file(tempFilePath);
-    const vcollabScm = scm.createSourceControl('v-collab', 'v-collab');
-    const index = vcollabScm.createResourceGroup('index', 'Index');
-    index.resourceStates = [{ resourceUri: originalUri }];
-
-    vcollabScm.quickDiffProvider = {
-      provideOriginalResource: async () => tempUri,
-    };
-
-    vcollabScm.inputBox.value = title;
-    vcollabScm.inputBox.enabled = false;
+    await commands.executeCommand(
+      'vscode.diff',
+      tempOldUri,
+      tempNewUri,
+      title,
+      {
+        viewColumn: ViewColumn.Beside,
+        preview: true,
+      },
+    );
+    // TODO when diffEditor/gutter api is available, using gutter to apply changes instead of dialog
   };
 
   private insertMessageToEditor = (message: IWebviewMessage) => {

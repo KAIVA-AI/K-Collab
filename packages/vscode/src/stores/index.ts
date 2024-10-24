@@ -12,9 +12,13 @@ import {
 import { EditorCommentProvider } from '../providers';
 import { Logger } from '../utils/logger';
 import { CodeActionProvider } from 'src/providers/codeActionProvider';
+import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
+import { AcceptChangeCommand } from 'src/commands/acceptChange';
+import { RejectChangeCommand } from 'src/commands/rejectChange';
 
 export class RootStore {
   // providers
+  memoryFileProvider: MemoryFileProvider = new MemoryFileProvider();
   editorCommentProvider = new EditorCommentProvider(this);
   codeActionProvider = new CodeActionProvider(this);
   // views
@@ -35,6 +39,8 @@ export class RootStore {
   reviewCommand: CodingCommand = new CodingCommand(this, 'review');
   askAICommand: AskAICommand = new AskAICommand(this);
   inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
+  acceptChangeCommand: AcceptChangeCommand = new AcceptChangeCommand(this);
+  rejectChangeCommand: RejectChangeCommand = new RejectChangeCommand(this);
 
   get extensionVersion(): string {
     return this.context.extension.packageJSON.version;
@@ -51,6 +57,7 @@ export class RootStore {
   register = () => {
     Logger.register();
     // providers
+    this.context.subscriptions.push(this.memoryFileProvider.register());
     this.context.subscriptions.push(this.editorCommentProvider.register());
     this.context.subscriptions.push(this.codeActionProvider.register());
     // views
@@ -70,6 +77,8 @@ export class RootStore {
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
+    this.context.subscriptions.push(this.acceptChangeCommand.register());
+    this.context.subscriptions.push(this.rejectChangeCommand.register());
   };
 
   registerPanel = (panel: WebviewPanel) => {
