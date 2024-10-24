@@ -39,6 +39,9 @@
     "prepackage": "yarn build-vscode",
     "package": "vsce package"
   },
+  "enabledApiProposals": [
+    "contribDiffEditorGutterToolBarMenus"
+  ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -234,6 +237,29 @@
           "command": "v-collab.command.inline.chat",
           "group": "inline",
           "when": "commentController == v-collab.comment.ask"
+        }
+      ],
+      "diffEditor/gutter/hunk": [
+        {
+          "command": "v-collab.command.chat.history",
+          "group": "primary@10"
+        }
+      ],
+      "diffEditor/gutter/selection": [
+        {
+          "command": "v-collab.command.chat.history",
+          "group": "primary@10"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "v-collab.command.chat.history",
+          "when": "scmResourceState == v-collab"
+        }
+      ],
+      "scm/change/title": [
+        {
+          "command": "v-collab.command.chat.history"
         }
       ]
     }
