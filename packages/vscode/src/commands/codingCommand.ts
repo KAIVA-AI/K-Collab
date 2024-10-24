@@ -11,6 +11,8 @@ export class CodingCommand {
     private subCommand: string,
   ) {}
 
+  getCommandId = () => `${COMMAND_ID}.${this.subCommand}`;
+
   register = (): Disposable => {
     return commands.registerCommand(
       `${COMMAND_ID}.${this.subCommand}`,
