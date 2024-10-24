@@ -1,4 +1,11 @@
-import { IChannel, IMessage, ITopic, IZulipSendMessageParams } from '../models';
+import {
+  IChannel,
+  IMessage,
+  ITopic,
+  ITopicFileInput,
+  IZulipSendMessageParams,
+  TopicFileInput,
+} from '../models';
 import {
   IEventListener,
   IEventListeners,
@@ -229,12 +236,19 @@ export class ZulipService {
     let attempts = 5;
     let queueId: string | undefined = undefined;
     let lastEventId: number = -1;
+    let retrying = false;
     while (true) {
       try {
         if (!queueId) {
           [queueId, lastEventId] = await this.registerEventQueue();
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);
+        if (retrying) {
+          // receive events success, reset attempts
+          attempts = 5;
+          retrying = false;
+          console.log('Retry success');
+        }
         events.forEach(this.deliveryEvent);
         lastEventId = Math.max(lastEventId, ...events.map(e => e.id));
         // await new Promise(resolve => setTimeout(resolve, 1000));
@@ -242,6 +256,7 @@ export class ZulipService {
         console.log('Error subscribe event queue', error);
         console.log('Start retry after 1 second');
         attempts--;
+        retrying = true;
         if (attempts <= 0) {
           return Promise.reject(error);
         }
@@ -283,15 +298,50 @@ export class ZulipService {
     delete this.unreadListeners[key];
   };
 
-  addFile = async (topic: string, path: string, content: string) => {
-    const formData = {
+  addFile = async (
+    topic: string,
+    name: string | undefined,
+    path: string,
+    start: string | undefined,
+    end: string | undefined,
+    content: string,
+  ) => {
+    const formData: any = {
       external_id: topic,
       path: path,
       content: content,
     };
+    if (name !== undefined) {
+      formData['name'] = name;
+    }
+    if (start !== undefined && end !== undefined) {
+      formData['start'] = start;
+      formData['end'] = end;
+    }
     return this.sendRequest({
       path: 'assistant/add-file',
       formData,
     });
+  };
+
+  getFileInput = async (topic: string): Promise<TopicFileInput[]> => {
+    return this.sendRequest({
+      path: 'assistant/get-file-input',
+      formData: {
+        external_id: topic,
+      },
+    })
+      .then((json: any) => (json.files || []) as ITopicFileInput[])
+      .then((files: ITopicFileInput[]) =>
+        files.map((f: ITopicFileInput) => {
+          if (f.start === null) {
+            f.start = undefined;
+          }
+          if (f.end === null) {
+            f.end = undefined;
+          }
+          return new TopicFileInput(f as ITopicFileInput);
+        }),
+      );
   };
 }

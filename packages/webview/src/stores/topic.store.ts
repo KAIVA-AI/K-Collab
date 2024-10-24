@@ -92,7 +92,10 @@ export class TopicStore {
     if (this.currentTopic?.name) {
       await this.rootStore.zulipService.addFile(
         this.currentTopic?.name,
+        file.name,
         file.path,
+        file.start,
+        file.end,
         file.content ?? '',
       );
     }
@@ -117,11 +120,20 @@ export class TopicStore {
     if (index !== undefined && index !== -1) {
       this.currentTopic?.file_inputs?.splice(index, 1);
     }
+    // TODO remove from api
   };
 
   @action selectTopic = (topic: ITopic) => {
     this.currentTopic = topic;
     this.rootStore.chatViewModel.eventFocusInput = true;
     this.rootStore.messageStore.loadData();
+    this.rootStore.zulipService.getFileInput(topic.name).then(fileInputs => {
+      runInAction(() => {
+        if (!this.currentTopic) {
+          return;
+        }
+        this.currentTopic.file_inputs = fileInputs;
+      });
+    });
   };
 }

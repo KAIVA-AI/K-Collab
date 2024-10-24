@@ -27,8 +27,8 @@ export class AddSelectionCommand {
     this.rootStore.chatPanelProvider.addFileToTopic({
       name: file,
       path: filepath,
-      start: lineStart,
-      end: lineEnd,
+      start: `${lineStart}`,
+      end: `${lineEnd}`,
       content,
     });
   };

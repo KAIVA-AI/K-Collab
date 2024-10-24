@@ -41,8 +41,8 @@ export class CodingCommand {
       file: {
         name: file,
         path: filepath,
-        start: lineStart,
-        end: lineEnd,
+        start: lineStart !== undefined ? `${lineStart}` : undefined,
+        end: lineEnd !== undefined ? `${lineEnd}` : undefined,
         content,
       },
       content: `/${this.subCommand}`,

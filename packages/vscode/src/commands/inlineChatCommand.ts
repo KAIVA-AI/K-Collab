@@ -39,8 +39,8 @@ export class InlineChatCommand {
       file: {
         path: filepath,
         name: filename,
-        start: lineStart,
-        end: lineEnd,
+        start: lineStart !== undefined ? `${lineStart}` : undefined,
+        end: lineEnd !== undefined ? `${lineEnd}` : undefined,
         content,
       },
       content: reply.text,
