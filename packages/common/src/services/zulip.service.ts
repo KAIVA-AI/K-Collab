@@ -36,6 +36,7 @@ export class ZulipService {
 
   setBasicAuth = (email: string, apiKey: string) => {
     this.token = Buffer.from(`${email}:${apiKey}`).toString('base64');
+    console.log('TOKEN ', this.token);
   };
 
   private buildUrl = (path: string) => {

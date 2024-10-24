@@ -107,10 +107,23 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     }
   };
 
-  insertMessageToEditor = (message: string) => {
+  insertMessageToEditor = async (message: string) => {
     const editor = window.activeTextEditor;
     if (editor) {
+      // const pick = await window.showInformationMessage(
+      //   'Code generation is done.',
+      //   'Accept',
+      //   'Reject',
+      // );
+      // if (pick === 'Accept') {
+      //   console.log('DO ACCEPT');
+      // } else if (pick === 'Reject') {
+      //   this.dispose();
+      // }
       editor.edit(editBuilder => {
+        console.log(
+          `CONTENT REPLACE AT ${editor.selection.start.line}/${editor.selection.start.character}: ${editor.selection.end.line}/${editor.selection.end.character} value : ${message}`,
+        );
         editBuilder.insert(editor.selection.start, message);
       });
     }
