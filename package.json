@@ -2,7 +2,7 @@
   "name": "v-collab",
   "displayName": "V-Collab",
   "description": "VIETIS AI powered collaborative chat for developers",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -90,6 +90,11 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.coding.comment",
+        "title": "Comment",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.coding.porting",
         "title": "Porting",
         "category": "V-Collab"
@@ -148,6 +153,18 @@
         "command": "v-collab.command.ask-ai",
         "title": "Ask VietIS-Coding",
         "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.preview.accept",
+        "title": "Accept",
+        "icon": "$(check)",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.preview.reject",
+        "title": "Reject",
+        "icon": "$(close)",
+        "category": "V-Collab"
       }
     ],
     "submenus": [
@@ -187,8 +204,12 @@
           "group": "2_code@3"
         },
         {
-          "command": "v-collab.command.coding.porting",
+          "command": "v-collab.command.coding.comment",
           "group": "2_code@4"
+        },
+        {
+          "command": "v-collab.command.coding.porting",
+          "group": "2_code@5"
         },
         {
           "command": "v-collab.command.coding.explain",
@@ -234,6 +255,18 @@
           "command": "v-collab.command.inline.chat",
           "group": "inline",
           "when": "commentController == v-collab.comment.ask"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "v-collab.command.preview.accept",
+          "group": "navigation@1",
+          "when": "isInDiffEditor"
+        },
+        {
+          "command": "v-collab.command.preview.reject",
+          "group": "navigation@2",
+          "when": "isInDiffEditor"
         }
       ]
     }
