@@ -92,7 +92,10 @@ export class TopicStore {
     if (this.currentTopic?.name) {
       await this.rootStore.zulipService.addFile(
         this.currentTopic?.name,
+        file.name,
         file.path,
+        file.start,
+        file.end,
         file.content ?? '',
       );
     }

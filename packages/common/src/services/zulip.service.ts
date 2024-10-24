@@ -283,10 +283,20 @@ export class ZulipService {
     delete this.unreadListeners[key];
   };
 
-  addFile = async (topic: string, path: string, content: string) => {
+  addFile = async (
+    topic: string,
+    name: string | undefined,
+    path: string,
+    start: string | undefined,
+    end: string | undefined,
+    content: string,
+  ) => {
     const formData = {
       external_id: topic,
+      name: name,
       path: path,
+      start: start,
+      end: end,
       content: content,
     };
     return this.sendRequest({
