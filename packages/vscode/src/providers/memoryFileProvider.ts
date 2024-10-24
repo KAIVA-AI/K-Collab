@@ -88,10 +88,18 @@ export class MemoryFileProvider implements TextDocumentContentProvider {
 
     return null;
   };
-  static closePreviewTabByUri = async (uri: Uri) => {
+  closePreviewTabByUri = async (uri: Uri) => {
     const tab = MemoryFileProvider.getOpenedTab(uri);
     if (tab) {
-      return window.tabGroups.close(tab);
+      await window.tabGroups.close(tab);
+      const docId = uri.path;
+      this.documents.delete(docId);
+    }
+  };
+  closeAllPreviewTabs = async () => {
+    for (const docId of this.documents.keys()) {
+      const uri = MemoryFileProvider.getUri(docId, 'new');
+      await this.closePreviewTabByUri(uri);
     }
   };
 }

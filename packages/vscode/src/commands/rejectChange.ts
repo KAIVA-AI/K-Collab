@@ -1,6 +1,5 @@
 import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../stores';
-import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
 
 const COMMAND_ID = 'v-collab.command.preview.reject';
 
@@ -17,6 +16,8 @@ export class RejectChangeCommand {
     if (!previewEditor) {
       return;
     }
-    MemoryFileProvider.closePreviewTabByUri(previewEditor.document.uri);
+    this.rootStore.memoryFileProvider.closePreviewTabByUri(
+      previewEditor.document.uri,
+    );
   };
 }

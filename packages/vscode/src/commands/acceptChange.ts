@@ -1,6 +1,5 @@
 import { commands, Disposable, window, Range } from 'vscode';
 import { RootStore } from '../stores';
-import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
 
 const COMMAND_ID = 'v-collab.command.preview.accept';
 
@@ -20,12 +19,13 @@ export class AcceptChangeCommand {
     const doc = this.rootStore.memoryFileProvider.getDocumentByUri(
       previewEditor.document.uri,
     );
-    await MemoryFileProvider.closePreviewTabByUri(previewEditor.document.uri);
+    await this.rootStore.memoryFileProvider.closePreviewTabByUri(
+      previewEditor.document.uri,
+    );
 
     if (!doc) {
       return;
     }
-    console.log(window.visibleTextEditors.map(editor => editor.document.uri));
     const editor = window.visibleTextEditors.find(
       editor => editor.document.uri.path === doc.originUri.path,
     );

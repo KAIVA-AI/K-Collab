@@ -103,6 +103,7 @@ export class ChatPanelProvider
   };
 
   private previewChange = async (message: IWebviewMessage) => {
+    await this.rootStore.memoryFileProvider.closeAllPreviewTabs();
     const editor = window.activeTextEditor;
     if (!editor) {
       window.showErrorMessage('No active editor found');
