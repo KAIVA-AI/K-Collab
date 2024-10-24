@@ -45,6 +45,7 @@ export class RootStore {
   @observable webviewVersion = '1.0.0';
   @observable extensionVersion = '';
   @observable wakedUp = false;
+  @observable pageRouter = 'chat-panel';
 
   @computed get isVersionMismatch() {
     return this.webviewVersion !== this.extensionVersion;
@@ -65,10 +66,11 @@ export class RootStore {
   @action init = async () => {
     await this.registerVSCodeListener();
     await this.checkExtensionVersion();
-    await this.loadData();
+    await this.getPageRouter();
     runInAction(() => {
       this.wakedUp = true;
     });
+    this.loadData();
   };
 
   @action private checkExtensionVersion = async () => {
@@ -80,6 +82,17 @@ export class RootStore {
     extensionVersion &&
       runInAction(() => {
         this.extensionVersion = extensionVersion.data.version;
+      });
+  };
+
+  @action private getPageRouter = async () => {
+    const pageRouter = await this.postMessageToVSCode({
+      command: 'getPageRouter',
+      hasReturn: true,
+    });
+    pageRouter &&
+      runInAction(() => {
+        this.pageRouter = pageRouter.data.pageRouter;
       });
   };
 
