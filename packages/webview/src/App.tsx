@@ -1,16 +1,16 @@
 import { inject, observer } from 'mobx-react';
 import { Component, lazy } from 'react';
 import { BaseComponentProps } from './models/base';
+import { LoadingPage } from './pages/bootstrap/loading';
+import { VersionPage } from './pages/bootstrap/version';
 
-const LoadingPage = lazy(() => import('./pages/bootstrap/loading'));
-const VersionPage = lazy(() => import('./pages/bootstrap/version'));
 const TopicPage = lazy(() => import('./pages/topic/topic'));
 const ChatPage = lazy(() => import('./pages/chat/chat'));
 const PreviewPage = lazy(() => import('./pages/preview/preview'));
 
 @inject('rootStore')
 @observer
-class App extends Component<BaseComponentProps> {
+export class App extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
   }
