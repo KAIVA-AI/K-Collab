@@ -33,6 +33,7 @@ export class RootStore {
   genCodeCommand: CodingCommand = new CodingCommand(this, 'gen-code');
   genTestCommand: CodingCommand = new CodingCommand(this, 'gen-test');
   debugCommand: CodingCommand = new CodingCommand(this, 'debug');
+  commendCommand: CodingCommand = new CodingCommand(this, 'comment');
   portingCommand: CodingCommand = new CodingCommand(this, 'porting');
   explainCommand: CodingCommand = new CodingCommand(this, 'explain');
   improveCommand: CodingCommand = new CodingCommand(this, 'improve');
@@ -71,6 +72,7 @@ export class RootStore {
     this.context.subscriptions.push(this.genCodeCommand.register());
     this.context.subscriptions.push(this.genTestCommand.register());
     this.context.subscriptions.push(this.debugCommand.register());
+    this.context.subscriptions.push(this.commendCommand.register());
     this.context.subscriptions.push(this.portingCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());

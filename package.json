@@ -90,6 +90,11 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.coding.comment",
+        "title": "Comment",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.coding.porting",
         "title": "Porting",
         "category": "V-Collab"
@@ -199,8 +204,12 @@
           "group": "2_code@3"
         },
         {
-          "command": "v-collab.command.coding.porting",
+          "command": "v-collab.command.coding.comment",
           "group": "2_code@4"
+        },
+        {
+          "command": "v-collab.command.coding.porting",
+          "group": "2_code@5"
         },
         {
           "command": "v-collab.command.coding.explain",
