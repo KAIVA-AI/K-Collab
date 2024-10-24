@@ -11,10 +11,12 @@ import {
 } from '../commands';
 import { EditorCommentProvider } from '../providers';
 import { Logger } from '../utils/logger';
+import { CodeActionProvider } from 'src/providers/codeActionProvider';
 
 export class RootStore {
   // providers
   editorCommentProvider = new EditorCommentProvider(this);
+  codeActionProvider = new CodeActionProvider(this);
   // views
   chatPanelProvider: ChatPanelProvider;
   previewPanelProvider: PreviewPanelProvider = new PreviewPanelProvider(this);
@@ -46,6 +48,7 @@ export class RootStore {
     Logger.register();
     // providers
     this.context.subscriptions.push(this.editorCommentProvider.register());
+    this.context.subscriptions.push(this.codeActionProvider.register());
     // views
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
