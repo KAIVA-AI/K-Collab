@@ -11,4 +11,3 @@ export const Constants = {
   WEB_URL: process.env.PUBLIC_URL || 'http://localhost:3000',
   WEB_VERSION: process.env.WEBVIEW_VERSION || '1.0.0',
 };
-console.log(Constants);
