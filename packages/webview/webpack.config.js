@@ -101,5 +101,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
+    new webpack.BannerPlugin(`${packageJson.name} v${packageJson.version}`),
   ],
 };

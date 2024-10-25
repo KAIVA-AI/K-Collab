@@ -4,7 +4,7 @@ import { BaseComponentProps } from 'src/models/base';
 
 @inject('rootStore')
 @observer
-class VersionPage extends Component<BaseComponentProps> {
+export class VersionPage extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
   }
@@ -20,5 +20,3 @@ class VersionPage extends Component<BaseComponentProps> {
     );
   }
 }
-
-export default VersionPage;

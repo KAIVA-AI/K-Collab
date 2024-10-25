@@ -9,6 +9,18 @@ export class ChatViewModel {
     makeObservable(this);
   }
 
+  @action clickPreviewChange = (content: string) => {
+    var tempElement = document.createElement('pre');
+    tempElement.innerHTML = content;
+    const text = tempElement.textContent || tempElement.innerText || '';
+    this.rootStore.postMessageToVSCode({
+      command: 'previewChange',
+      data: {
+        content: text,
+      },
+    });
+  };
+
   @action clickInsertMessage = (content: string) => {
     var tempElement = document.createElement('pre');
     tempElement.innerHTML = content;

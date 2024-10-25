@@ -8,6 +8,7 @@ const slashCommands = [
   'gen-code',
   'gen-test',
   'debug',
+  'comment',
   'porting',
   'explain',
   'improve',

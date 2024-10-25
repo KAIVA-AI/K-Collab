@@ -1,13 +1,12 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'mobx-react';
 import { enableLogging } from 'mobx-logger';
 import { rootStore } from './stores';
+import { App } from './App';
 
 import './index.css';
 import '@vscode/codicons/dist/codicon.css';
-
-const App = lazy(() => import('./App'));
 
 enableLogging();
 

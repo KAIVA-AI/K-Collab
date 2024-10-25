@@ -12,9 +12,13 @@ import {
 import { EditorCommentProvider } from '../providers';
 import { Logger } from '../utils/logger';
 import { CodeActionProvider } from 'src/providers/codeActionProvider';
+import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
+import { AcceptChangeCommand } from 'src/commands/acceptChange';
+import { RejectChangeCommand } from 'src/commands/rejectChange';
 
 export class RootStore {
   // providers
+  memoryFileProvider: MemoryFileProvider = new MemoryFileProvider();
   editorCommentProvider = new EditorCommentProvider(this);
   codeActionProvider = new CodeActionProvider(this);
   // views
@@ -29,12 +33,19 @@ export class RootStore {
   genCodeCommand: CodingCommand = new CodingCommand(this, 'gen-code');
   genTestCommand: CodingCommand = new CodingCommand(this, 'gen-test');
   debugCommand: CodingCommand = new CodingCommand(this, 'debug');
+  commendCommand: CodingCommand = new CodingCommand(this, 'comment');
   portingCommand: CodingCommand = new CodingCommand(this, 'porting');
   explainCommand: CodingCommand = new CodingCommand(this, 'explain');
   improveCommand: CodingCommand = new CodingCommand(this, 'improve');
   reviewCommand: CodingCommand = new CodingCommand(this, 'review');
   askAICommand: AskAICommand = new AskAICommand(this);
   inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
+  acceptChangeCommand: AcceptChangeCommand = new AcceptChangeCommand(this);
+  rejectChangeCommand: RejectChangeCommand = new RejectChangeCommand(this);
+
+  get extensionVersion(): string {
+    return this.context.extension.packageJSON.version;
+  }
 
   constructor(private context: ExtensionContext) {
     this.chatPanelProvider = new ChatPanelProvider(this);
@@ -47,6 +58,7 @@ export class RootStore {
   register = () => {
     Logger.register();
     // providers
+    this.context.subscriptions.push(this.memoryFileProvider.register());
     this.context.subscriptions.push(this.editorCommentProvider.register());
     this.context.subscriptions.push(this.codeActionProvider.register());
     // views
@@ -60,16 +72,15 @@ export class RootStore {
     this.context.subscriptions.push(this.genCodeCommand.register());
     this.context.subscriptions.push(this.genTestCommand.register());
     this.context.subscriptions.push(this.debugCommand.register());
+    this.context.subscriptions.push(this.commendCommand.register());
     this.context.subscriptions.push(this.portingCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
-  };
-
-  extensionVersion = () => {
-    return this.context.extension.packageJSON.version;
+    this.context.subscriptions.push(this.acceptChangeCommand.register());
+    this.context.subscriptions.push(this.rejectChangeCommand.register());
   };
 
   registerPanel = (panel: WebviewPanel) => {
