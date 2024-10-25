@@ -6,20 +6,23 @@ export interface IChannel {
 }
 
 export interface ITopicFileInput {
+  db_index?: string;
   name: string;
   path: string;
-  start?: number;
-  end?: number;
+  start?: string;
+  end?: string;
   content?: string;
 }
 export class TopicFileInput {
-  name: string;
-  path: string;
-  start?: number;
-  end?: number;
-  content?: string;
+  readonly db_index?: string;
+  readonly name: string;
+  readonly path: string;
+  readonly start?: string;
+  readonly end?: string;
+  readonly content?: string;
 
   constructor(data: ITopicFileInput) {
+    this.db_index = data.db_index;
     this.name = data.name;
     this.path = data.path;
     this.start = data.start;
@@ -37,6 +40,7 @@ export class TopicFileInput {
 }
 
 export interface ITopic {
+  topic_id?: number;
   stream_id: number;
   name: string;
   max_id?: number;

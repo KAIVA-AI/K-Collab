@@ -5,15 +5,20 @@ import {
   Disposable,
   commands,
   env,
+  workspace,
+  Selection,
 } from 'vscode';
-import { ITopicFileInput, IWebviewMessage } from '../models';
+import { ITopicFileInput, IWebviewMessage, TopicFileInput } from '../models';
 import { RootStore } from '../stores';
 import { AddFileCommand, AddSelectionCommand } from '../commands';
 import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
+import { IBaseWebview } from './baseWebview';
 
 const VIEW_ID = 'v-collab_bar.chat';
 
-export class ChatPanelProvider implements WebviewViewProvider, Disposable {
+export class ChatPanelProvider
+  implements WebviewViewProvider, IBaseWebview, Disposable
+{
   private view?: WebviewView;
   readonly #webProvider: Disposable;
   private zulipService: ZulipService;
@@ -66,6 +71,15 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     if (message.command === 'copyMessage') {
       this.copyMessageToClipboard(message.data.content);
     }
+    if (message.command === 'getExtensionVersion') {
+      this.getExtensionVersion(message);
+    }
+    if (message.command === 'openInputFile') {
+      this.openInputFile(message.data.file);
+    }
+    if (message.command === 'getPageRouter') {
+      this.getPageRouter(message);
+    }
   };
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -107,7 +121,10 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
     }
   };
 
-  insertMessageToEditor = async (message: string) => {
+
+  insertMessageToEditor = (message: string) => {
+    // TODO wait for preview panel to be implemented
+    // this.rootStore.previewPanelProvider.show(message);
     const editor = window.activeTextEditor;
     if (editor) {
       // const pick = await window.showInformationMessage(
@@ -159,6 +176,48 @@ export class ChatPanelProvider implements WebviewViewProvider, Disposable {
         topic,
         file,
         content,
+      },
+    });
+  };
+
+  openInputFile = async (f: ITopicFileInput) => {
+    try {
+      const file = new TopicFileInput(f);
+      const document = await workspace.openTextDocument(file.path);
+      window.showTextDocument(document);
+      if (file.isSelection) {
+        const editor = window.activeTextEditor;
+        if (editor) {
+          const start = document.lineAt(Math.max(0, Number(file.start) - 1));
+          const end = document.lineAt(Math.max(0, Number(file.end) - 1));
+          editor.selection = new Selection(start.range.start, end.range.end);
+        }
+      }
+    } catch {
+      // file not found
+    }
+  };
+
+  getExtensionVersion = (message: IWebviewMessage) => {
+    this.view?.webview.postMessage({
+      source: 'vscode',
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        version: this.rootStore.extensionVersion(),
+      },
+    });
+  };
+
+  getPageRouter = (message: IWebviewMessage) => {
+    this.view?.webview.postMessage({
+      source: 'vscode',
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        pageRouter: 'chat-panel',
       },
     });
   };

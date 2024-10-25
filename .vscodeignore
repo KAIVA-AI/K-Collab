@@ -18,3 +18,4 @@ development.md
 .env
 .env.example
 dist/webview
+scripts

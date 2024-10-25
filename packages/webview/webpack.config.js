@@ -5,6 +5,7 @@ require('dotenv').config();
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost:3000';
+const packageJson = require('../../package.json');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -95,6 +96,7 @@ module.exports = {
       'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),
 
       'process.env.PUBLIC_URL': JSON.stringify(publicUrl),
+      'process.env.WEBVIEW_VERSION': JSON.stringify(packageJson.version),
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],

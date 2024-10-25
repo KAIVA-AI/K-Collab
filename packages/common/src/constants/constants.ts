@@ -9,5 +9,6 @@ export const Constants = {
   BOT_CODING: 'VietIS-Coding',
 
   WEB_URL: process.env.PUBLIC_URL || 'http://localhost:3000',
+  WEB_VERSION: process.env.WEBVIEW_VERSION || '1.0.0',
 };
 console.log(Constants);

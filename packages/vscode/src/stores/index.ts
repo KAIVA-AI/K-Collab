@@ -1,5 +1,5 @@
-import { ExtensionContext } from 'vscode';
-import { ChatPanelProvider } from '../views';
+import { ExtensionContext, WebviewPanel } from 'vscode';
+import { ChatPanelProvider, PreviewPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
 import {
   AddFileCommand,
@@ -11,12 +11,15 @@ import {
 } from '../commands';
 import { EditorCommentProvider } from '../providers';
 import { Logger } from '../utils/logger';
+import { CodeActionProvider } from 'src/providers/codeActionProvider';
 
 export class RootStore {
   // providers
   editorCommentProvider = new EditorCommentProvider(this);
+  codeActionProvider = new CodeActionProvider(this);
   // views
   chatPanelProvider: ChatPanelProvider;
+  previewPanelProvider: PreviewPanelProvider = new PreviewPanelProvider(this);
   // handlers
   uriHandler: UriHandler;
   // commands
@@ -45,6 +48,7 @@ export class RootStore {
     Logger.register();
     // providers
     this.context.subscriptions.push(this.editorCommentProvider.register());
+    this.context.subscriptions.push(this.codeActionProvider.register());
     // views
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
@@ -62,5 +66,13 @@ export class RootStore {
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
+  };
+
+  extensionVersion = () => {
+    return this.context.extension.packageJSON.version;
+  };
+
+  registerPanel = (panel: WebviewPanel) => {
+    this.context.subscriptions.push(panel);
   };
 }

@@ -14,10 +14,14 @@
 .topic-page {
   user-select: none;
   .topic-list {
-    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 3px;
     .topic-item {
       border: solid 1px var(--main-border-color);
-      padding: 2px;
+      border-radius: 5px;
+      padding: 3px 10px 6px 10px;
       cursor: pointer;
       &:hover {
         background-color: var(--mention-highlight);
