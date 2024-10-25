@@ -102,7 +102,6 @@ export class ChatPanelProvider
     }
   };
 
-
   private previewChange = async (message: IWebviewMessage) => {
     await this.rootStore.memoryFileProvider.closeAllPreviewTabs();
     const editor = window.activeTextEditor;
@@ -172,19 +171,8 @@ export class ChatPanelProvider
   private insertMessageToEditor = (message: IWebviewMessage) => {
     const editor = window.activeTextEditor;
     if (editor) {
-      // const pick = await window.showInformationMessage(
-      //   'Code generation is done.',
-      //   'Accept',
-      //   'Reject',
-      // );
-      // if (pick === 'Accept') {
-      //   console.log('DO ACCEPT');
-      // } else if (pick === 'Reject') {
-      //   this.dispose();
-      // }
       editor.edit(editBuilder => {
         editBuilder.insert(editor.selection.start, message.data.content);
-
       });
     }
   };
