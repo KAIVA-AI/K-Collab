@@ -1,5 +1,6 @@
 set -e
 set -x
+cd /home/zulip/ide-ext
 git pull
 yarn
 yarn package
