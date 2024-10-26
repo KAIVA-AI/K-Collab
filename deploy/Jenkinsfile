@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+  options {
+    timestamps()
+  }
+  stages {
+    stage('Deloy Stg') {
+      when {
+        beforeOptions true
+        anyOf {
+          environment name: 'gitlabBranch', value: 'stg'
+        }
+      }
+      agent { label 'v-collab-stg' }
+      steps {
+        gitlabCommitStatus('Deloy Stg') {
+          sh 'sudo -u zulip /home/zulip/ide-ext/deploy/deploy.sh'
+        }
+      }
+    }
+  }
+}
