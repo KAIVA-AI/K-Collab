@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 require('dotenv').config();
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -76,7 +75,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new NodePolyfillPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
