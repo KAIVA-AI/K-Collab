@@ -14,7 +14,7 @@ const slashCommands = [
   'improve',
   'review',
 ];
-const userMentions: string[] = [];
+// const userMentions: string[] = [];
 // TODO combine slash and users to single array
 
 interface MentionItem {
@@ -68,18 +68,8 @@ export class ChatInputViewModel {
       });
   }
 
-  @computed get filteredUserMentions() {
-    return userMentions.filter(mention =>
-      mention.toLowerCase().includes((this.filterMention || '').toLowerCase()),
-    );
-  }
-
   @computed get hasSlashCommand() {
     return this.filteredSlashCommands.length > 0;
-  }
-
-  @computed get hasUserMention() {
-    return this.filteredUserMentions.length > 0;
   }
 
   @computed get selectedMention() {
@@ -160,7 +150,7 @@ export class ChatInputViewModel {
       if (['Enter', 'Tab'].includes(e.key)) {
         if (this.selectedMention) {
           const mentionText = this.filterMention || '';
-          const selectedMention = this.selectedMention || '';
+          const selectedMention = this.selectedMention?.value || '';
           this.reset();
           const temp = this.prompt;
           const target = e.target as HTMLInputElement;

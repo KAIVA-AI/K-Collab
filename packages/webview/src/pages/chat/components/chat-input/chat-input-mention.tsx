@@ -50,19 +50,6 @@ export class ChatInputMentionComponent extends Component<IProps> {
             <div className="mention-item">No available command</div>
           )}
         </div>
-        <div className="mention-group">
-          {this.viewModel.filteredUserMentions.map((command, index) => (
-            <div
-              key={index}
-              className="mention-item"
-              onClick={() => {
-                this.viewModel.handleSelectMention(command);
-              }}
-            >
-              /{command}
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
