@@ -22,7 +22,7 @@ class TopicPage extends Component<BaseComponentProps> {
           {this.topicStore.topics.map((topic, index) => (
             <div
               key={index}
-              className="topic-item"
+              className="topic-item vc-border"
               onClick={() => {
                 this.topicStore.selectTopic(topic);
               }}

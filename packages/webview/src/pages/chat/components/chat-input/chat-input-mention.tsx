@@ -20,7 +20,7 @@ export class ChatInputMentionComponent extends Component<IProps> {
     return this.props.viewModel!;
   }
   get mentionListClass() {
-    const classes: string[] = ['mention-list'];
+    const classes: string[] = ['mention-list', 'vc-border'];
     if (!this.viewModel.isShowMentionBox) {
       classes.push('hidden');
     }

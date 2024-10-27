@@ -14,6 +14,7 @@ import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
 import { Constants, ZulipService } from '@v-collab/common';
 import { v4 as uuidV4 } from 'uuid';
+import { AuthStore } from './auth.store';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -39,6 +40,7 @@ interface IWebviewMessageHandlerMap {
 
 export class RootStore {
   private vscode = getVSCodeApi();
+  authStore = new AuthStore();
   realmStore = new RealmStore();
   channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);

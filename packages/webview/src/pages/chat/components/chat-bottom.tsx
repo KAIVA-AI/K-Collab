@@ -24,9 +24,9 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
 
   render() {
     return (
-      <div className="bottom-block">
+      <div className="bottom-block vc-border">
         <div className="context-block">
-          <div className="add-context">
+          <div className="add-context vc-border">
             <i
               className="codicon codicon-add"
               onClick={() => this.topicStore.selectAddContextMethod()}
@@ -34,7 +34,7 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
           </div>
           <div className="context-list">
             {this.topicStore.currentTopic?.file_inputs?.map((file, index) => (
-              <div className="context-file" key={index}>
+              <div className="context-file vc-border" key={index}>
                 <div
                   className="file c-pointer"
                   onClick={() => this.chatViewModel.openInputFile(file)}

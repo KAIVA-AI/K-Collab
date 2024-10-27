@@ -6,9 +6,11 @@ import { VersionPage } from './pages/bootstrap/version';
 import { rootStore } from './stores';
 import { enableLogging } from 'mobx-logger';
 
+import './assets/scss/app.scss';
+
+const LoginPage = lazy(() => import('./pages/login/login'));
 const TopicPage = lazy(() => import('./pages/topic/topic'));
 const ChatPage = lazy(() => import('./pages/chat/chat'));
-const PreviewPage = lazy(() => import('./pages/preview/preview'));
 
 enableLogging();
 
@@ -33,11 +35,11 @@ export class App extends Component<BaseComponentProps> {
     if (this.rootStore.isVersionMismatch) {
       return <VersionPage />;
     }
+    if (!this.rootStore.authStore.isLogin) {
+      return <LoginPage />;
+    }
     if (this.rootStore.pageRouter === 'chat-panel') {
       return this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />;
-    }
-    if (this.rootStore.pageRouter === 'view-diff') {
-      return <PreviewPage />;
     }
     return <></>;
   }

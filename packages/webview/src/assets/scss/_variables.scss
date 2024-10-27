@@ -1,0 +1,10 @@
+:root {
+  --main-foreground-color: var(--vscode-input-foreground);
+
+  --main-background-color: var(--vscode-sideBar-background);
+  --input-background-color: var(--vscode-input-background);
+  --code-background-color: var(--vscode-editor-background);
+  --highlight-background-color: var(--vscode-badge-background);
+
+  --main-border-color: var(--vscode-chat-requestBorder, var(--vscode-input-background, transparent));
+}

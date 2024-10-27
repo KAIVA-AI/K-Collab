@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import './index.css';
 import '@vscode/codicons/dist/codicon.css';
 
 const App = lazy(() => import('./App'));

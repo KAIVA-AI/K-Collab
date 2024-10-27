@@ -40,3 +40,10 @@ code {
 .mb-6px {
   margin-bottom: 6px;
 }
+.vc-highlight-bg {
+  background-color: var(--highlight-background-color);
+}
+.vc-border {
+  border: solid 1px var(--main-border-color);
+  border-radius: 5px;
+}
