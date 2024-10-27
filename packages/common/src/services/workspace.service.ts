@@ -27,7 +27,7 @@ export class WorkspaceService {
       method: 'POST',
       headers,
       body: JSON.stringify({ username, password }),
-    }).then(res => res.json());
+    }).then((res: any) => res.json());
 
     return result;
   };
@@ -44,7 +44,7 @@ export class WorkspaceService {
       console.log('Unauthorized');
       return [];
     }
-    const result = await response.json();
+    const result: any = await response.json();
     if (!result.status) {
       console.log('Error:', result.message);
       return [];
