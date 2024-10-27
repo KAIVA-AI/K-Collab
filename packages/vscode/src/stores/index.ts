@@ -2,15 +2,21 @@ import { ExtensionContext, WebviewPanel } from 'vscode';
 import { ChatPanelProvider, PreviewPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
 import {
-  AcceptChangeCommand,
+  // chat
+  HistoryCommand,
+  InlineChatCommand,
+  // coding
   AddFileCommand,
   AddSelectionCommand,
   AskAICommand,
   CodingCommand,
-  HistoryCommand,
-  InlineChatCommand,
+  // preview
+  AcceptChangeCommand,
   RejectChangeCommand,
-  SettingCommand,
+  // setting
+  OpenSettingCommand,
+  ChangeWorkspaceCommand,
+  LogoutCommand,
 } from '../commands';
 import {
   CodeActionProvider,
@@ -22,44 +28,40 @@ import { Logger } from '../utils/logger';
 
 export class RootStore {
   // providers
-  memoryFileProvider: MemoryFileProvider = new MemoryFileProvider();
+  memoryFileProvider = new MemoryFileProvider();
   editorCommentProvider = new EditorCommentProvider(this);
   codeActionProvider = new CodeActionProvider(this);
-  statusBarIconProvider: StatusBarIconProvider = new StatusBarIconProvider();
+  statusBarIconProvider = new StatusBarIconProvider();
   // views
-  chatPanelProvider: ChatPanelProvider;
-  previewPanelProvider: PreviewPanelProvider = new PreviewPanelProvider(this);
+  chatPanelProvider = new ChatPanelProvider(this);
+  previewPanelProvider = new PreviewPanelProvider(this);
   // handlers
-  uriHandler: UriHandler;
+  uriHandler: UriHandler = new UriHandler(this);
   // commands
-  addSelectionCommand: AddSelectionCommand;
-  addFileCommand: AddFileCommand;
-  historyCommand: HistoryCommand = new HistoryCommand(this);
-  genCodeCommand: CodingCommand = new CodingCommand(this, 'gen-code');
-  genTestCommand: CodingCommand = new CodingCommand(this, 'gen-test');
-  debugCommand: CodingCommand = new CodingCommand(this, 'debug');
-  commendCommand: CodingCommand = new CodingCommand(this, 'comment');
-  portingCommand: CodingCommand = new CodingCommand(this, 'porting');
-  explainCommand: CodingCommand = new CodingCommand(this, 'explain');
-  improveCommand: CodingCommand = new CodingCommand(this, 'improve');
-  reviewCommand: CodingCommand = new CodingCommand(this, 'review');
-  askAICommand: AskAICommand = new AskAICommand(this);
-  inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
-  acceptChangeCommand: AcceptChangeCommand = new AcceptChangeCommand(this);
-  rejectChangeCommand: RejectChangeCommand = new RejectChangeCommand(this);
-  settingCommand: SettingCommand = new SettingCommand(this);
+  addSelectionCommand = new AddSelectionCommand(this);
+  addFileCommand = new AddFileCommand(this);
+  historyCommand = new HistoryCommand(this);
+  genCodeCommand = new CodingCommand(this, 'gen-code');
+  genTestCommand = new CodingCommand(this, 'gen-test');
+  debugCommand = new CodingCommand(this, 'debug');
+  commendCommand = new CodingCommand(this, 'comment');
+  portingCommand = new CodingCommand(this, 'porting');
+  explainCommand = new CodingCommand(this, 'explain');
+  improveCommand = new CodingCommand(this, 'improve');
+  reviewCommand = new CodingCommand(this, 'review');
+  askAICommand = new AskAICommand(this);
+  inlineChatCommand = new InlineChatCommand(this);
+  acceptChangeCommand = new AcceptChangeCommand(this);
+  rejectChangeCommand = new RejectChangeCommand(this);
+  openSettingCommand = new OpenSettingCommand(this);
+  changeWorkspaceCommand = new ChangeWorkspaceCommand(this);
+  logoutCommand = new LogoutCommand(this);
 
   get extensionVersion(): string {
     return this.context.extension.packageJSON.version;
   }
 
-  constructor(private context: ExtensionContext) {
-    this.chatPanelProvider = new ChatPanelProvider(this);
-    this.uriHandler = new UriHandler(this, context);
-    // commands
-    this.addSelectionCommand = new AddSelectionCommand(this);
-    this.addFileCommand = new AddFileCommand(this);
-  }
+  constructor(private context: ExtensionContext) {}
 
   register = () => {
     Logger.register();
@@ -88,10 +90,16 @@ export class RootStore {
     this.context.subscriptions.push(this.inlineChatCommand.register());
     this.context.subscriptions.push(this.acceptChangeCommand.register());
     this.context.subscriptions.push(this.rejectChangeCommand.register());
-    this.context.subscriptions.push(this.settingCommand.register());
+    this.context.subscriptions.push(this.openSettingCommand.register());
+    this.context.subscriptions.push(this.changeWorkspaceCommand.register());
+    this.context.subscriptions.push(this.logoutCommand.register());
   };
 
   registerPanel = (panel: WebviewPanel) => {
     this.context.subscriptions.push(panel);
+  };
+
+  setState = (key: string, value: any) => {
+    this.context.globalState.update(key, value);
   };
 }

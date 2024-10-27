@@ -170,9 +170,21 @@
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.setting",
+        "command": "v-collab.command.setting.open",
         "title": "V-Collab Setting",
         "icon": "$(gear)",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.setting.change-workspace",
+        "title": "Change workspace",
+        "icon": "$(account)",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.setting.logout",
+        "title": "Logout",
+        "icon": "$(log-out)",
         "category": "V-Collab"
       }
     ],
@@ -254,7 +266,7 @@
           "group": "navigation@3"
         },
         {
-          "command": "v-collab.command.setting",
+          "command": "v-collab.command.setting.open",
           "when": "view == v-collab_bar.chat",
           "group": "navigation@4"
         }

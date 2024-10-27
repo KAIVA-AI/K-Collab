@@ -1,3 +1,4 @@
+import { OpenSettingCommand } from 'src/commands';
 import { StatusBarItem, StatusBarAlignment, window, Disposable } from 'vscode';
 
 export class StatusBarIconProvider {
@@ -7,7 +8,7 @@ export class StatusBarIconProvider {
     this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right);
     this.statusBarItem.text = '$(v-collab-icon) V-Collab';
     this.statusBarItem.tooltip = 'V-Collab Menu';
-    this.statusBarItem.command = 'v-collab.command.setting';
+    this.statusBarItem.command = OpenSettingCommand.COMMAND_ID;
   }
 
   register = (): Disposable => {
