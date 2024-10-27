@@ -17,6 +17,13 @@ const slashCommands = [
 const userMentions: string[] = [];
 // TODO combine slash and users to single array
 
+interface MentionItem {
+  index: number;
+  value: string;
+  selected: boolean;
+  className?: string;
+}
+
 export class ChatInputViewModel {
   @observable prompt = '';
   @observable sending = false;
@@ -41,10 +48,24 @@ export class ChatInputViewModel {
     return this.filterMention !== undefined;
   }
 
-  @computed get filteredSlashCommands() {
-    return slashCommands.filter(command =>
-      command.toLowerCase().includes((this.filterMention || '').toLowerCase()),
-    );
+  @computed get filteredSlashCommands(): MentionItem[] {
+    return slashCommands
+      .filter(command =>
+        command
+          .toLowerCase()
+          .includes((this.filterMention || '').toLowerCase()),
+      )
+      .map((value, index) => {
+        const classes: string[] = ['mention-item'];
+        const selected = index === this.mentionIndex;
+        if (selected) classes.push('selected');
+        return {
+          value,
+          index,
+          selected,
+          className: classes.join(' '),
+        };
+      });
   }
 
   @computed get filteredUserMentions() {

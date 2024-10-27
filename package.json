@@ -31,7 +31,7 @@
   ],
   "main": "./dist/vscode/extension.js",
   "scripts": {
-    "lint": "eslint src",
+    "lint": "eslint packages",
     "start-webview": "yarn workspace @v-collab/webview start",
     "start-vscode": "yarn workspace @v-collab/vscode start",
     "build-webview": "yarn workspace @v-collab/webview build",
