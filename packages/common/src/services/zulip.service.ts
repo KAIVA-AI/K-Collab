@@ -140,7 +140,7 @@ export class ZulipService {
   getMessages = async (streamId: number, topic: string) => {
     const queryParams = {
       anchor: 'newest',
-      num_before: 10,
+      num_before: 50,
       num_after: 0,
       narrow: JSON.stringify([
         { operator: 'stream', operand: streamId },
