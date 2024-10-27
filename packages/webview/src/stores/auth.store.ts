@@ -67,7 +67,8 @@ export class AuthStore {
     }
   };
 
-  @action onLoggedInTest = () => {
+  @action onLoggedInTest = async () => {
+    this.rootStore.cleanup();
     this.rootStore.zulipService.setBasicAuth(
       Constants.USER_EMAIL,
       Constants.USER_API_KEY,
@@ -75,6 +76,18 @@ export class AuthStore {
     this.rootStore.postMessageToVSCode({
       command: 'onLoggedInTest',
     });
+    const realm = Constants.REALM_STRING;
+    this.rootStore.zulipService.setRealm(realm);
+    this.rootStore.postMessageToVSCode({
+      command: 'onSelectRealm',
+      data: {
+        realm,
+      },
+    });
+    await this.rootStore.channelStore.loadData();
+    this.rootStore.realmStore.currentRealm = {
+      realm_string: realm,
+    };
     this.isLogin = true;
   };
 }

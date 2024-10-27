@@ -1,4 +1,5 @@
 import { Constants } from '../constants/constants';
+import { IWorkspace } from '../models';
 
 interface ILoginResult {
   status: boolean;
@@ -36,13 +37,20 @@ export class WorkspaceService {
     const headers = new Headers();
     headers.set('Accept', 'application/json');
     headers.set('Authorization', `Bearer ${this.token}`);
-    const result = await fetch(url, {
+    const response = await fetch(url, {
       headers,
     });
-    if (result.status === 401) {
+    if (response.status === 401) {
       console.log('Unauthorized');
-      return;
+      return [];
     }
-    console.log(result);
+    const result = await response.json();
+    if (!result.status) {
+      console.log('Error:', result.message);
+      return [];
+    }
+    const workspaces: IWorkspace[] = result.workspaces;
+
+    return workspaces;
   };
 }

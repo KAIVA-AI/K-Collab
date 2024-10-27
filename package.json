@@ -252,17 +252,17 @@
       "view/title": [
         {
           "command": "v-collab.command.chat.new-topic",
-          "when": "view == v-collab_bar.chat",
+          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
           "group": "navigation@1"
         },
         {
           "command": "v-collab.command.chat.history",
-          "when": "view == v-collab_bar.chat",
+          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
           "group": "navigation@2"
         },
         {
           "command": "v-collab.command.chat.preview",
-          "when": "view == v-collab_bar.chat",
+          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
           "group": "navigation@3"
         },
         {

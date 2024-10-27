@@ -37,7 +37,7 @@ export class ChatPanelProvider
         retainContextWhenHidden: true,
       },
     });
-    this.zulipService = new ZulipService(Constants.REALM_STRING);
+    this.zulipService = new ZulipService();
   }
 
   async resolveWebviewView(webviewView: WebviewView) {
@@ -62,6 +62,8 @@ export class ChatPanelProvider
     onLoggedIn: this.onLoggedIn,
     onLoggedOut: this.onLoggedOut,
     onLoggedInTest: this.onLoggedInTest,
+    setCurrentWebviewPageContext: this.setCurrentWebviewPageContext,
+    onSelectRealm: this.onSelectRealm,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -241,13 +243,17 @@ export class ChatPanelProvider
   private onLoggedIn = (message: IWebviewMessage) => {
     this.rootStore.authStore.setToken(message.data.token);
     this.zulipService.setToken(message.data.token);
-    this.zulipService.subscribeEventQueue();
   };
 
   private onLoggedOut = () => {
     this.rootStore.authStore.setToken('');
     this.zulipService.stopSubscribeEventQueue();
     this.zulipService.setToken('');
+  };
+
+  private onSelectRealm = (message: IWebviewMessage) => {
+    this.zulipService.setRealm(message.data.realm);
+    this.zulipService.subscribeEventQueue();
   };
 
   doLogout = () => {
@@ -263,5 +269,19 @@ export class ChatPanelProvider
       Constants.USER_API_KEY,
     );
     this.zulipService.subscribeEventQueue();
+  };
+
+  toWorkspaceList = () => {
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'navigateTo',
+      data: {
+        page: 'workspace-page',
+      },
+    });
+  };
+
+  private setCurrentWebviewPageContext = (message: IWebviewMessage) => {
+    this.rootStore.setContext('currentWebviewPage', message.data.context);
   };
 }

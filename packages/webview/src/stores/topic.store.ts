@@ -35,7 +35,7 @@ export class TopicStore {
     }
     if (message.command === 'backToTopicPage') {
       this.currentTopic = undefined;
-      return this.loadData();
+      return;
     }
     if (message.command === 'startNewTopic') {
       const data: {
@@ -126,7 +126,6 @@ export class TopicStore {
   @action selectTopic = (topic: ITopic) => {
     this.currentTopic = topic;
     this.rootStore.chatViewModel.eventFocusInput = true;
-    this.rootStore.messageStore.loadData();
     this.rootStore.zulipService.getFileInput(topic.name).then(fileInputs => {
       runInAction(() => {
         if (!this.currentTopic) {

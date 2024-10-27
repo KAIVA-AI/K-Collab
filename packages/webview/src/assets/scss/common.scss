@@ -55,7 +55,7 @@ code {
 .pa-10px {
   padding: 10px;
 }
-.vc-highlight-bg {
+.vc-highlight-bg:hover {
   background-color: var(--highlight-background-color);
 }
 .vc-input-bg {
@@ -85,4 +85,13 @@ code {
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
   color: var(--main-foreground-color);
+}
+.us-none {
+  user-select: none;
+}
+.ma-3px {
+  margin: 3px;
+}
+.list-item {
+  padding: 3px 10px 6px 10px;
 }

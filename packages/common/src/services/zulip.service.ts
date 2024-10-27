@@ -34,12 +34,13 @@ export class ZulipService {
   private tokenType: string = 'Basic';
   private controller? = new AbortController();
   private subscribeKey: number = 0;
+  private realm?: string;
 
   get isAuthorized() {
     return !!this.token;
   }
 
-  constructor(private realm: string) {}
+  constructor() {}
 
   setToken = (token: string) => {
     this.token = token;
@@ -51,7 +52,14 @@ export class ZulipService {
     this.tokenType = 'Basic';
   };
 
+  setRealm = (realm: string) => {
+    this.realm = realm;
+  };
+
   private buildUrl = (path: string) => {
+    if (this.realm === undefined) {
+      throw new Error('Realm is not set');
+    }
     const prefix = !this.realm ? '' : `${this.realm}.`;
     return `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/api/v1/${path}`;
   };

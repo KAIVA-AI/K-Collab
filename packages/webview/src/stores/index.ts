@@ -41,7 +41,7 @@ interface IWebviewMessageHandlerMap {
 export class RootStore {
   private vscode = getVSCodeApi();
   authStore = new AuthStore(this);
-  realmStore = new RealmStore();
+  realmStore = new RealmStore(this);
   channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);
   messageStore = new MessageStore(this);
@@ -71,7 +71,7 @@ export class RootStore {
 
   constructor() {
     makeObservable(this);
-    this.zulipService = new ZulipService(Constants.REALM_STRING);
+    this.zulipService = new ZulipService();
   }
 
   @action init = async () => {
@@ -127,14 +127,6 @@ export class RootStore {
     }
   };
 
-  @action loadData = async () => {
-    await this.realmStore.loadData();
-    await this.channelStore.loadData();
-    await this.topicStore.loadData();
-    await this.messageStore.loadData();
-    this.workspaceService.listWorkspace();
-  };
-
   @action cleanup = () => {
     this.realmStore.cleanup();
     this.channelStore.cleanup();
@@ -150,6 +142,12 @@ export class RootStore {
     if (message.command === 'updateWebviewTheme') {
       this.currentTheme = message.data.theme;
       return;
+    }
+    if (message.command === 'navigateTo') {
+      if (message.data.page === 'workspace-page') {
+        this.cleanup();
+        return;
+      }
     }
     if (message.webviewCallbackKey) {
       (window as any)[message.webviewCallbackKey](message);
@@ -195,6 +193,15 @@ export class RootStore {
       setTimeout(() => {
         if (!completed) resolve(undefined);
       }, 1000);
+    });
+  };
+
+  @action setCurrentWebviewPageContext = async (context: string) => {
+    await this.postMessageToVSCode({
+      command: 'setCurrentWebviewPageContext',
+      data: {
+        context,
+      },
     });
   };
 }

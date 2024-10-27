@@ -4,6 +4,7 @@ import { BaseComponentProps } from 'src/models/base';
 
 const TopicPage = lazy(() => import('../pages/topic/topic'));
 const ChatPage = lazy(() => import('../pages/chat/chat'));
+const WorkspacePage = lazy(() => import('../pages/workspace/workspace'));
 
 @inject('rootStore')
 @observer
@@ -11,16 +12,21 @@ class ChatPanelRoute extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
   }
+  get realmStore() {
+    return this.rootStore.realmStore;
+  }
   get topicStore() {
     return this.rootStore.topicStore;
   }
 
-  componentDidMount(): void {
-    this.rootStore.loadData();
-  }
-
   render() {
-    return this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />;
+    if (!this.realmStore.currentRealm) {
+      return <WorkspacePage />;
+    }
+    if (!this.topicStore.currentTopic) {
+      return <TopicPage />;
+    }
+    return <ChatPage />;
   }
 }
 export default ChatPanelRoute;

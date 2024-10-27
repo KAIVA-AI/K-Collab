@@ -1,4 +1,4 @@
-import { ExtensionContext, WebviewPanel } from 'vscode';
+import { ExtensionContext, WebviewPanel, commands } from 'vscode';
 import { ChatPanelProvider, PreviewPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
 import {
@@ -109,5 +109,9 @@ export class RootStore {
 
   setState = (key: string, value: any) => {
     this.context.globalState.update(key, value);
+  };
+
+  setContext = (name: string, value: any) => {
+    commands.executeCommand('setContext', name, value);
   };
 }

@@ -1,3 +1,7 @@
+export interface IRealm {
+  realm_string: string;
+}
+
 export interface IChannel {
   stream_id: number;
   name: string;

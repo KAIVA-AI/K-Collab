@@ -12,6 +12,10 @@ class LoginPage extends Component<BaseComponentProps> {
   }
   private vm = new LoginViewModel(this.rootStore);
 
+  componentDidMount(): void {
+    this.rootStore.setCurrentWebviewPageContext('login-page');
+  }
+
   render() {
     return (
       <div className="d-flex flex-col items-center justify-center f-g-24px">

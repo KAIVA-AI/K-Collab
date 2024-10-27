@@ -14,6 +14,11 @@ class TopicPage extends Component<BaseComponentProps> {
     return this.rootStore.topicStore;
   }
 
+  componentDidMount(): void {
+    this.rootStore.setCurrentWebviewPageContext('topic-page');
+    this.topicStore.loadData();
+  }
+
   render() {
     return (
       <div className="topic-page">
