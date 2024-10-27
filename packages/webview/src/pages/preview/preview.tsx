@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { PreviewViewModel } from './preview.viewmodel';
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react';
 
 @inject('rootStore')
 @observer
@@ -17,15 +16,8 @@ class PreviewPage extends Component<BaseComponentProps> {
     return (
       <div>
         <div className="d-flex f-g-6px mb-6px">
-          <VSCodeButton onClick={() => this.vm.acceptChanges()}>
-            Accept
-          </VSCodeButton>
-          <VSCodeButton
-            appearance="secondary"
-            onClick={() => this.vm.rejectChanges()}
-          >
-            Reject
-          </VSCodeButton>
+          <button onClick={() => this.vm.acceptChanges()}>Accept</button>
+          <button onClick={() => this.vm.rejectChanges()}>Reject</button>
         </div>
         <ReactDiffViewer
           styles={{

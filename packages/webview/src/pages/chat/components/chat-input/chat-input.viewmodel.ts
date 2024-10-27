@@ -1,5 +1,5 @@
 import { Constants } from '@v-collab/common';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
 
