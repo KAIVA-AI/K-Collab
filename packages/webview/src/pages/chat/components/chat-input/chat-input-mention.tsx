@@ -20,7 +20,7 @@ export class ChatInputMentionComponent extends Component<IProps> {
     return this.props.viewModel!;
   }
   get mentionListClass() {
-    const classes: string[] = ['mention-list'];
+    const classes: string[] = ['mention-list', 'vc-border'];
     if (!this.viewModel.isShowMentionBox) {
       classes.push('hidden');
     }
@@ -49,19 +49,6 @@ export class ChatInputMentionComponent extends Component<IProps> {
           ) : (
             <div className="mention-item">No available command</div>
           )}
-        </div>
-        <div className="mention-group">
-          {this.viewModel.filteredUserMentions.map((command, index) => (
-            <div
-              key={index}
-              className="mention-item"
-              onClick={() => {
-                this.viewModel.handleSelectMention(command);
-              }}
-            >
-              /{command}
-            </div>
-          ))}
         </div>
       </div>
     );

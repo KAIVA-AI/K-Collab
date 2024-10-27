@@ -1,59 +1,71 @@
-import { ExtensionContext, WebviewPanel } from 'vscode';
+import { ExtensionContext, WebviewPanel, commands } from 'vscode';
 import { ChatPanelProvider, PreviewPanelProvider } from '../views';
 import { UriHandler } from '../handlers';
 import {
+  // chat
+  HistoryCommand,
+  InlineChatCommand,
+  // coding
   AddFileCommand,
   AddSelectionCommand,
   AskAICommand,
   CodingCommand,
-  HistoryCommand,
-  InlineChatCommand,
+  // preview
+  AcceptChangeCommand,
+  RejectChangeCommand,
+  // setting
+  OpenSettingCommand,
+  ChangeWorkspaceCommand,
+  LogoutCommand,
 } from '../commands';
-import { EditorCommentProvider } from '../providers';
+import {
+  CodeActionProvider,
+  EditorCommentProvider,
+  MemoryFileProvider,
+  StatusBarIconProvider,
+} from '../providers';
 import { Logger } from '../utils/logger';
-import { CodeActionProvider } from 'src/providers/codeActionProvider';
-import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
-import { AcceptChangeCommand } from 'src/commands/acceptChange';
-import { RejectChangeCommand } from 'src/commands/rejectChange';
+import { AuthStore } from './auth.store';
 
 export class RootStore {
+  // stores
+  authStore = new AuthStore(this);
+
   // providers
-  memoryFileProvider: MemoryFileProvider = new MemoryFileProvider();
+  memoryFileProvider = new MemoryFileProvider();
   editorCommentProvider = new EditorCommentProvider(this);
   codeActionProvider = new CodeActionProvider(this);
+  statusBarIconProvider = new StatusBarIconProvider();
   // views
-  chatPanelProvider: ChatPanelProvider;
-  previewPanelProvider: PreviewPanelProvider = new PreviewPanelProvider(this);
+  chatPanelProvider = new ChatPanelProvider(this);
+  previewPanelProvider = new PreviewPanelProvider(this);
   // handlers
-  uriHandler: UriHandler;
+  uriHandler: UriHandler = new UriHandler(this);
   // commands
-  addSelectionCommand: AddSelectionCommand;
-  addFileCommand: AddFileCommand;
-  historyCommand: HistoryCommand = new HistoryCommand(this);
-  genCodeCommand: CodingCommand = new CodingCommand(this, 'gen-code');
-  genTestCommand: CodingCommand = new CodingCommand(this, 'gen-test');
-  debugCommand: CodingCommand = new CodingCommand(this, 'debug');
-  commendCommand: CodingCommand = new CodingCommand(this, 'comment');
-  portingCommand: CodingCommand = new CodingCommand(this, 'porting');
-  explainCommand: CodingCommand = new CodingCommand(this, 'explain');
-  improveCommand: CodingCommand = new CodingCommand(this, 'improve');
-  reviewCommand: CodingCommand = new CodingCommand(this, 'review');
-  askAICommand: AskAICommand = new AskAICommand(this);
-  inlineChatCommand: InlineChatCommand = new InlineChatCommand(this);
-  acceptChangeCommand: AcceptChangeCommand = new AcceptChangeCommand(this);
-  rejectChangeCommand: RejectChangeCommand = new RejectChangeCommand(this);
+  addSelectionCommand = new AddSelectionCommand(this);
+  addFileCommand = new AddFileCommand(this);
+  historyCommand = new HistoryCommand(this);
+  genCodeCommand = new CodingCommand(this, 'gen-code');
+  genTestCommand = new CodingCommand(this, 'gen-test');
+  debugCommand = new CodingCommand(this, 'debug');
+  commendCommand = new CodingCommand(this, 'comment');
+  portingCommand = new CodingCommand(this, 'porting');
+  explainCommand = new CodingCommand(this, 'explain');
+  improveCommand = new CodingCommand(this, 'improve');
+  reviewCommand = new CodingCommand(this, 'review');
+  askAICommand = new AskAICommand(this);
+  inlineChatCommand = new InlineChatCommand(this);
+  acceptChangeCommand = new AcceptChangeCommand(this);
+  rejectChangeCommand = new RejectChangeCommand(this);
+  openSettingCommand = new OpenSettingCommand(this);
+  changeWorkspaceCommand = new ChangeWorkspaceCommand(this);
+  logoutCommand = new LogoutCommand(this);
 
   get extensionVersion(): string {
     return this.context.extension.packageJSON.version;
   }
 
-  constructor(private context: ExtensionContext) {
-    this.chatPanelProvider = new ChatPanelProvider(this);
-    this.uriHandler = new UriHandler(this, context);
-    // commands
-    this.addSelectionCommand = new AddSelectionCommand(this);
-    this.addFileCommand = new AddFileCommand(this);
-  }
+  constructor(private context: ExtensionContext) {}
 
   register = () => {
     Logger.register();
@@ -61,6 +73,7 @@ export class RootStore {
     this.context.subscriptions.push(this.memoryFileProvider.register());
     this.context.subscriptions.push(this.editorCommentProvider.register());
     this.context.subscriptions.push(this.codeActionProvider.register());
+    this.context.subscriptions.push(this.statusBarIconProvider.register());
     // views
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
@@ -81,9 +94,24 @@ export class RootStore {
     this.context.subscriptions.push(this.inlineChatCommand.register());
     this.context.subscriptions.push(this.acceptChangeCommand.register());
     this.context.subscriptions.push(this.rejectChangeCommand.register());
+    this.context.subscriptions.push(this.openSettingCommand.register());
+    this.context.subscriptions.push(this.changeWorkspaceCommand.register());
+    this.context.subscriptions.push(this.logoutCommand.register());
   };
 
   registerPanel = (panel: WebviewPanel) => {
     this.context.subscriptions.push(panel);
+  };
+
+  getState = (key: string) => {
+    return this.context.globalState.get(key);
+  };
+
+  setState = (key: string, value: any) => {
+    this.context.globalState.update(key, value);
+  };
+
+  setContext = (name: string, value: any) => {
+    commands.executeCommand('setContext', name, value);
   };
 }

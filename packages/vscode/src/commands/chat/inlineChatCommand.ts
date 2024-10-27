@@ -1,5 +1,5 @@
 import { commands, Disposable, window, CommentReply } from 'vscode';
-import { RootStore } from '../stores';
+import { RootStore } from '../../stores';
 import path from 'path';
 
 const COMMAND_ID = 'v-collab.command.inline.chat';

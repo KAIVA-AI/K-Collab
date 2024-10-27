@@ -1,13 +1,23 @@
 import { ChatHeaderComponent } from './components/chat-header';
 import { ChatMainComponent } from './components/chat-main';
 import { ChatBottomComponent } from './components/chat-bottom';
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Component } from 'react';
 
 import './chat.scss';
+import { BaseComponentProps } from 'src/models/base';
 
+@inject('rootStore')
 @observer
-class ChatPage extends Component {
+class ChatPage extends Component<BaseComponentProps> {
+  get rootStore() {
+    return this.props.rootStore!;
+  }
+  componentDidMount(): void {
+    this.rootStore.setCurrentWebviewPageContext('chat-page');
+    this.rootStore.messageStore.loadData();
+  }
+
   render() {
     return (
       <div className="chat-page">

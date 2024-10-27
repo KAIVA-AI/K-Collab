@@ -1,5 +1,5 @@
 import { commands, Disposable } from 'vscode';
-import { RootStore } from '../stores';
+import { RootStore } from '../../stores';
 
 const COMMAND_ID = 'v-collab.command.chat.history';
 

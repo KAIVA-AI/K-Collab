@@ -1,12 +1,9 @@
-import { Disposable, Uri, window, ExtensionContext } from 'vscode';
+import { Disposable, Uri, window } from 'vscode';
 import { RootStore } from '../stores';
 import { Logger } from 'src/utils/logger';
 
 export class UriHandler {
-  constructor(
-    private rootStore: RootStore,
-    private context: ExtensionContext,
-  ) {}
+  constructor(private rootStore: RootStore) {}
 
   #handleUri(uri: Uri) {
     Logger.log(`Handling uri: ${uri}`);
@@ -17,12 +14,12 @@ export class UriHandler {
 
     if (accessToken) {
       // Store the token in the global state for later use
-      this.context.globalState.update('accessToken', accessToken);
+      this.rootStore.setState('accessToken', accessToken);
     } else {
       window.showErrorMessage('Authentication failed!');
     }
     if (realm) {
-      this.context.globalState.update('realm_string', realm);
+      this.rootStore.setState('realm_string', realm);
     }
     window.showInformationMessage(
       `${realm} Authentication successful! ${accessToken}`,

@@ -6,9 +6,10 @@ import { VersionPage } from './pages/bootstrap/version';
 import { rootStore } from './stores';
 import { enableLogging } from 'mobx-logger';
 
-const TopicPage = lazy(() => import('./pages/topic/topic'));
-const ChatPage = lazy(() => import('./pages/chat/chat'));
-const PreviewPage = lazy(() => import('./pages/preview/preview'));
+import './assets/scss/app.scss';
+
+const LoginPage = lazy(() => import('./pages/login/login'));
+const ChatPanelRoute = lazy(() => import('./routes/chatPanelRoute'));
 
 enableLogging();
 
@@ -17,9 +18,6 @@ enableLogging();
 export class App extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
-  }
-  get topicStore() {
-    return this.rootStore.topicStore;
   }
 
   componentDidMount(): void {
@@ -33,11 +31,11 @@ export class App extends Component<BaseComponentProps> {
     if (this.rootStore.isVersionMismatch) {
       return <VersionPage />;
     }
-    if (this.rootStore.pageRouter === 'chat-panel') {
-      return this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />;
+    if (!this.rootStore.authStore.isLogin) {
+      return <LoginPage />;
     }
-    if (this.rootStore.pageRouter === 'view-diff') {
-      return <PreviewPage />;
+    if (this.rootStore.pageRouter === 'chat-panel') {
+      return <ChatPanelRoute />;
     }
     return <></>;
   }

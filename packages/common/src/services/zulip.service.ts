@@ -24,28 +24,42 @@ interface RequestInit {
   method?: string;
   headers: Headers;
   body?: FormData;
+  signal?: AbortSignal | null;
 }
 
 export class ZulipService {
   private token: string = '';
   private eventListeners: IEventListeners = {};
   private unreadListeners: IUnreadListeners = {};
+  private tokenType: string = 'Basic';
+  private controller? = new AbortController();
+  private subscribeKey: number = 0;
+  private realm?: string;
 
   get isAuthorized() {
     return !!this.token;
   }
 
-  constructor(private realm: string) {}
+  constructor() {}
 
   setToken = (token: string) => {
     this.token = token;
+    this.tokenType = 'Bearer';
   };
 
   setBasicAuth = (email: string, apiKey: string) => {
     this.token = btoa(`${email}:${apiKey}`);
+    this.tokenType = 'Basic';
+  };
+
+  setRealm = (realm: string) => {
+    this.realm = realm;
   };
 
   private buildUrl = (path: string) => {
+    if (this.realm === undefined) {
+      throw new Error('Realm is not set');
+    }
     const prefix = !this.realm ? '' : `${this.realm}.`;
     return `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/api/v1/${path}`;
   };
@@ -55,16 +69,18 @@ export class ZulipService {
     formData,
     queryParams,
     method = 'POST',
+    controller,
   }: {
     path: string;
     method?: string;
     formData?: any;
     queryParams?: any;
+    controller?: AbortController;
   }): Promise<any> => {
     try {
       let url = this.buildUrl(path);
       const headers = new Headers();
-      headers.set('Authorization', `Basic ${this.token}`);
+      headers.set('Authorization', `${this.tokenType} ${this.token}`);
       const request: RequestInit = {
         method: method,
         headers: headers,
@@ -88,6 +104,9 @@ export class ZulipService {
           search.append(key, value as string);
         });
         url += `?${search}`;
+      }
+      if (controller) {
+        request.signal = controller.signal;
       }
       const response = await fetch(url, request);
       const json = await response.json();
@@ -140,7 +159,7 @@ export class ZulipService {
   getMessages = async (streamId: number, topic: string) => {
     const queryParams = {
       anchor: 'newest',
-      num_before: 10,
+      num_before: 50,
       num_after: 0,
       narrow: JSON.stringify([
         { operator: 'stream', operand: streamId },
@@ -173,6 +192,8 @@ export class ZulipService {
     queueId?: string,
     lastEventId?: number,
   ): Promise<IZulipEvent[]> => {
+    this.controller?.abort();
+    this.controller = new AbortController();
     return this.sendRequest({
       path: 'events',
       method: 'GET',
@@ -180,6 +201,7 @@ export class ZulipService {
         queue_id: queueId,
         last_event_id: lastEventId,
       },
+      controller: this.controller,
     }).then((json: any) => {
       if (json.result === 'error') {
         throw new Error('Error getting events');
@@ -232,17 +254,25 @@ export class ZulipService {
     }
   };
 
+  stopSubscribeEventQueue = () => {
+    this.subscribeKey = Date.now();
+    this.controller?.abort();
+  };
+
   subscribeEventQueue = async () => {
     let attempts = 5;
     let queueId: string | undefined = undefined;
     let lastEventId: number = -1;
     let retrying = false;
+    this.subscribeKey = Date.now();
+    const localSubscribeKey = this.subscribeKey;
     while (true) {
       try {
         if (!queueId) {
           [queueId, lastEventId] = await this.registerEventQueue();
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);
+        DEBUG && console.log('subscribeEventQueue events', events);
         if (retrying) {
           // receive events success, reset attempts
           attempts = 5;
@@ -253,6 +283,10 @@ export class ZulipService {
         lastEventId = Math.max(lastEventId, ...events.map(e => e.id));
         // await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
+        if (this.subscribeKey !== localSubscribeKey) {
+          console.log('Stop subscribe event queue');
+          return;
+        }
         console.log('Error subscribe event queue', error);
         console.log('Start retry after 1 second');
         attempts--;

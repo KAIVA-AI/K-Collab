@@ -51,6 +51,10 @@ const extensionConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      'process.env.PROJECT_SETTING_HOST': JSON.stringify(
+        process.env.PROJECT_SETTING_HOST,
+      ),
+
       'process.env.REALM_STRING': JSON.stringify(process.env.REALM_STRING),
       'process.env.USER_EMAIL': JSON.stringify(process.env.USER_EMAIL),
       'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),

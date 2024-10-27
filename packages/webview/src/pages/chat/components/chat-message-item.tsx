@@ -9,7 +9,6 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
   const renderedMarkdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // TODO render action buttons depend on div.codehilite tag
     const codeBlockList =
       renderedMarkdownRef.current?.querySelectorAll('div.codehilite');
     if (codeBlockList) {
@@ -54,19 +53,7 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
             />
             <div>{message.sender_full_name}</div>
           </div>
-          <div className="message-content">
-            {/* <div className="message-code-action">
-              <i
-                className="c-pointer codicon codicon-insert"
-                onClick={() =>
-                  chatViewModel.clickInsertMessage(message.content)
-                }
-              />
-              <i
-                className="c-pointer codicon codicon-copy"
-                onClick={() => chatViewModel.clickCopyMessage(message.content)}
-              />
-            </div> */}
+          <div className="message-content vc-border">
             <div
               ref={renderedMarkdownRef}
               dangerouslySetInnerHTML={{ __html: message.content }}

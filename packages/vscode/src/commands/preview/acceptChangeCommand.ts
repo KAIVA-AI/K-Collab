@@ -1,5 +1,5 @@
 import { commands, Disposable, window, Range } from 'vscode';
-import { RootStore } from '../stores';
+import { RootStore } from '../../stores';
 
 const COMMAND_ID = 'v-collab.command.preview.accept';
 

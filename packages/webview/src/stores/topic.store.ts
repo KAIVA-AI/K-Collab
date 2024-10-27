@@ -25,6 +25,16 @@ export class TopicStore {
     runInAction(() => {
       this.topics = topics;
     });
+    const lastTopic = await this.rootStore.postMessageToVSCode({
+      command: 'getLastTopic',
+      hasReturn: true,
+    });
+    if (lastTopic?.data?.topic) {
+      const topic = topics.find(t => t.name === lastTopic.data.topic);
+      if (topic) {
+        this.selectTopic(topic);
+      }
+    }
   };
 
   @action onMessageFromVSCode = async (message: IWebviewMessage) => {
@@ -35,7 +45,14 @@ export class TopicStore {
     }
     if (message.command === 'backToTopicPage') {
       this.currentTopic = undefined;
-      return this.loadData();
+      // TODO set to common
+      this.rootStore.postMessageToVSCode({
+        command: 'setLastTopic',
+        data: {
+          realm: this.rootStore.realmStore.currentRealm?.realm_string,
+        },
+      });
+      return;
     }
     if (message.command === 'startNewTopic') {
       const data: {
@@ -48,6 +65,13 @@ export class TopicStore {
         name: data.topic,
         file_inputs: [],
       };
+      this.rootStore.postMessageToVSCode({
+        command: 'setLastTopic',
+        data: {
+          realm: this.rootStore.realmStore.currentRealm?.realm_string,
+          topic: this.currentTopic?.name,
+        },
+      });
       this.rootStore.chatViewModel.eventFocusInput = true;
       if (data.file) {
         await this.addFileToTopic(new TopicFileInput(data.file));
@@ -125,8 +149,14 @@ export class TopicStore {
 
   @action selectTopic = (topic: ITopic) => {
     this.currentTopic = topic;
+    this.rootStore.postMessageToVSCode({
+      command: 'setLastTopic',
+      data: {
+        realm: this.rootStore.realmStore.currentRealm?.realm_string,
+        topic: this.currentTopic?.name,
+      },
+    });
     this.rootStore.chatViewModel.eventFocusInput = true;
-    this.rootStore.messageStore.loadData();
     this.rootStore.zulipService.getFileInput(topic.name).then(fileInputs => {
       runInAction(() => {
         if (!this.currentTopic) {
@@ -135,5 +165,10 @@ export class TopicStore {
         this.currentTopic.file_inputs = fileInputs;
       });
     });
+  };
+
+  @action cleanup = () => {
+    this.topics = [];
+    this.currentTopic = undefined;
   };
 }

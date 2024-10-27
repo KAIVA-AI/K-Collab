@@ -18,4 +18,9 @@ export class ChannelStore {
       c => c.name === Constants.CHANNEL_BACKEND,
     );
   };
+
+  @action cleanup = () => {
+    this.channels = [];
+    this.currentChannel = undefined;
+  };
 }
