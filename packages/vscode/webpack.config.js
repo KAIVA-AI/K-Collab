@@ -5,7 +5,8 @@
 const path = require('path');
 const webpack = require('webpack');
 require('dotenv').config();
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -49,7 +50,6 @@ const extensionConfig = {
     level: 'log',
   },
   plugins: [
-    new NodePolyfillPlugin(),
     new webpack.DefinePlugin({
       'process.env.REALM_STRING': JSON.stringify(process.env.REALM_STRING),
       'process.env.USER_EMAIL': JSON.stringify(process.env.USER_EMAIL),
@@ -57,6 +57,7 @@ const extensionConfig = {
 
       'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
     }),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],
 };
 module.exports = [extensionConfig];

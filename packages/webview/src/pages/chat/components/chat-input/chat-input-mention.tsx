@@ -1,5 +1,4 @@
 import { inject, observer } from 'mobx-react';
-import clsx from 'clsx';
 import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
@@ -20,30 +19,31 @@ export class ChatInputMentionComponent extends Component<IProps> {
   get viewModel() {
     return this.props.viewModel!;
   }
+  get mentionListClass() {
+    const classes: string[] = ['mention-list'];
+    if (!this.viewModel.isShowMentionBox) {
+      classes.push('hidden');
+    }
+    return classes.join(' ');
+  }
 
   render() {
     return (
       <div
         ref={this.viewModel.mentionListRef}
-        className={clsx(
-          'mention-list',
-          !this.viewModel.isShowMentionBox && 'hidden',
-        )}
+        className={this.mentionListClass}
       >
         <div className="mention-group">
           {this.viewModel.hasSlashCommand ? (
-            this.viewModel.filteredSlashCommands.map((command, index) => (
+            this.viewModel.filteredSlashCommands.map(command => (
               <div
-                key={index}
-                className={clsx(
-                  'mention-item',
-                  index === this.viewModel.mentionIndex && 'selected',
-                )}
+                key={command.index}
+                className={command.className}
                 onClick={() => {
-                  this.viewModel.handleSelectMention(command);
+                  this.viewModel.handleSelectMention(command.value);
                 }}
               >
-                /{command}
+                /{command.value}
               </div>
             ))
           ) : (

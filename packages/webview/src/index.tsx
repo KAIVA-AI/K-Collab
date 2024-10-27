@@ -1,14 +1,10 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'mobx-react';
-import { enableLogging } from 'mobx-logger';
-import { rootStore } from './stores';
-import { App } from './App';
 
 import './index.css';
 import '@vscode/codicons/dist/codicon.css';
 
-enableLogging();
+const App = lazy(() => import('./App'));
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -19,8 +15,6 @@ root.render(
   //   <App />
   // </React.StrictMode>,
   <Suspense>
-    <Provider rootStore={rootStore}>
-      <App />
-    </Provider>
+    <App />
   </Suspense>,
 );

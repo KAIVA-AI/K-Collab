@@ -42,7 +42,7 @@ export class ZulipService {
   };
 
   setBasicAuth = (email: string, apiKey: string) => {
-    this.token = Buffer.from(`${email}:${apiKey}`).toString('base64');
+    this.token = btoa(`${email}:${apiKey}`);
   };
 
   private buildUrl = (path: string) => {
