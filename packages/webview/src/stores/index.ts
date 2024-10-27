@@ -12,7 +12,7 @@ import {
 } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
-import { Constants, ZulipService } from '@v-collab/common';
+import { Constants, WorkspaceService, ZulipService } from '@v-collab/common';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthStore } from './auth.store';
 
@@ -40,7 +40,7 @@ interface IWebviewMessageHandlerMap {
 
 export class RootStore {
   private vscode = getVSCodeApi();
-  authStore = new AuthStore();
+  authStore = new AuthStore(this);
   realmStore = new RealmStore();
   channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);
@@ -48,8 +48,10 @@ export class RootStore {
   chatViewModel = new ChatViewModel(this);
   private eventListeners: IWebviewMessageHandlerMap = {};
 
+  workspaceService = new WorkspaceService();
   zulipService: ZulipService;
 
+  @observable private initialized = false;
   @observable currentTheme = 'dark';
   @observable webviewVersion = '1.0.0';
   @observable extensionVersion = '';
@@ -77,16 +79,20 @@ export class RootStore {
   }
 
   @action init = async () => {
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
     await this.registerVSCodeListener();
     await this.checkExtensionVersion();
     await this.getPageRouter();
+    await this.authStore.wakeup();
     runInAction(() => {
       this.wakedUp = true;
     });
     this.postMessageToVSCode({
       command: 'webviewWakedUp',
     });
-    this.loadData();
   };
 
   @action private checkExtensionVersion = async () => {
@@ -125,11 +131,19 @@ export class RootStore {
     }
   };
 
-  private loadData = async () => {
+  @action loadData = async () => {
     await this.realmStore.loadData();
     await this.channelStore.loadData();
     await this.topicStore.loadData();
     await this.messageStore.loadData();
+    this.workspaceService.listWorkspace();
+  };
+
+  @action cleanup = () => {
+    this.realmStore.cleanup();
+    this.channelStore.cleanup();
+    this.topicStore.cleanup();
+    this.messageStore.cleanup();
   };
 
   addEventListener = (key: string, listener: IWebviewMessageHandler) => {
@@ -143,6 +157,10 @@ export class RootStore {
     }
     if (message.webviewCallbackKey) {
       (window as any)[message.webviewCallbackKey](message);
+      return;
+    }
+    if (message.store === 'AuthStore') {
+      this.authStore.onMessageFromVSCode(message);
       return;
     }
     if (message.store === 'TopicStore') {

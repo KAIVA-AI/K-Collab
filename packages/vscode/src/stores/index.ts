@@ -25,8 +25,12 @@ import {
   StatusBarIconProvider,
 } from '../providers';
 import { Logger } from '../utils/logger';
+import { AuthStore } from './auth.store';
 
 export class RootStore {
+  // stores
+  authStore = new AuthStore(this);
+
   // providers
   memoryFileProvider = new MemoryFileProvider();
   editorCommentProvider = new EditorCommentProvider(this);
@@ -97,6 +101,10 @@ export class RootStore {
 
   registerPanel = (panel: WebviewPanel) => {
     this.context.subscriptions.push(panel);
+  };
+
+  getState = (key: string) => {
+    return this.context.globalState.get(key);
   };
 
   setState = (key: string, value: any) => {

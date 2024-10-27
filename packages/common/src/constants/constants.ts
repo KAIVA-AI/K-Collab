@@ -1,4 +1,6 @@
 export const Constants = {
+  PROJECT_SETTING_HOST:
+    process.env.PROJECT_SETTING_HOST || 'http://localhost:8000',
   // TODO hardcode
   REALM_STRING: process.env.REALM_STRING || 'pjd-2',
   USER_EMAIL: process.env.USER_EMAIL || '',

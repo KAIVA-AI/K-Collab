@@ -28,22 +28,61 @@ code {
 .d-flex {
   display: flex;
 }
-.flex-column {
+.flex-col {
   flex-direction: column;
 }
 .flex-row {
   flex-direction: row;
 }
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
 .f-g-6px {
   gap: 6px;
+}
+.f-g-24px {
+  gap: 23px;
 }
 .mb-6px {
   margin-bottom: 6px;
 }
+.mt-24px {
+  margin-top: 24px;
+}
+.pa-10px {
+  padding: 10px;
+}
 .vc-highlight-bg {
   background-color: var(--highlight-background-color);
+}
+.vc-input-bg {
+  box-sizing: border-box;
+  background-color: var(--input-background-color);
+  color: var(--main-foreground-color);
+  border: none;
+  &:focus {
+    outline: none;
+  }
 }
 .vc-border {
   border: solid 1px var(--main-border-color);
   border-radius: 5px;
+}
+.h-16 {
+  height: 4rem;
+}
+.w-auto {
+  width: auto;
+}
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+.bg-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+  color: var(--main-foreground-color);
 }

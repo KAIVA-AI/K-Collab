@@ -136,4 +136,9 @@ export class TopicStore {
       });
     });
   };
+
+  @action cleanup = () => {
+    this.topics = [];
+    this.currentTopic = undefined;
+  };
 }

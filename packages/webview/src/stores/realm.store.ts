@@ -14,4 +14,8 @@ export class RealmStore {
       realm_string: Constants.REALM_STRING,
     };
   };
+
+  @action cleanup = () => {
+    this.currentRealm = undefined;
+  };
 }

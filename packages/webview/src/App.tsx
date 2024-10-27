@@ -9,8 +9,7 @@ import { enableLogging } from 'mobx-logger';
 import './assets/scss/app.scss';
 
 const LoginPage = lazy(() => import('./pages/login/login'));
-const TopicPage = lazy(() => import('./pages/topic/topic'));
-const ChatPage = lazy(() => import('./pages/chat/chat'));
+const ChatPanelRoute = lazy(() => import('./routes/chatPanelRoute'));
 
 enableLogging();
 
@@ -19,9 +18,6 @@ enableLogging();
 export class App extends Component<BaseComponentProps> {
   get rootStore() {
     return this.props.rootStore!;
-  }
-  get topicStore() {
-    return this.rootStore.topicStore;
   }
 
   componentDidMount(): void {
@@ -39,7 +35,7 @@ export class App extends Component<BaseComponentProps> {
       return <LoginPage />;
     }
     if (this.rootStore.pageRouter === 'chat-panel') {
-      return this.topicStore.currentTopic ? <ChatPage /> : <TopicPage />;
+      return <ChatPanelRoute />;
     }
     return <></>;
   }

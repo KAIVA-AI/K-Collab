@@ -51,7 +51,6 @@ export class ChatPanelProvider
 
   register = (): Disposable => {
     this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
-    this.zulipService.subscribeEventQueue();
     return this.#webProvider;
   };
 
@@ -63,6 +62,9 @@ export class ChatPanelProvider
     insertMessage: this.insertMessageToEditor,
     copyMessage: this.copyMessageToClipboard,
     openInputFile: this.openInputFile,
+    getToken: this.getToken,
+    onLoggedIn: this.onLoggedIn,
+    onLoggedOut: this.onLoggedOut,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -225,5 +227,36 @@ export class ChatPanelProvider
     } catch {
       // file not found
     }
+  };
+
+  private getToken = (message: IWebviewMessage) => {
+    const token = this.rootStore.authStore.getToken();
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        token,
+      },
+    });
+  };
+
+  private onLoggedIn = (message: IWebviewMessage) => {
+    this.rootStore.authStore.setToken(message.data.token);
+    this.zulipService.setToken(message.data.token);
+    this.zulipService.subscribeEventQueue();
+  };
+
+  private onLoggedOut = () => {
+    this.rootStore.authStore.setToken('');
+    this.zulipService.stopSubscribeEventQueue();
+    this.zulipService.setToken('');
+  };
+
+  doLogout = () => {
+    this.postMessageToWebview({
+      store: 'AuthStore',
+      command: 'doLogout',
+    });
   };
 }

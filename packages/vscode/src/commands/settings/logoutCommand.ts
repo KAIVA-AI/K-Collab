@@ -20,5 +20,7 @@ export class LogoutCommand {
     return commands.registerCommand(COMMAND_ID, this.#execute);
   };
 
-  #execute = async (): Promise<void> => {};
+  #execute = async (): Promise<void> => {
+    this.rootStore.chatPanelProvider.doLogout();
+  };
 }
