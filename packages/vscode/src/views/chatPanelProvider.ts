@@ -38,10 +38,6 @@ export class ChatPanelProvider
       },
     });
     this.zulipService = new ZulipService(Constants.REALM_STRING);
-    this.zulipService.setBasicAuth(
-      Constants.USER_EMAIL,
-      Constants.USER_API_KEY,
-    );
   }
 
   async resolveWebviewView(webviewView: WebviewView) {
@@ -65,6 +61,7 @@ export class ChatPanelProvider
     getToken: this.getToken,
     onLoggedIn: this.onLoggedIn,
     onLoggedOut: this.onLoggedOut,
+    onLoggedInTest: this.onLoggedInTest,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -258,5 +255,13 @@ export class ChatPanelProvider
       store: 'AuthStore',
       command: 'doLogout',
     });
+  };
+
+  private onLoggedInTest = () => {
+    this.zulipService.setBasicAuth(
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
+    );
+    this.zulipService.subscribeEventQueue();
   };
 }

@@ -1,6 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 import { IWebviewMessage } from 'src/models';
+import { Constants } from '@v-collab/common';
 
 export class AuthStore {
   @observable isLogin: boolean = false;
@@ -64,5 +65,16 @@ export class AuthStore {
     if (message.command === 'doLogout') {
       return this.onLoggedOut();
     }
+  };
+
+  @action onLoggedInTest = () => {
+    this.rootStore.zulipService.setBasicAuth(
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
+    );
+    this.rootStore.postMessageToVSCode({
+      command: 'onLoggedInTest',
+    });
+    this.isLogin = true;
   };
 }

@@ -72,10 +72,6 @@ export class RootStore {
   constructor() {
     makeObservable(this);
     this.zulipService = new ZulipService(Constants.REALM_STRING);
-    this.zulipService.setBasicAuth(
-      Constants.USER_EMAIL,
-      Constants.USER_API_KEY,
-    );
   }
 
   @action init = async () => {

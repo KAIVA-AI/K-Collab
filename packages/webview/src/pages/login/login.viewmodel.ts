@@ -36,6 +36,6 @@ export class LoginViewModel {
   };
 
   @action loginTest = () => {
-    this.rootStore.authStore.isLogin = true;
+    this.rootStore.authStore.onLoggedInTest();
   };
 }
