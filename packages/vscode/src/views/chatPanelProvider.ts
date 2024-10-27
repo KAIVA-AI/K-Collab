@@ -64,6 +64,8 @@ export class ChatPanelProvider
     onLoggedInTest: this.onLoggedInTest,
     setCurrentWebviewPageContext: this.setCurrentWebviewPageContext,
     onSelectRealm: this.onSelectRealm,
+    getLastTopic: this.getLastTopic,
+    setLastTopic: this.setLastTopic,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -283,5 +285,25 @@ export class ChatPanelProvider
 
   private setCurrentWebviewPageContext = (message: IWebviewMessage) => {
     this.rootStore.setContext('currentWebviewPage', message.data.context);
+  };
+
+  private getLastTopic = (message: IWebviewMessage) => {
+    const realm = this.rootStore.getState('v-collab-last-realm') as string;
+    const topic = this.rootStore.getState('v-collab-last-topic') as string;
+
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        realm,
+        topic,
+      },
+    });
+  };
+
+  private setLastTopic = (message: IWebviewMessage) => {
+    this.rootStore.setState('v-collab-last-realm', message.data.realm);
+    this.rootStore.setState('v-collab-last-topic', message.data.topic);
   };
 }

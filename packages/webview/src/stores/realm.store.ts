@@ -16,10 +16,26 @@ export class RealmStore {
     runInAction(() => {
       this.workspaces = workspaces.filter(w => w.workspace_flag === 1);
     });
+    const lastRealm = await this.rootStore.postMessageToVSCode({
+      command: 'getLastTopic',
+      hasReturn: true,
+    });
+    if (lastRealm?.data?.realm) {
+      const workspace = workspaces.find(
+        w => w.workspace_realm === lastRealm.data.realm,
+      );
+      if (workspace) {
+        this.selectWorkspace(workspace);
+      }
+    }
   };
 
   @action cleanup = () => {
     this.currentRealm = undefined;
+    this.rootStore.postMessageToVSCode({
+      command: 'setLastTopic',
+      data: {},
+    });
   };
 
   @action selectWorkspace = async (workspace: IWorkspace) => {
@@ -28,6 +44,12 @@ export class RealmStore {
     this.rootStore.zulipService.setRealm(realm);
     this.rootStore.postMessageToVSCode({
       command: 'onSelectRealm',
+      data: {
+        realm,
+      },
+    });
+    this.rootStore.postMessageToVSCode({
+      command: 'setLastTopic',
       data: {
         realm,
       },
