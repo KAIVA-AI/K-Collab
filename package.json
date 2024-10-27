@@ -261,12 +261,12 @@
         {
           "command": "v-collab.command.preview.accept",
           "group": "navigation@1",
-          "when": "isInDiffEditor"
+          "when": "isInDiffEditor && resourceScheme == 'v-collab-memory'"
         },
         {
           "command": "v-collab.command.preview.reject",
           "group": "navigation@2",
-          "when": "isInDiffEditor"
+          "when": "isInDiffEditor && resourceScheme == 'v-collab-memory'"
         }
       ]
     }
