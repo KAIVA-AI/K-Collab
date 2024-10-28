@@ -270,7 +270,6 @@ export class ChatPanelProvider
       Constants.USER_EMAIL,
       Constants.USER_API_KEY,
     );
-    this.zulipService.subscribeEventQueue();
   };
 
   toWorkspaceList = () => {
