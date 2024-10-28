@@ -129,6 +129,11 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.coding.fixbug",
+        "title": "Fixbug",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.chat.new-topic",
         "title": "New topic",
         "icon": "$(add)",
@@ -243,6 +248,10 @@
         {
           "command": "v-collab.command.coding.review",
           "group": "3_ask@3"
+        },
+        {
+          "command": "v-collab.command.coding.fixbug",
+          "group": "3_ask@4"
         },
         {
           "command": "v-collab.command.ask-ai",
