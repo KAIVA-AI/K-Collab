@@ -15,7 +15,7 @@ export class ChannelStore {
     this.channels = await this.rootStore.zulipService.getChannels();
 
     this.currentChannel = this.channels.find(
-      c => c.name === Constants.CHANNEL_BACKEND,
+      c => c.name === Constants.CHANNEL_AI_CODING,
     );
   };
 
