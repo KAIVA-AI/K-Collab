@@ -53,6 +53,7 @@ export class RootStore {
   explainCommand = new CodingCommand(this, 'explain');
   improveCommand = new CodingCommand(this, 'improve');
   reviewCommand = new CodingCommand(this, 'review');
+  fixbugCommand = new CodingCommand(this, 'fixbug');
   askAICommand = new AskAICommand(this);
   inlineChatCommand = new InlineChatCommand(this);
   acceptChangeCommand = new AcceptChangeCommand(this);
@@ -90,6 +91,7 @@ export class RootStore {
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
+    this.context.subscriptions.push(this.fixbugCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
     this.context.subscriptions.push(this.acceptChangeCommand.register());

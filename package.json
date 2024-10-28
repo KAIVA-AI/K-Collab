@@ -2,7 +2,7 @@
   "name": "v-collab",
   "displayName": "V-Collab",
   "description": "VIETIS AI powered collaborative chat for developers",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -129,6 +129,11 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.coding.fixbug",
+        "title": "Fixbug",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.chat.new-topic",
         "title": "New topic",
         "icon": "$(add)",
@@ -243,6 +248,10 @@
         {
           "command": "v-collab.command.coding.review",
           "group": "3_ask@3"
+        },
+        {
+          "command": "v-collab.command.coding.fixbug",
+          "group": "3_ask@4"
         },
         {
           "command": "v-collab.command.ask-ai",
