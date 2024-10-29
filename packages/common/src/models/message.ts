@@ -63,3 +63,13 @@ export interface IZulipSendMessageParams {
   topic?: string;
   content: string;
 }
+
+export interface ZulipAcceptedFile {
+  type: []
+}
+
+export interface IZulipUserFileUpload {
+  type: string;
+  name: string;
+  files: FileList;
+}

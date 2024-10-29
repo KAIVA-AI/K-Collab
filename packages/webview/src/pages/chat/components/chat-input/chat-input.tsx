@@ -1,16 +1,33 @@
 import { inject, Observer, Provider } from 'mobx-react';
 import { ChatInputMentionComponent } from './chat-input-mention';
-import { Component } from 'react';
+import { Component, useRef } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
 import { IReactionDisposer, reaction } from 'mobx';
+import { UserUploadForm } from './user-upload-form'
 
 interface IProps extends BaseComponentProps {
   onSendMessage: (inputValue?: string) => Promise<void>;
+  // formMethods: {
+  // errors: any;
+  // setValue: (name: string, value: any) => void;
+  // getValues: () => any;
+  // watch: () => any;
+  // setError: (name: string, error: any) => void;
+  // clearErrors: (name?: string | string[]) => void;
+  // reset: () => void;
+  // control: any;
+  // };
 }
 
 @inject('rootStore')
 export class ChatInputComponent extends Component<IProps> {
+  formComponentRef: any;
+
+  constructor(props: IProps) {
+    super(props);
+    this.formComponentRef = useRef<any>(null);
+  }
   private viewModel = new ChatInputViewModel();
   private disposers: IReactionDisposer[] = [];
 
@@ -20,6 +37,11 @@ export class ChatInputComponent extends Component<IProps> {
   private get chatViewModel() {
     return this.rootStore.chatViewModel;
   }
+
+
+  // form
+  
+
 
   componentDidMount(): void {
     this.disposers.push(
@@ -81,6 +103,7 @@ export class ChatInputComponent extends Component<IProps> {
             />
           )}
         </Observer>
+        <UserUploadForm ref={this.formComponentRef}/>
       </Provider>
     );
   }

@@ -144,6 +144,13 @@
           outline: none;
         }
       }
+      .image-preview {
+        position: absolute;
+        height: 100%; 
+        width: 100%; 
+        inset: 0px; 
+        color: transparent;
+      }
     }
     .action-block {
       display: flex;
