@@ -25,6 +25,7 @@ interface RequestInit {
   method?: string;
   headers: Headers;
   body?: FormData;
+  signal?: AbortSignal | null;
 }
 
 export class ZulipService {
@@ -338,13 +339,12 @@ export class ZulipService {
     path: string,
     start: string | undefined,
     end: string | undefined,
-    content: string | undefined,
-    inputType: string = 'coding_context_file',
+    content: string,
   ) => {
     const formData: any = {
       external_id: topic,
       path: path,
-      input_type: inputType,
+      content: content,
     };
     if (name !== undefined) {
       formData['name'] = name;
@@ -352,9 +352,6 @@ export class ZulipService {
     if (start !== undefined && end !== undefined) {
       formData['start'] = start;
       formData['end'] = end;
-    }
-    if (content !== undefined) {
-      formData['content'] = content;
     }
     return this.sendRequest({
       path: 'assistant/add-file',
