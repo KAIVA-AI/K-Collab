@@ -71,7 +71,7 @@ export class RootStore {
 
   constructor() {
     makeObservable(this);
-    this.zulipService = new ZulipService(this.realmStore.currentRealm ? this.realmStore.currentRealm?.realm_string : '');
+    this.zulipService = new ZulipService();
   }
 
   @action init = async () => {

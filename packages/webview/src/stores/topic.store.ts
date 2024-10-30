@@ -23,11 +23,7 @@ export class TopicStore {
     }
     const topics = await this.rootStore.zulipService.getTopics(channelId);
     runInAction(() => {
-      this.topics = topics.sort((a, b) => {
-        const maxIdA = a.max_id ?? 0;
-        const maxIdB = b.max_id ?? 0;
-        return maxIdB - maxIdA;
-      });
+      this.topics = topics;
     });
     const lastTopic = await this.rootStore.postMessageToVSCode({
       command: 'getLastTopic',
