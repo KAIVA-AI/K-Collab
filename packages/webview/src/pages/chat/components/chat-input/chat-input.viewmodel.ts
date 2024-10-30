@@ -14,6 +14,8 @@ const slashCommands = [
   'improve',
   'review',
   'fixbug',
+  'html',
+  'html_item',
 ];
 // const userMentions: string[] = [];
 // TODO combine slash and users to single array

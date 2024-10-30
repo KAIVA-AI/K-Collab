@@ -1,8 +1,6 @@
 import { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import '@vscode/codicons/dist/codicon.css';
-
 const App = lazy(() => import('./App'));
 
 const root = ReactDOM.createRoot(

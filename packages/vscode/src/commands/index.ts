@@ -1,9 +1,11 @@
 // chat
 export { HistoryCommand } from './chat/historyCommand';
 export { InlineChatCommand } from './chat/inlineChatCommand';
+export { NewTopicCommand } from './chat/newTopicCommand';
 
 //coding
 export { AddFileCommand } from './coding/addFileCommand';
+export { AddImageCommand } from './coding/addImageCommand';
 export { AddSelectionCommand } from './coding/addSelectionCommand';
 export { AskAICommand } from './coding/askAICommand';
 export { CodingCommand } from './coding/codingCommand';
