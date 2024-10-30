@@ -17,6 +17,8 @@ import {
   OpenSettingCommand,
   ChangeWorkspaceCommand,
   LogoutCommand,
+  NewTopicCommand,
+  AddImageCommand,
 } from '../commands';
 import {
   CodeActionProvider,
@@ -42,9 +44,14 @@ export class RootStore {
   // handlers
   uriHandler: UriHandler = new UriHandler(this);
   // commands
-  addSelectionCommand = new AddSelectionCommand(this);
-  addFileCommand = new AddFileCommand(this);
   historyCommand = new HistoryCommand(this);
+  inlineChatCommand = new InlineChatCommand(this);
+  newTopicCommand = new NewTopicCommand(this);
+
+  addFileCommand = new AddFileCommand(this);
+  addImageCommand = new AddImageCommand(this);
+  addSelectionCommand = new AddSelectionCommand(this);
+  askAICommand = new AskAICommand(this);
   genCodeCommand = new CodingCommand(this, 'gen-code');
   genTestCommand = new CodingCommand(this, 'gen-test');
   debugCommand = new CodingCommand(this, 'debug');
@@ -54,10 +61,10 @@ export class RootStore {
   improveCommand = new CodingCommand(this, 'improve');
   reviewCommand = new CodingCommand(this, 'review');
   fixbugCommand = new CodingCommand(this, 'fixbug');
-  askAICommand = new AskAICommand(this);
-  inlineChatCommand = new InlineChatCommand(this);
+
   acceptChangeCommand = new AcceptChangeCommand(this);
   rejectChangeCommand = new RejectChangeCommand(this);
+
   openSettingCommand = new OpenSettingCommand(this);
   changeWorkspaceCommand = new ChangeWorkspaceCommand(this);
   logoutCommand = new LogoutCommand(this);
@@ -80,9 +87,14 @@ export class RootStore {
     // handlers
     this.context.subscriptions.push(this.uriHandler.register());
     // commands
-    this.context.subscriptions.push(this.addSelectionCommand.register());
-    this.context.subscriptions.push(this.addFileCommand.register());
     this.context.subscriptions.push(this.historyCommand.register());
+    this.context.subscriptions.push(this.inlineChatCommand.register());
+    this.context.subscriptions.push(this.newTopicCommand.register());
+
+    this.context.subscriptions.push(this.addFileCommand.register());
+    this.context.subscriptions.push(this.addImageCommand.register());
+    this.context.subscriptions.push(this.addSelectionCommand.register());
+    this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.genCodeCommand.register());
     this.context.subscriptions.push(this.genTestCommand.register());
     this.context.subscriptions.push(this.debugCommand.register());
@@ -92,10 +104,10 @@ export class RootStore {
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.fixbugCommand.register());
-    this.context.subscriptions.push(this.askAICommand.register());
-    this.context.subscriptions.push(this.inlineChatCommand.register());
+
     this.context.subscriptions.push(this.acceptChangeCommand.register());
     this.context.subscriptions.push(this.rejectChangeCommand.register());
+
     this.context.subscriptions.push(this.openSettingCommand.register());
     this.context.subscriptions.push(this.changeWorkspaceCommand.register());
     this.context.subscriptions.push(this.logoutCommand.register());

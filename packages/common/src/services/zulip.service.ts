@@ -338,12 +338,13 @@ export class ZulipService {
     path: string,
     start: string | undefined,
     end: string | undefined,
-    content: string,
+    content: string | undefined,
+    inputType: string = 'coding_context_file',
   ) => {
     const formData: any = {
       external_id: topic,
       path: path,
-      content: content,
+      input_type: inputType,
     };
     if (name !== undefined) {
       formData['name'] = name;
@@ -351,6 +352,9 @@ export class ZulipService {
     if (start !== undefined && end !== undefined) {
       formData['start'] = start;
       formData['end'] = end;
+    }
+    if (content !== undefined) {
+      formData['content'] = content;
     }
     return this.sendRequest({
       path: 'assistant/add-file',
