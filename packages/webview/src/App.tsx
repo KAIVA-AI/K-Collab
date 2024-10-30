@@ -7,6 +7,7 @@ import { rootStore } from './stores';
 import { enableLogging } from 'mobx-logger';
 
 import './assets/scss/app.scss';
+import '@vscode/codicons/dist/codicon.css';
 
 const LoginPage = lazy(() => import('./pages/login/login'));
 const ChatPanelRoute = lazy(() => import('./routes/chatPanelRoute'));

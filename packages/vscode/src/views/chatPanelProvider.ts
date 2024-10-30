@@ -14,7 +14,11 @@ import {
 } from 'vscode';
 import { ITopicFileInput, IWebviewMessage, TopicFileInput } from '../models';
 import { RootStore } from '../stores';
-import { AddFileCommand, AddSelectionCommand } from '../commands';
+import {
+  AddFileCommand,
+  AddImageCommand,
+  AddSelectionCommand,
+} from '../commands';
 import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
 import { IBaseWebview } from './baseWebview';
 import * as path from 'path';
@@ -88,6 +92,16 @@ export class ChatPanelProvider
     });
   };
 
+  addImageToTopic = (file: ITopicFileInput) => {
+    this.postMessageToWebview({
+      store: 'TopicStore',
+      command: 'addImageToTopic',
+      data: {
+        file,
+      },
+    });
+  };
+
   private selectAddContextMethod = async () => {
     const options = [];
     const editor = window.activeTextEditor;
@@ -96,12 +110,19 @@ export class ChatPanelProvider
       options.push(AddSelectionCommand.COMMAND_TITLE);
     }
     options.push(AddFileCommand.COMMAND_TITLE);
+    options.push(AddImageCommand.COMMAND_TITLE);
     const selection = await window.showQuickPick(options);
     if (selection === AddSelectionCommand.COMMAND_TITLE) {
       commands.executeCommand(AddSelectionCommand.COMMAND_ID);
+      return;
     }
     if (selection === AddFileCommand.COMMAND_TITLE) {
       commands.executeCommand(AddFileCommand.COMMAND_ID);
+      return;
+    }
+    if (selection === AddImageCommand.COMMAND_TITLE) {
+      commands.executeCommand(AddImageCommand.COMMAND_ID);
+      return;
     }
   };
 

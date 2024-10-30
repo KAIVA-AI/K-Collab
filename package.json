@@ -79,6 +79,11 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.add-image",
+        "title": "Add Image to Chat",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.coding.gen-code",
         "title": "Generate Code",
         "category": "V-Collab"
@@ -116,11 +121,6 @@
       {
         "command": "v-collab.command.coding.improve",
         "title": "Improve",
-        "category": "V-Collab"
-      },
-      {
-        "command": "v-collab.command.coding.enhance",
-        "title": "Enhance",
         "category": "V-Collab"
       },
       {
@@ -261,7 +261,7 @@
       "view/title": [
         {
           "command": "v-collab.command.chat.new-topic",
-          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
+          "when": "view == v-collab_bar.chat && (currentWebviewPage == 'chat-page' || currentWebviewPage == 'topic-page')",
           "group": "navigation@1"
         },
         {
