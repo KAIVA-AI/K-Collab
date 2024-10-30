@@ -1,18 +1,5 @@
 @use '../../assets/scss/zilip-codehilite.scss';
 
-:root {
-  --vscode-interactive-result-editor-background-color: #1e1e1e;
-
-  // --input-background-color: #212121;
-  // --main-border-color: #3C3C3C;
-
-  --main-foreground-color: var(--vscode-input-foreground);
-  --main-background-color: var(--vscode-sideBar-background);
-  --input-background-color: var(--vscode-input-background);
-  --main-border-color: var(--vscode-chat-requestBorder,var(--vscode-input-background,transparent));
-  --mention-highlight: #2A2D2E;
-}
-
 .chat-page {
   display: flex;
   flex-direction: column;
@@ -46,15 +33,13 @@
       }
       .message-content {
         padding: 0 6px;
-        border: solid 1px var(--main-border-color);
-        border-radius: 6px;
         .rendered_markdown {
           padding: 13px 0;
         }
         div.codehilite {
           position: relative;
           border: solid 1px var(--main-border-color) !important;
-          background-color: var(--vscode-interactive-result-editor-background-color) !important;
+          background-color: var(--code-background-color) !important;
           border-radius: 6px;
           padding: 13px 0 0 0;
           margin: 8px 0;
@@ -80,8 +65,6 @@
     gap: 6px;
     margin: 10px;
     background-color: var(--input-background-color);
-    border: solid 1px var(--main-border-color);
-    border-radius: 5px;
     padding: 8px;
     .context-block {
       display: flex;
@@ -90,8 +73,6 @@
         cursor: pointer;
         display: inline-flex;
         padding: 2px;
-        border: solid 1px var(--main-border-color);
-        border-radius: 4px;
       }
       .context-list {
         display: flex;
@@ -105,8 +86,6 @@
           align-items: center;
           white-space: nowrap;
           padding: 0 2px;
-          border: solid 1px var(--main-border-color);
-          border-radius: 4px;
           user-select: none;
           .remove {
             cursor: pointer;
@@ -122,14 +101,12 @@
         height: fit-content;
         bottom: calc(100% + .3rem);
         background-color: var(--main-background-color);
-        border: solid 1px var(--main-border-color);
         user-select: none;
-        border-radius: 3px;
         .mention-item {
           padding: 2px;
           cursor: pointer;
           &:hover, &.selected {
-            background-color: var(--mention-highlight);
+            background-color: var(--highlight-background-color);
           }
         }
       }

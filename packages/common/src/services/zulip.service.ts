@@ -5,6 +5,7 @@ import {
   ITopicFileInput,
   IZulipSendMessageParams,
   TopicFileInput,
+  IZulipUserFileUpload
 } from '../models';
 import {
   IEventListener,
@@ -35,7 +36,7 @@ export class ZulipService {
     return !!this.token;
   }
 
-  constructor(private realm: string) {}
+  constructor(private realm: string) { }
 
   setToken = (token: string) => {
     this.token = token;
@@ -343,5 +344,12 @@ export class ZulipService {
           return new TopicFileInput(f as ITopicFileInput);
         }),
       );
+  };
+
+  postUserUpload = async (data: FormData) => {
+    return this.sendRequest({
+      path: 'user_uploads',
+      formData: data,
+    })
   };
 }

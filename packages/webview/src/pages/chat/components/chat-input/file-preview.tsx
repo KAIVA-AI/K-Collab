@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import { UseFormSetValue } from "react-hook-form";
 // ui
-import { FileText, PlayCircle, XCircle } from "lucide-react";
+// import { FileText, PlayCircle, XCircle } from "lucide-react";
 // helpers
 import { convertFileSize } from "../../../../helpers/string.helper";
 import CustomImage from './image'
@@ -68,12 +68,12 @@ const FileView = memo(({ data, handleRemoveFile }: IFileView) => {
                   preload='metadata'
                   src={mediaSrc}
                 />
-                <PlayCircle className="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer text-custom-text-200 hover:text-custom-text-400" />
+                {/* <PlayCircle className="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer text-custom-text-200 hover:text-custom-text-400" /> */}
               </>
             )
             : (
               <div className="w-full h-full flex flex-col justify-between">
-                <FileText size={40} className="block text-custom-text-200" />
+                {/* <FileText size={40} className="block text-custom-text-200" /> */}
                 <div>
                   <p title={name} className="w-full text-xs font-medium line-clamp-1">{name}</p>
                   <p className="w-full text-xs line-clamp-1">{convertFileSize(size)}</p>
@@ -85,7 +85,7 @@ const FileView = memo(({ data, handleRemoveFile }: IFileView) => {
         className="w-5 h-5 absolute -right-2 -top-2 p-1 rounded-full"
         onClick={handleRemove}
       >
-        <XCircle className="w-4 h-4 cursor-pointer text-custom-text-200 hover:text-custom-text-400" />
+        {/* <XCircle className="w-4 h-4 cursor-pointer text-custom-text-200 hover:text-custom-text-400" /> */}
       </div>
     </div>
   );

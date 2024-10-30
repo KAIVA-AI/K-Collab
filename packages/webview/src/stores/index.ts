@@ -12,8 +12,9 @@ import {
 } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage } from '../models';
-import { Constants, ZulipService } from '@v-collab/common';
+import { Constants, WorkspaceService, ZulipService } from '@v-collab/common';
 import { v4 as uuidV4 } from 'uuid';
+import { AuthStore } from './auth.store';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -39,15 +40,18 @@ interface IWebviewMessageHandlerMap {
 
 export class RootStore {
   private vscode = getVSCodeApi();
-  realmStore = new RealmStore();
+  authStore = new AuthStore(this);
+  realmStore = new RealmStore(this);
   channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);
   messageStore = new MessageStore(this);
   chatViewModel = new ChatViewModel(this);
   private eventListeners: IWebviewMessageHandlerMap = {};
 
+  workspaceService = new WorkspaceService();
   zulipService: ZulipService;
 
+  @observable private initialized = false;
   @observable currentTheme = 'dark';
   @observable webviewVersion = '1.0.0';
   @observable extensionVersion = '';
@@ -67,24 +71,24 @@ export class RootStore {
 
   constructor() {
     makeObservable(this);
-    this.zulipService = new ZulipService(Constants.REALM_STRING);
-    this.zulipService.setBasicAuth(
-      Constants.USER_EMAIL,
-      Constants.USER_API_KEY,
-    );
+    this.zulipService = new ZulipService(this.realmStore.currentRealm ? this.realmStore.currentRealm?.realm_string : '');
   }
 
   @action init = async () => {
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
     await this.registerVSCodeListener();
     await this.checkExtensionVersion();
     await this.getPageRouter();
+    await this.authStore.wakeup();
     runInAction(() => {
       this.wakedUp = true;
     });
     this.postMessageToVSCode({
       command: 'webviewWakedUp',
     });
-    this.loadData();
   };
 
   @action private checkExtensionVersion = async () => {
@@ -123,11 +127,11 @@ export class RootStore {
     }
   };
 
-  private loadData = async () => {
-    await this.realmStore.loadData();
-    await this.channelStore.loadData();
-    await this.topicStore.loadData();
-    await this.messageStore.loadData();
+  @action cleanup = () => {
+    this.realmStore.cleanup();
+    this.channelStore.cleanup();
+    this.topicStore.cleanup();
+    this.messageStore.cleanup();
   };
 
   addEventListener = (key: string, listener: IWebviewMessageHandler) => {
@@ -139,8 +143,18 @@ export class RootStore {
       this.currentTheme = message.data.theme;
       return;
     }
+    if (message.command === 'navigateTo') {
+      if (message.data.page === 'workspace-page') {
+        this.cleanup();
+        return;
+      }
+    }
     if (message.webviewCallbackKey) {
       (window as any)[message.webviewCallbackKey](message);
+      return;
+    }
+    if (message.store === 'AuthStore') {
+      this.authStore.onMessageFromVSCode(message);
       return;
     }
     if (message.store === 'TopicStore') {
@@ -179,6 +193,15 @@ export class RootStore {
       setTimeout(() => {
         if (!completed) resolve(undefined);
       }, 1000);
+    });
+  };
+
+  @action setCurrentWebviewPageContext = async (context: string) => {
+    await this.postMessageToVSCode({
+      command: 'setCurrentWebviewPageContext',
+      data: {
+        context,
+      },
     });
   };
 }

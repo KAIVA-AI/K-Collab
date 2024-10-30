@@ -2,7 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 require('dotenv').config();
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const publicUrl = process.env.PUBLIC_URL || 'http://localhost:3000';
 const packageJson = require('../../package.json');
@@ -22,11 +23,17 @@ module.exports = {
     allowedHosts: 'all',
     hot: false,
     client: false,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     fallback: {
       buffer: require.resolve('buffer'),
+    },
+    alias: {
+      src: path.resolve(__dirname, 'src'),
     },
   },
   module: {
@@ -62,35 +69,23 @@ module.exports = {
       },
       {
         test: /\.(svg|png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ],
+        type: 'asset/resource',
       },
       {
         test: /\.(ttf)$/i,
-        type: 'javascript/auto',
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              name: '[name].[hash].[ext]',
-              outputPath: 'static/fonts/',
-              publicPath: publicUrl + '/static/fonts/',
-              esModule: false,
-            },
-          },
-        ],
+        type: 'asset/resource',
       },
     ],
   },
   plugins: [
-    new NodePolyfillPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
     new webpack.DefinePlugin({
+      'process.env.PROJECT_SETTING_HOST': JSON.stringify(
+        process.env.PROJECT_SETTING_HOST,
+      ),
+
       'process.env.REALM_STRING': JSON.stringify(process.env.REALM_STRING),
       'process.env.USER_EMAIL': JSON.stringify(process.env.USER_EMAIL),
       'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),
@@ -102,5 +97,6 @@ module.exports = {
       Buffer: ['buffer', 'Buffer'],
     }),
     new webpack.BannerPlugin(`${packageJson.name} v${packageJson.version}`),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],
 };

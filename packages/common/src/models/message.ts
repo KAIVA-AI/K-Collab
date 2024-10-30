@@ -1,3 +1,7 @@
+export interface IRealm {
+  realm_string: string;
+}
+
 export interface IChannel {
   stream_id: number;
   name: string;
@@ -55,6 +59,7 @@ export interface IMessage {
   timestamp: number;
   recipient_id?: number;
   is_me_message?: boolean;
+  sender_id: number
 }
 
 export interface IZulipSendMessageParams {
@@ -71,5 +76,13 @@ export interface ZulipAcceptedFile {
 export interface IZulipUserFileUpload {
   type: string;
   name: string;
-  files: FileList;
+  file: File;
 }
+
+export interface IDetailZulipMessage {
+  message: IMessage;
+  msg: string;
+  raw_content: string;
+  result: string;
+}
+

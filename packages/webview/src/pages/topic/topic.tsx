@@ -14,6 +14,11 @@ class TopicPage extends Component<BaseComponentProps> {
     return this.rootStore.topicStore;
   }
 
+  componentDidMount(): void {
+    this.rootStore.setCurrentWebviewPageContext('topic-page');
+    this.topicStore.loadData();
+  }
+
   render() {
     return (
       <div className="topic-page">
@@ -22,7 +27,7 @@ class TopicPage extends Component<BaseComponentProps> {
           {this.topicStore.topics.map((topic, index) => (
             <div
               key={index}
-              className="topic-item"
+              className="topic-item vc-border"
               onClick={() => {
                 this.topicStore.selectTopic(topic);
               }}

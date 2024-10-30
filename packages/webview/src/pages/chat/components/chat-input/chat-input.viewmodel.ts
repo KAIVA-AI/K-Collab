@@ -1,5 +1,5 @@
 import { Constants } from '@v-collab/common';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
 
@@ -13,9 +13,17 @@ const slashCommands = [
   'explain',
   'improve',
   'review',
+  'fixbug',
 ];
-const userMentions: string[] = [];
+// const userMentions: string[] = [];
 // TODO combine slash and users to single array
+
+interface MentionItem {
+  index: number;
+  value: string;
+  selected: boolean;
+  className?: string;
+}
 
 export class ChatInputViewModel {
   @observable prompt = '';
@@ -41,24 +49,28 @@ export class ChatInputViewModel {
     return this.filterMention !== undefined;
   }
 
-  @computed get filteredSlashCommands() {
-    return slashCommands.filter(command =>
-      command.toLowerCase().includes((this.filterMention || '').toLowerCase()),
-    );
-  }
-
-  @computed get filteredUserMentions() {
-    return userMentions.filter(mention =>
-      mention.toLowerCase().includes((this.filterMention || '').toLowerCase()),
-    );
+  @computed get filteredSlashCommands(): MentionItem[] {
+    return slashCommands
+      .filter(command =>
+        command
+          .toLowerCase()
+          .includes((this.filterMention || '').toLowerCase()),
+      )
+      .map((value, index) => {
+        const classes: string[] = ['mention-item'];
+        const selected = index === this.mentionIndex;
+        if (selected) classes.push('selected');
+        return {
+          value,
+          index,
+          selected,
+          className: classes.join(' '),
+        };
+      });
   }
 
   @computed get hasSlashCommand() {
     return this.filteredSlashCommands.length > 0;
-  }
-
-  @computed get hasUserMention() {
-    return this.filteredUserMentions.length > 0;
   }
 
   @computed get selectedMention() {
@@ -139,7 +151,7 @@ export class ChatInputViewModel {
       if (['Enter', 'Tab'].includes(e.key)) {
         if (this.selectedMention) {
           const mentionText = this.filterMention || '';
-          const selectedMention = this.selectedMention || '';
+          const selectedMention = this.selectedMention?.value || '';
           this.reset();
           const temp = this.prompt;
           const target = e.target as HTMLInputElement;

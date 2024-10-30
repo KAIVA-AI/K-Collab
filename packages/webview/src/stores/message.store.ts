@@ -48,4 +48,8 @@ export class MessageStore {
       }
     }
   };
+
+  @action cleanup = () => {
+    this.messages = [];
+  };
 }

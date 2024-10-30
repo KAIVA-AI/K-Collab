@@ -37,11 +37,7 @@ export class ChatPanelProvider
         retainContextWhenHidden: true,
       },
     });
-    this.zulipService = new ZulipService(Constants.REALM_STRING);
-    this.zulipService.setBasicAuth(
-      Constants.USER_EMAIL,
-      Constants.USER_API_KEY,
-    );
+    this.zulipService = new ZulipService();
   }
 
   async resolveWebviewView(webviewView: WebviewView) {
@@ -51,7 +47,6 @@ export class ChatPanelProvider
 
   register = (): Disposable => {
     this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
-    this.zulipService.subscribeEventQueue();
     return this.#webProvider;
   };
 
@@ -63,6 +58,14 @@ export class ChatPanelProvider
     insertMessage: this.insertMessageToEditor,
     copyMessage: this.copyMessageToClipboard,
     openInputFile: this.openInputFile,
+    getToken: this.getToken,
+    onLoggedIn: this.onLoggedIn,
+    onLoggedOut: this.onLoggedOut,
+    onLoggedInTest: this.onLoggedInTest,
+    setCurrentWebviewPageContext: this.setCurrentWebviewPageContext,
+    onSelectRealm: this.onSelectRealm,
+    getLastTopic: this.getLastTopic,
+    setLastTopic: this.setLastTopic,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -225,5 +228,81 @@ export class ChatPanelProvider
     } catch {
       // file not found
     }
+  };
+
+  private getToken = (message: IWebviewMessage) => {
+    const token = this.rootStore.authStore.getToken();
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        token,
+      },
+    });
+  };
+
+  private onLoggedIn = (message: IWebviewMessage) => {
+    this.rootStore.authStore.setToken(message.data.token);
+    this.zulipService.setToken(message.data.token);
+  };
+
+  private onLoggedOut = () => {
+    this.rootStore.authStore.setToken('');
+    this.zulipService.stopSubscribeEventQueue();
+    this.zulipService.setToken('');
+  };
+
+  private onSelectRealm = (message: IWebviewMessage) => {
+    this.zulipService.setRealm(message.data.realm);
+    this.zulipService.subscribeEventQueue();
+  };
+
+  doLogout = () => {
+    this.postMessageToWebview({
+      store: 'AuthStore',
+      command: 'doLogout',
+    });
+  };
+
+  private onLoggedInTest = () => {
+    this.zulipService.setBasicAuth(
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
+    );
+  };
+
+  toWorkspaceList = () => {
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'navigateTo',
+      data: {
+        page: 'workspace-page',
+      },
+    });
+  };
+
+  private setCurrentWebviewPageContext = (message: IWebviewMessage) => {
+    this.rootStore.setContext('currentWebviewPage', message.data.context);
+  };
+
+  private getLastTopic = (message: IWebviewMessage) => {
+    const realm = this.rootStore.getState('v-collab-last-realm') as string;
+    const topic = this.rootStore.getState('v-collab-last-topic') as string;
+
+    this.postMessageToWebview({
+      store: 'RootStore',
+      command: 'webviewCallbackKey',
+      webviewCallbackKey: message.webviewCallbackKey,
+      data: {
+        realm,
+        topic,
+      },
+    });
+  };
+
+  private setLastTopic = (message: IWebviewMessage) => {
+    this.rootStore.setState('v-collab-last-realm', message.data.realm);
+    this.rootStore.setState('v-collab-last-topic', message.data.topic);
   };
 }

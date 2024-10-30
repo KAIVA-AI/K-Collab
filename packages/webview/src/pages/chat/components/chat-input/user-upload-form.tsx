@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 
 import { useFormContext, Controller } from 'react-hook-form';
 import { FilesPreview } from './file-preview';
-import { AtSign, CaseSensitive, Mic, Paperclip, Send, Smile, Video } from 'lucide-react';
+// import { AtSign, CaseSensitive, Mic, Paperclip, Send, Smile, Video } from 'lucide-react';
 import { observer } from 'mobx-react';
 
 
@@ -28,7 +28,7 @@ export const MAX_FILE_UPLOAD_SIZE = 10;
 
 // Functional wrapper component
 export const UserUploadForm = observer(forwardRef((props: any, ref: any) => {
-  
+
   const {
     formState: { errors },
     setValue,
@@ -43,9 +43,9 @@ export const UserUploadForm = observer(forwardRef((props: any, ref: any) => {
     file: FileList | null;
   }>();
 
-    useImperativeHandle(ref, () => ({
-      
-    }));
+  useImperativeHandle(ref, () => ({
+
+  }));
 
   const file = watch("file");
 
@@ -92,9 +92,8 @@ export const UserUploadForm = observer(forwardRef((props: any, ref: any) => {
                 onChange={(e: any) => handleChangeFile(e.target.files, field)}
               />
               <Tooltip tooltipContent={file ? "Edit" : "Upload File"} openOnTargetFocus={false} position="top">
-                <Paperclip
-                  size={16}
-                  className="text-custom-text-200 hover:text-custom-text-400"
+                <i
+                  className="codicon cloud-upload"
                   onClick={() => document?.getElementById('fileInput')?.click()}
                 />
               </Tooltip>
