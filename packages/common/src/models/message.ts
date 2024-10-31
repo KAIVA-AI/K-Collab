@@ -59,7 +59,7 @@ export interface IMessage {
   timestamp: number;
   recipient_id?: number;
   is_me_message?: boolean;
-  sender_id: number
+  sender_id: number;
 }
 
 export interface IZulipSendMessageParams {
@@ -70,7 +70,7 @@ export interface IZulipSendMessageParams {
 }
 
 export interface ZulipAcceptedFile {
-  type: []
+  type: [];
 }
 
 export interface IZulipUserFileUpload {
@@ -85,4 +85,3 @@ export interface IDetailZulipMessage {
   raw_content: string;
   result: string;
 }
-

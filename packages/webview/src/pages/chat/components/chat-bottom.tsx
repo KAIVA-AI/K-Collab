@@ -1,11 +1,17 @@
 import { inject, observer } from 'mobx-react';
 import { ChatInputComponent } from './chat-input';
-import { Component, createRef, RefObject } from 'react';
+import React, { Component, createRef, RefObject } from 'react';
 import { BaseComponentProps } from 'src/models/base';
-
+import { reaction } from 'mobx';
+import UserUploadFormWrapper from './chat-input/user-form-wrapper';
+import {
+  handleSendFile,
+  formatMessageContent,
+} from '../../../helpers/string.helper';
 @inject('rootStore')
 @observer
 export class ChatBottomComponent extends Component<BaseComponentProps> {
+  formComponentRef: any;
   private get rootStore() {
     return this.props.rootStore!;
   }
@@ -20,7 +26,48 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
   constructor(props: BaseComponentProps) {
     super(props);
     this.chatInputRef = createRef<ChatInputComponent>();
+    this.formComponentRef = React.createRef();
   }
+
+  componentDidUpdate() {
+    reaction(
+      () => this.formComponentRef.current?.file,
+      file => {
+        console.log('file selected:', file);
+        const payload = {
+          file: file,
+          name: file.name,
+          type: file.type,
+        };
+        this.rootStore.zulipService.postUserUpload(payload);
+      },
+    );
+  }
+
+  handleSendMessage = async (inputValue?: string) => {
+    console.log('file select  ', this.formComponentRef.current?.file);
+
+    const uploadContent = this.formComponentRef.current?.file
+      ? await handleSendFile(
+          this.formComponentRef.current?.file,
+          this.rootStore.zulipService.postUserUpload.bind(
+            this.rootStore.zulipService.postUserUpload,
+          ),
+        )
+      : undefined;
+    if (uploadContent !== 'undefined') {
+      const finalMessage = formatMessageContent(
+        inputValue,
+        uploadContent,
+        null,
+      );
+      console.log('content upload ', uploadContent);
+      console.log('value input ', finalMessage);
+      await this.chatViewModel.onSendMessage(finalMessage);
+      // Clear file after sending
+      this.formComponentRef.current.clearFile();
+    }
+  };
 
   render() {
     return (
@@ -57,11 +104,14 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
         <div className="input-block">
           <ChatInputComponent
             ref={this.chatInputRef}
-            onSendMessage={this.chatViewModel.onSendMessage}
+            onSendMessage={this.handleSendMessage}
           />
         </div>
         <div className="action-block">
           <div className="action-left">
+            <div className="action-icon">
+              <UserUploadFormWrapper ref={this.formComponentRef} />
+            </div>
             <div className="action-icon">
               <i className="codicon codicon-mention" />
             </div>

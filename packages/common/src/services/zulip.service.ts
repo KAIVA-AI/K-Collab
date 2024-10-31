@@ -5,7 +5,7 @@ import {
   ITopicFileInput,
   IZulipSendMessageParams,
   TopicFileInput,
-  IZulipUserFileUpload
+  IZulipUserFileUpload,
 } from '../models';
 import {
   IEventListener,
@@ -87,6 +87,7 @@ export class ZulipService {
         headers: headers,
       };
       if (formData) {
+        console.log('VALUE BODY ', formData);
         request.body = new FormData();
         Object.keys(formData).forEach(key => {
           let data = formData[key];
@@ -95,6 +96,10 @@ export class ZulipService {
           }
           request.body?.append(key, data);
         });
+        console.log('send request body ');
+        request.body.forEach((value: any, key: any) =>
+          console.log(`${key}: ${value}`),
+        );
       }
       if (queryParams) {
         const search = new URLSearchParams();
@@ -380,10 +385,15 @@ export class ZulipService {
       );
   };
 
-  postUserUpload = async (data: FormData) => {
-    return this.sendRequest({
+  postUserUpload = async (data: any) => {
+    const result = await this.sendRequest({
       path: 'user_uploads',
       formData: data,
-    })
+    });
+    const prefix = !this.realm ? '' : `${this.realm}.`;
+    return {
+      name: data.name,
+      url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,
+    };
   };
 }
