@@ -355,6 +355,9 @@ export class ZulipService {
       formData['start'] = start;
       formData['end'] = end;
     }
+    if (content !== undefined) {
+      formData['content'] = content;
+    }
     return this.sendRequest({
       path: 'assistant/add-file',
       formData,
