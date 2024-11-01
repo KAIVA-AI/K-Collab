@@ -11,11 +11,9 @@ interface IProps extends BaseComponentProps {
 
 @inject('rootStore')
 export class ChatInputComponent extends Component<IProps> {
-  // formComponentRef: any;
 
   constructor(props: IProps) {
     super(props);
-    // this.formComponentRef = React.createRef();
   }
   private viewModel = new ChatInputViewModel();
   private disposers: IReactionDisposer[] = [];

@@ -1,14 +1,11 @@
 import { memo, useMemo } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
-// ui
-// import { FileText, PlayCircle, XCircle } from "lucide-react";
 // helpers
 import { convertFileSize } from '../../../../helpers/string.helper';
 import CustomImage from './image';
 interface IFilesPreview {
   data: FileList | null;
   setValue: UseFormSetValue<{
-    // chatbox__input: string;
     file: FileList | null;
   }>;
 }
@@ -67,11 +64,9 @@ const FileView = memo(({ data, handleRemoveFile }: IFileView) => {
               preload="metadata"
               src={mediaSrc}
             />
-            {/* <PlayCircle className="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer text-custom-text-200 hover:text-custom-text-400" /> */}
           </>
         ) : (
           <div className="w-full h-full flex flex-col justify-between">
-            {/* <FileText size={40} className="block text-custom-text-200" /> */}
             <div>
               <p
                 title={name}

@@ -43,6 +43,11 @@ export class TopicStore {
       this.rootStore.chatViewModel.eventFocusInput = true;
       return this.addFileToTopic(file);
     }
+    if (message.command === 'addImageToTopic') {
+      const file: TopicFileInput = new TopicFileInput(message.data.file);
+      this.rootStore.chatViewModel.eventFocusInput = true;
+      return this.addImageToTopic(file);
+    }
     if (message.command === 'backToTopicPage') {
       this.currentTopic = undefined;
       // TODO set to common
@@ -121,6 +126,29 @@ export class TopicStore {
         file.start,
         file.end,
         file.content ?? '',
+      );
+    }
+  };
+
+  private addImageToTopic = async (file: TopicFileInput) => {
+    const exists = this.currentTopic?.file_inputs?.find(
+      f => f.isFile && f.path === file.path,
+    );
+    if (exists) {
+      console.log('file already exists');
+      return;
+    }
+    this.currentTopic?.file_inputs?.push(file);
+
+    if (this.currentTopic?.name) {
+      await this.rootStore.zulipService.addFile(
+        this.currentTopic?.name,
+        file.name,
+        file.path,
+        undefined,
+        undefined,
+        undefined,
+        'coding_context_image',
       );
     }
   };

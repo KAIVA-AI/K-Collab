@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 
 import { useFormContext, Controller } from 'react-hook-form';
 import { FilesPreview } from './file-preview';
-// import { AtSign, CaseSensitive, Mic, Paperclip, Send, Smile, Video } from 'lucide-react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '../ui/tooltip';
 
@@ -23,7 +22,6 @@ export const UserUploadForm = observer(
       reset,
       control,
     } = useFormContext<{
-      // chatbox__input: string;
       file: FileList | null;
     }>();
 
@@ -76,12 +74,10 @@ export const UserUploadForm = observer(
                 onChange={(e: any) => handleChangeFile(e.target.files, field)}
               />
               {errors.file && <p>{errors.file.message}</p>}
-              {/* <Tooltip tooltipContent={file ? "Edit" : "Upload File"} openOnTargetFocus={false} position="top"> */}
               <i
                 className="codicon codicon-cloud-upload"
                 onClick={() => document?.getElementById('fileInput')?.click()}
               />
-              {/* </Tooltip> */}
             </>
           )}
         />

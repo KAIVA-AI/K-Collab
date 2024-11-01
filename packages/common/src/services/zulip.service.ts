@@ -87,7 +87,6 @@ export class ZulipService {
         headers: headers,
       };
       if (formData) {
-        console.log('VALUE BODY ', formData);
         request.body = new FormData();
         Object.keys(formData).forEach(key => {
           let data = formData[key];
@@ -96,10 +95,6 @@ export class ZulipService {
           }
           request.body?.append(key, data);
         });
-        console.log('send request body ');
-        request.body.forEach((value: any, key: any) =>
-          console.log(`${key}: ${value}`),
-        );
       }
       if (queryParams) {
         const search = new URLSearchParams();
@@ -345,10 +340,12 @@ export class ZulipService {
     start: string | undefined,
     end: string | undefined,
     content: string,
+    inputType: string = 'coding_context_file',
   ) => {
     const formData: any = {
       external_id: topic,
       path: path,
+      input_type: inputType,
       content: content,
     };
     if (name !== undefined) {
