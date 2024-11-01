@@ -75,7 +75,7 @@ export const UserUploadForm = observer(
               />
               {errors.file && <p>{errors.file.message}</p>}
               <i
-                className="codicon codicon-close"
+                className="codicon codicon-cloud-upload"
                 onClick={() => document?.getElementById('fileInput')?.click()}
               />
             </>

@@ -33,7 +33,6 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
     reaction(
       () => this.formComponentRef.current?.file,
       file => {
-        console.log('file selected:', file);
         const payload = {
           file: file,
           name: file.name,
@@ -45,8 +44,6 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
   }
 
   handleSendMessage = async (inputValue?: string) => {
-    console.log('file select  ', this.formComponentRef.current?.file);
-
     const uploadContent = this.formComponentRef.current?.file
       ? await handleSendFile(
           this.formComponentRef.current?.file,
@@ -56,13 +53,22 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
         )
       : undefined;
     if (uploadContent !== 'undefined') {
+      await this.rootStore.zulipService.addFile(
+        this.rootStore.topicStore.currentTopic?.name
+          ? this.rootStore.topicStore.currentTopic?.name
+          : '',
+        this.formComponentRef.current?.file[0].name,
+        this.formComponentRef.current?.file[0].path,
+        undefined,
+        undefined,
+        undefined,
+        'coding_context_image',
+      );
       const finalMessage = formatMessageContent(
         inputValue,
         uploadContent,
         null,
       );
-      console.log('content upload ', uploadContent);
-      console.log('value input ', finalMessage);
       await this.chatViewModel.onSendMessage(finalMessage);
       // Clear file after sending
       this.formComponentRef.current.clearFile();

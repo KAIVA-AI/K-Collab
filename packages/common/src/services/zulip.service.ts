@@ -391,6 +391,8 @@ export class ZulipService {
       formData: data,
     });
     const prefix = !this.realm ? '' : `${this.realm}.`;
+    if (result.result === 'success') {
+    }
     return {
       name: data.name,
       url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,

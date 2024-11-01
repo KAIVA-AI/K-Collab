@@ -85,7 +85,7 @@ const FileView = memo(({ data, handleRemoveFile }: IFileView) => {
         className="w-5 h-5 absolute -right-2 -top-2 p-1 rounded-full"
         onClick={handleRemove}
       >
-        <i className="codicon codicon-cloud-upload" />
+        <i className="codicon codicon-close" />
       </div>
     </div>
   );

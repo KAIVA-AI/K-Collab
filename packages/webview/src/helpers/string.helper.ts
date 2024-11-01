@@ -68,24 +68,16 @@ export const handleSendFile = async (
   uploadRequest: (formData: any) => Promise<any>,
 ) => {
   if (!files || !files.length) return;
-  console.log('HANDLE SEND FILE ', files);
   const requests = Array.from(files).map(item => {
-    console.log('ITEM FILE ', item);
     const payload = {
       file: item,
       name: item.name,
       type: item.type,
     };
-    // formData.append('file', item);
-    // formData.append('name', item.name);
-    // formData.append('type', item.type);
-
-    // formData.forEach((value, key) => console.log(`${key}: ${value}`));
     return uploadRequest(payload);
   });
 
   try {
-    console.log('request zulip to upload ', requests);
     const uploads = await Promise.all(requests);
     if (uploads && uploads.length > 0) {
       const uploadContent = uploads
