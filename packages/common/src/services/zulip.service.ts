@@ -339,7 +339,7 @@ export class ZulipService {
     path: string,
     start: string | undefined,
     end: string | undefined,
-    content: string,
+    content: string | undefined,
     inputType: string = 'coding_context_file',
   ) => {
     const formData: any = {
