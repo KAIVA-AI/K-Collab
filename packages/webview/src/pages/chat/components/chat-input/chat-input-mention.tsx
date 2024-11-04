@@ -28,28 +28,59 @@ export class ChatInputMentionComponent extends Component<IProps> {
   }
 
   render() {
+    const showSlashCommands = this.viewModel.currentInput.startsWith('/');
+    const showFileInputs = this.viewModel.currentInput.startsWith('/img:');
+    console.log(
+      'comare show mentions ',
+      showSlashCommands,
+      '12321',
+      showFileInputs,
+    );
+
     return (
       <div
         ref={this.viewModel.mentionListRef}
         className={this.mentionListClass}
       >
-        <div className="mention-group">
-          {this.viewModel.hasSlashCommand ? (
-            this.viewModel.filteredSlashCommands.map(command => (
-              <div
-                key={command.index}
-                className={command.className}
-                onClick={() => {
-                  this.viewModel.handleSelectMention(command.value);
-                }}
-              >
-                /{command.value}
-              </div>
-            ))
-          ) : (
-            <div className="mention-item">No available command</div>
-          )}
-        </div>
+        {showSlashCommands && (
+          <div className="mention-group">
+            {this.viewModel.filteredSlashCommands.length > 0 ? (
+              this.viewModel.filteredSlashCommands.map(command => (
+                <div
+                  key={command.index}
+                  className={command.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(command.value);
+                  }}
+                >
+                  /{command.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available command</div>
+            )}
+          </div>
+        )}
+
+        {showFileInputs && (
+          <div className="mention-group">
+            {this.viewModel.filteredContextImages.length > 0 ? (
+              this.viewModel.filteredContextImages.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(file.value);
+                  }}
+                >
+                  /file:{file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available files</div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

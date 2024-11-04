@@ -2,6 +2,7 @@ import { Constants } from '@v-collab/common';
 import debounce from 'lodash/debounce';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
+import { RootStore } from '../../../../stores/index';
 
 const slashCommands = [
   //
@@ -28,16 +29,22 @@ interface MentionItem {
 }
 
 export class ChatInputViewModel {
+  private rootStore: RootStore;
   @observable prompt = '';
   @observable sending = false;
   @observable sendingInputValue?: string = undefined;
   @observable filterMention?: string = undefined;
   @observable mentionIndex = 0;
+
+  @observable contextImages = [];
+  @observable currentInput: string = '';
+
   mentionListRef = createRef<any>();
   inputRef = createRef<HTMLTextAreaElement>();
 
   @action onChangePrompt: ChangeEventHandler<HTMLTextAreaElement> = event => {
     this.prompt = event.target.value;
+    this.setCurrentInput(event.target.value);
   };
 
   private debounceDetectMention = debounce(
@@ -46,6 +53,10 @@ export class ChatInputViewModel {
     },
     200,
   );
+
+  @action setCurrentInput(input: string) {
+    this.currentInput = input;
+  }
 
   @computed get isShowMentionBox() {
     return this.filterMention !== undefined;
@@ -71,6 +82,28 @@ export class ChatInputViewModel {
       });
   }
 
+  @computed get filteredContextImages(): MentionItem[] {
+    // Filter file inputs if input starts with `/img:`
+    if (this.currentInput.startsWith('/img:')) {
+      const fileInputs =
+        this.rootStore.topicStore.currentTopic?.file_inputs ?? [];
+      return fileInputs.map((file, index) => ({
+        value: file.name,
+        index,
+        selected: index === this.mentionIndex,
+        className:
+          index === this.mentionIndex
+            ? 'mention-item selected'
+            : 'mention-item',
+      }));
+    }
+    return [];
+  }
+
+  @computed get hasContextImage() {
+    return this.filteredContextImages.length > 0;
+  }
+
   @computed get hasSlashCommand() {
     return this.filteredSlashCommands.length > 0;
   }
@@ -78,8 +111,9 @@ export class ChatInputViewModel {
   @computed get selectedMention() {
     return this.filteredSlashCommands[this.mentionIndex];
   }
-  constructor() {
+  constructor(rootStore: RootStore) {
     makeObservable(this);
+    this.rootStore = rootStore;
   }
 
   // TODO: refactor
@@ -135,6 +169,7 @@ export class ChatInputViewModel {
   };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log('BINGO');
     if (!e || !e.target) return;
     if (this.isShowMentionBox && e.key === 'Escape') {
       this.reset();
@@ -175,6 +210,7 @@ export class ChatInputViewModel {
     }
     this.debounceDetectMention(e);
     if (e.key === 'Enter') {
+      console.log('filere mention ', this.filterMention);
       e.preventDefault();
       e.stopPropagation();
       if (e.shiftKey) {

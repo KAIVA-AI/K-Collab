@@ -52,7 +52,8 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
           ),
         )
       : undefined;
-    if (uploadContent !== 'undefined') {
+    console.log('send message', inputValue, uploadContent);
+    if (uploadContent !== undefined) {
       await this.rootStore.zulipService.addFile(
         this.rootStore.topicStore.currentTopic?.name
           ? this.rootStore.topicStore.currentTopic?.name
@@ -62,7 +63,7 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
         undefined,
         undefined,
         undefined,
-        'coding_context_image',
+        'coding_context_file',
       );
       const finalMessage = formatMessageContent(
         inputValue,
@@ -73,6 +74,7 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
       // Clear file after sending
       this.formComponentRef.current.clearFile();
     }
+    await this.chatViewModel.onSendMessage(inputValue);
   };
 
   render() {

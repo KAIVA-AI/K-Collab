@@ -11,11 +11,13 @@ interface IProps extends BaseComponentProps {
 
 @inject('rootStore')
 export class ChatInputComponent extends Component<IProps> {
+  private viewModel: ChatInputViewModel;
 
   constructor(props: IProps) {
     super(props);
+    this.viewModel = new ChatInputViewModel(this.rootStore); // Pass rootStore here
   }
-  private viewModel = new ChatInputViewModel();
+  // private viewModel = new ChatInputViewModel();
   private disposers: IReactionDisposer[] = [];
 
   private get rootStore() {
