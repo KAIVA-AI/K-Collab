@@ -100,6 +100,24 @@ export class ChatInputViewModel {
     return [];
   }
 
+  @computed get filteredElements(): MentionItem[] {
+    // Filter file inputs if input starts with `/img:`
+    if (this.currentInput.startsWith('/element:')) {
+      const fileInputs =
+        this.rootStore.topicStore.currentTopic?.element_inputs ?? [];
+      return fileInputs.map((file, index) => ({
+        value: file.name,
+        index,
+        selected: index === this.mentionIndex,
+        className:
+          index === this.mentionIndex
+            ? 'mention-item selected'
+            : 'mention-item',
+      }));
+    }
+    return [];
+  }
+
   @computed get hasContextImage() {
     return this.filteredContextImages.length > 0;
   }
@@ -111,6 +129,15 @@ export class ChatInputViewModel {
   @computed get selectedMention() {
     return this.filteredSlashCommands[this.mentionIndex];
   }
+
+  @computed get selectedMentionElement() {
+    return this.filteredElements[this.mentionIndex];
+  }
+
+  @computed get selectedMentionImages() {
+    return this.filteredContextImages[this.mentionIndex];
+  }
+
   constructor(rootStore: RootStore) {
     makeObservable(this);
     this.rootStore = rootStore;
@@ -169,7 +196,9 @@ export class ChatInputViewModel {
   };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    console.log('BINGO');
+    console.log(
+      `BINGO arrow filter ${this.filterMention} / index mention: ${this.mentionIndex}`,
+    );
     if (!e || !e.target) return;
     if (this.isShowMentionBox && e.key === 'Escape') {
       this.reset();
@@ -184,6 +213,7 @@ export class ChatInputViewModel {
         e.key === 'Enter' ||
         e.key === 'Tab')
     ) {
+      console.log('show mentions');
       e.preventDefault();
       if (['Enter', 'Tab'].includes(e.key)) {
         if (this.selectedMention) {
@@ -210,7 +240,7 @@ export class ChatInputViewModel {
     }
     this.debounceDetectMention(e);
     if (e.key === 'Enter') {
-      console.log('filere mention ', this.filterMention);
+      console.log('filter mention ', this.filterMention);
       e.preventDefault();
       e.stopPropagation();
       if (e.shiftKey) {
@@ -232,6 +262,9 @@ export class ChatInputViewModel {
   };
 
   private onMentionNavigate = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(
+      `command : ${this.filteredSlashCommands.length} / images : ${this.filteredContextImages.length} / element: ${this.filteredElements}`,
+    );
     if (e.key === 'ArrowUp') {
       this.upHandler();
       return true;

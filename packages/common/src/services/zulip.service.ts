@@ -16,8 +16,8 @@ import {
   IZulipEvent,
 } from '../models';
 
-const ZULIP_PROTOCOL = 'https://';
-const ZULIP_BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+const ZULIP_PROTOCOL = 'http://';
+const ZULIP_BASE_DOMAIN = 'zulipdev.com:9991';
 
 const DEBUG = false;
 
@@ -49,6 +49,7 @@ export class ZulipService {
   };
 
   setBasicAuth = (email: string, apiKey: string) => {
+    console.log('ENV ', email, apiKey);
     this.token = btoa(`${email}:${apiKey}`);
     this.tokenType = 'Basic';
   };
@@ -369,6 +370,28 @@ export class ZulipService {
       path: 'assistant/get-file-input',
       formData: {
         external_id: topic,
+      },
+    })
+      .then((json: any) => (json.files || []) as ITopicFileInput[])
+      .then((files: ITopicFileInput[]) =>
+        files.map((f: ITopicFileInput) => {
+          if (f.start === null) {
+            f.start = undefined;
+          }
+          if (f.end === null) {
+            f.end = undefined;
+          }
+          return new TopicFileInput(f as ITopicFileInput);
+        }),
+      );
+  };
+
+  getElementInput = async (topic: string): Promise<TopicFileInput[]> => {
+    return this.sendRequest({
+      path: 'assistant/get-element-input',
+      formData: {
+        external_id: topic,
+        input_type: 'html_element',
       },
     })
       .then((json: any) => (json.files || []) as ITopicFileInput[])

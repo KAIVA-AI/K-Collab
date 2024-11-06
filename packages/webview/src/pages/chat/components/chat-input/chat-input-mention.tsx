@@ -30,6 +30,8 @@ export class ChatInputMentionComponent extends Component<IProps> {
   render() {
     const showSlashCommands = this.viewModel.currentInput.startsWith('/');
     const showFileInputs = this.viewModel.currentInput.startsWith('/img:');
+    const showElementHtml = this.viewModel.currentInput.startsWith('/element:');
+
     console.log(
       'comare show mentions ',
       showSlashCommands,
@@ -73,11 +75,30 @@ export class ChatInputMentionComponent extends Component<IProps> {
                     this.viewModel.handleSelectMention(file.value);
                   }}
                 >
-                  /file:{file.value}
+                  /item:{file.value}
                 </div>
               ))
             ) : (
               <div className="mention-item">No available files</div>
+            )}
+          </div>
+        )}
+        {showElementHtml && (
+          <div className="mention-group">
+            {this.viewModel.filteredElements.length > 0 ? (
+              this.viewModel.filteredElements.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(file.value);
+                  }}
+                >
+                  /element:{file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available elements</div>
             )}
           </div>
         )}

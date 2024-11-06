@@ -193,6 +193,14 @@ export class TopicStore {
         this.currentTopic.file_inputs = fileInputs;
       });
     });
+    this.rootStore.zulipService.getElementInput(topic.name).then(fileInputs => {
+      runInAction(() => {
+        if (!this.currentTopic) {
+          return;
+        }
+        this.currentTopic.element_inputs = fileInputs;
+      });
+    });
   };
 
   @action cleanup = () => {

@@ -49,6 +49,8 @@ export interface ITopic {
   name: string;
   max_id?: number;
   file_inputs?: TopicFileInput[];
+  image_inputs?: TopicFileInput[];
+  element_inputs?: TopicFileInput[];
 }
 export interface IMessage {
   id: number;
