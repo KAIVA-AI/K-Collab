@@ -17,7 +17,6 @@ export class ChatInputComponent extends Component<IProps> {
     super(props);
     this.viewModel = new ChatInputViewModel(this.rootStore); // Pass rootStore here
   }
-  // private viewModel = new ChatInputViewModel();
   private disposers: IReactionDisposer[] = [];
 
   private get rootStore() {

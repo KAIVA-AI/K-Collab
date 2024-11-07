@@ -36,7 +36,6 @@ export class ChatInputViewModel {
   @observable filterMention?: string = undefined;
   @observable mentionIndex = 0;
 
-  @observable contextImages = [];
   @observable currentInput: string = '';
 
   mentionListRef = createRef<any>();

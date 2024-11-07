@@ -32,13 +32,6 @@ export class ChatInputMentionComponent extends Component<IProps> {
     const showFileInputs = this.viewModel.currentInput.startsWith('/img:');
     const showElementHtml = this.viewModel.currentInput.startsWith('/element:');
 
-    console.log(
-      'comare show mentions ',
-      showSlashCommands,
-      '12321',
-      showFileInputs,
-    );
-
     return (
       <div
         ref={this.viewModel.mentionListRef}
