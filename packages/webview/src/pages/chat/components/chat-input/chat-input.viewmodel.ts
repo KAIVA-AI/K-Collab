@@ -212,7 +212,6 @@ export class ChatInputViewModel {
         e.key === 'Enter' ||
         e.key === 'Tab')
     ) {
-      console.log('show mentions');
       e.preventDefault();
       if (['Enter', 'Tab'].includes(e.key)) {
         if (this.selectedMention) {

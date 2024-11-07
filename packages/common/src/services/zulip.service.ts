@@ -49,7 +49,6 @@ export class ZulipService {
   };
 
   setBasicAuth = (email: string, apiKey: string) => {
-    console.log('ENV ', email, apiKey);
     this.token = btoa(`${email}:${apiKey}`);
     this.tokenType = 'Basic';
   };
@@ -414,8 +413,6 @@ export class ZulipService {
       formData: data,
     });
     const prefix = !this.realm ? '' : `${this.realm}.`;
-    // if (result.result === 'success') {
-    // }
     return {
       name: data.name,
       url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,
