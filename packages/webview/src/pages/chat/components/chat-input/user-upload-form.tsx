@@ -3,7 +3,8 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { FilesPreview } from './file-preview';
 import { observer } from 'mobx-react';
-import { Tooltip } from '../ui/tooltip';
+import { useRootStore } from 'src/stores';
+import { TopicFileInput } from 'src/models';
 
 export const FILE_EXTENSIONS_REGEX = /\.(png|jpg)$/i;
 
@@ -12,14 +13,13 @@ export const MAX_FILE_UPLOAD_SIZE = 10;
 // Functional wrapper component
 export const UserUploadForm = observer(
   forwardRef((props: any, ref: any) => {
+    const { topicStore, zulipService } = useRootStore();
     const {
       formState: { errors },
       setValue,
-      getValues,
       watch,
       setError,
       clearErrors,
-      reset,
       control,
     } = useFormContext<{
       file: FileList | null;
@@ -32,7 +32,7 @@ export const UserUploadForm = observer(
 
     const file = watch('file');
 
-    const handleChangeFile = (files: any, field: any) => {
+    const handleChangeFile = async (files: any) => {
       const _file = files[0];
       console.log('field', _file);
       let error: string | null = null;
@@ -53,7 +53,19 @@ export const UserUploadForm = observer(
         return;
       } else {
         clearErrors('file');
-        field.onChange && field.onChange(files);
+        const payload = {
+          file: _file,
+          name: _file.name,
+          type: _file.type,
+        };
+        const result = await zulipService.postUserUpload(payload);
+        console.log(result);
+        topicStore.addImageToTopic(
+          new TopicFileInput({
+            name: _file.name,
+            path: zulipService.removeHost(result.url),
+          }),
+        );
       }
     };
 
@@ -64,14 +76,14 @@ export const UserUploadForm = observer(
           name="file"
           control={control}
           defaultValue={null}
-          render={({ field }) => (
+          render={() => (
             <>
               <input
                 type="file"
                 id="fileInput"
                 multiple
                 style={{ display: 'none' }}
-                onChange={(e: any) => handleChangeFile(e.target.files, field)}
+                onChange={(e: any) => handleChangeFile(e.target.files)}
               />
               {errors.file && <p>{errors.file.message}</p>}
               <i
