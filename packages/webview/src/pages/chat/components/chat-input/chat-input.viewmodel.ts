@@ -1,6 +1,6 @@
 import { Constants } from '@v-collab/common';
 import debounce from 'lodash/debounce';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, values } from 'mobx';
 import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
 import { RootStore } from '../../../../stores/index';
 
@@ -21,6 +21,18 @@ const slashCommands = [
 // const userMentions: string[] = [];
 // TODO combine slash and users to single array
 
+const slashAttribute = [
+  //
+  'href',
+  'src',
+  'width',
+  'height',
+  'maxlength',
+  'value',
+  'name',
+  'id',
+];
+
 interface MentionItem {
   index: number;
   value: string;
@@ -38,6 +50,9 @@ export class ChatInputViewModel {
 
   @observable currentInput: string = '';
 
+  @observable selectedCommandHistory: string | null = null;
+  @observable currentHistoryIndex: number = -1;
+
   mentionListRef = createRef<any>();
   inputRef = createRef<HTMLTextAreaElement>();
 
@@ -52,6 +67,10 @@ export class ChatInputViewModel {
     },
     200,
   );
+
+  @action setSelectedCommandHistory(command: string) {
+    this.selectedCommandHistory = command; // Update with the latest selected command
+  }
 
   @action setCurrentInput(input: string) {
     this.currentInput = input;
@@ -81,9 +100,32 @@ export class ChatInputViewModel {
       });
   }
 
+  @computed get filteredSlashAttribute(): MentionItem[] {
+    if (!this.currentInput.includes('/attribute:')) {
+      return [];
+    }
+    return slashAttribute
+      .filter(command =>
+        command
+          .toLowerCase()
+          .includes((this.filterMention || '').toLowerCase()),
+      )
+      .map((value, index) => {
+        const classes: string[] = ['mention-item'];
+        const selected = index === this.mentionIndex;
+        if (selected) classes.push('selected');
+        return {
+          value,
+          index,
+          selected,
+          className: classes.join(' '),
+        };
+      });
+  }
+
   @computed get filteredContextImages(): MentionItem[] {
     // Filter file inputs if input starts with `/img:`
-    if (this.currentInput.startsWith('/img:')) {
+    if (this.currentInput.includes('/img:')) {
       const fileInputs =
         this.rootStore.topicStore.currentTopic?.file_inputs ?? [];
       return fileInputs.map((file, index) => ({
@@ -101,7 +143,7 @@ export class ChatInputViewModel {
 
   @computed get filteredElements(): MentionItem[] {
     // Filter file inputs if input starts with `/img:`
-    if (this.currentInput.startsWith('/element:')) {
+    if (this.currentInput.includes('/element:')) {
       const fileInputs =
         this.rootStore.topicStore.currentTopic?.element_inputs ?? [];
       return fileInputs.map((file, index) => ({
@@ -165,7 +207,6 @@ export class ChatInputViewModel {
       if (char === '@' || char === '/') acc.push(index);
       return acc;
     }, []);
-
     if (atIndexes.includes(cursorPosition - 1)) {
       this.filterMention = '';
     } else {
@@ -195,9 +236,12 @@ export class ChatInputViewModel {
   };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    console.log(
-      `BINGO arrow filter ${this.filterMention} / index mention: ${this.mentionIndex}`,
-    );
+    if (e.key === 'ArrowUp' && this.selectedCommandHistory) {
+      // On ArrowUp, set the input prompt to the last selected command
+      this.prompt = this.selectedCommandHistory;
+      e.preventDefault(); // Prevent default arrow-up behavior
+    }
+
     if (!e || !e.target) return;
     if (this.isShowMentionBox && e.key === 'Escape') {
       this.reset();
@@ -238,7 +282,6 @@ export class ChatInputViewModel {
     }
     this.debounceDetectMention(e);
     if (e.key === 'Enter') {
-      console.log('filter mention ', this.filterMention);
       e.preventDefault();
       e.stopPropagation();
       if (e.shiftKey) {
@@ -260,9 +303,6 @@ export class ChatInputViewModel {
   };
 
   private onMentionNavigate = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    console.log(
-      `command : ${this.filteredSlashCommands.length} / images : ${this.filteredContextImages.length} / element: ${this.filteredElements}`,
-    );
     if (e.key === 'ArrowUp') {
       this.upHandler();
       return true;
@@ -337,7 +377,6 @@ export class ChatInputViewModel {
     // const second = `**${_item}** `;
     const second = `${_item} `;
     const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
-
     this.prompt = `${first}${second}${third}`;
     target && target.focus();
   };
@@ -348,5 +387,8 @@ export class ChatInputViewModel {
     this.prompt = '';
     this.sending = true;
     this.sendingInputValue = inputValue;
+    if (this.prompt.startsWith('/')) {
+      this.setSelectedCommandHistory(this.prompt); // Save the command as history
+    }
   };
 }

@@ -62,7 +62,7 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
         undefined,
         undefined,
         undefined,
-        'coding_context_image',
+        'coding_context_file',
       );
       const finalMessage = formatMessageContent(
         inputValue,

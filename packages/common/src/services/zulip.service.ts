@@ -16,8 +16,8 @@ import {
   IZulipEvent,
 } from '../models';
 
-const ZULIP_PROTOCOL = 'https://';
-const ZULIP_BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+const ZULIP_PROTOCOL = 'http://';
+const ZULIP_BASE_DOMAIN = 'zulipdev.com:9991';
 
 const DEBUG = false;
 
@@ -413,6 +413,7 @@ export class ZulipService {
       formData: data,
     });
     const prefix = !this.realm ? '' : `${this.realm}.`;
+
     return {
       name: data.name,
       url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,

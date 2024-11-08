@@ -28,9 +28,10 @@ export class ChatInputMentionComponent extends Component<IProps> {
   }
 
   render() {
-    const showSlashCommands = this.viewModel.currentInput.startsWith('/');
-    const showFileInputs = this.viewModel.currentInput.startsWith('/img:');
-    const showElementHtml = this.viewModel.currentInput.startsWith('/element:');
+    const showSlashCommands = this.viewModel.currentInput.includes('/');
+    const showFileInputs = this.viewModel.currentInput.includes('/img:');
+    const showElementHtml = this.viewModel.currentInput.includes('/element:');
+    const showAttribute = this.viewModel.currentInput.includes('/attribute:');
 
     return (
       <div
@@ -65,10 +66,10 @@ export class ChatInputMentionComponent extends Component<IProps> {
                   key={file.index}
                   className={file.className}
                   onClick={() => {
-                    this.viewModel.handleSelectMention(file.value);
+                    this.viewModel.handleSelectMention(`img:${file.value}`);
                   }}
                 >
-                  /item:{file.value}
+                  img:{file.value}
                 </div>
               ))
             ) : (
@@ -84,14 +85,35 @@ export class ChatInputMentionComponent extends Component<IProps> {
                   key={file.index}
                   className={file.className}
                   onClick={() => {
-                    this.viewModel.handleSelectMention(file.value);
+                    this.viewModel.handleSelectMention(`item:${file.value}`);
                   }}
                 >
-                  /element:{file.value}
+                  item:{file.value}
                 </div>
               ))
             ) : (
               <div className="mention-item">No available elements</div>
+            )}
+          </div>
+        )}
+        {showAttribute && (
+          <div className="mention-group">
+            {this.viewModel.filteredSlashAttribute.length > 0 ? (
+              this.viewModel.filteredSlashAttribute.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(
+                      `attribute:${file.value}`,
+                    );
+                  }}
+                >
+                  attribute:{file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available attributes</div>
             )}
           </div>
         )}
