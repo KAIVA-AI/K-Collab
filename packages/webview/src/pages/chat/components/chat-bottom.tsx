@@ -8,10 +8,6 @@ import {
   handleSendFile,
   formatMessageContent,
 } from '../../../helpers/string.helper';
-import {
-  ZULIP_BASE_DOMAIN,
-  ZULIP_PROTOCOL,
-} from '../../../../../common/src/services/zulip.service';
 
 @inject('rootStore')
 @observer

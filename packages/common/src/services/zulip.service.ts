@@ -5,7 +5,6 @@ import {
   ITopicFileInput,
   IZulipSendMessageParams,
   TopicFileInput,
-  IZulipUserFileUpload,
 } from '../models';
 import {
   IEventListener,
@@ -63,6 +62,15 @@ export class ZulipService {
     }
     const prefix = !this.realm ? '' : `${this.realm}.`;
     return `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/api/v1/${path}`;
+  };
+
+  removeHost = (url: string) => {
+    if (this.realm === undefined) {
+      throw new Error('Realm is not set');
+    }
+    const prefix = !this.realm ? '' : `${this.realm}.`;
+    const host = `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}`;
+    return url.replace(host, '');
   };
 
   private sendRequest = async ({

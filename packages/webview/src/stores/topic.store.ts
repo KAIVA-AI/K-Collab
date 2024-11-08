@@ -130,7 +130,7 @@ export class TopicStore {
     }
   };
 
-  private addImageToTopic = async (file: TopicFileInput) => {
+  @action addImageToTopic = async (file: TopicFileInput) => {
     const exists = this.currentTopic?.file_inputs?.find(
       f => f.isFile && f.path === file.path,
     );

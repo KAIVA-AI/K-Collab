@@ -1,13 +1,9 @@
 import { inject, Observer, Provider } from 'mobx-react';
 import { ChatInputMentionComponent } from './chat-input-mention';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
 import { IReactionDisposer, reaction } from 'mobx';
-import {
-  ZULIP_BASE_DOMAIN,
-  ZULIP_PROTOCOL,
-} from '../../../../../../common/src/services/zulip.service';
 interface IProps extends BaseComponentProps {
   onSendMessage: (inputValue?: string) => Promise<void>;
 }
