@@ -15,9 +15,10 @@ import {
   IUnreadListeners,
   IZulipEvent,
 } from '../models';
+import { Constants } from '../../../common/src/constants/constants';
 
-export const ZULIP_PROTOCOL = 'https://';
-export const ZULIP_BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+export const ZULIP_PROTOCOL = Constants.ZULIP_PROTOCOL;
+export const ZULIP_BASE_DOMAIN = Constants.ZULIP_BASE_DOMAIN;
 
 const DEBUG = false;
 
