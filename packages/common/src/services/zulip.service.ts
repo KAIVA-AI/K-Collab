@@ -16,8 +16,8 @@ import {
   IZulipEvent,
 } from '../models';
 
-const ZULIP_PROTOCOL = 'http://';
-const ZULIP_BASE_DOMAIN = 'zulipdev.com:9991';
+export const ZULIP_PROTOCOL = 'http://';
+export const ZULIP_BASE_DOMAIN = 'zulipdev.com:9991';
 
 const DEBUG = false;
 
