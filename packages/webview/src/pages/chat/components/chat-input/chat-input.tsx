@@ -1,6 +1,6 @@
 import { inject, Observer, Provider } from 'mobx-react';
 import { ChatInputMentionComponent } from './chat-input-mention';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { ChatInputViewModel } from './chat-input.viewmodel';
 import { IReactionDisposer, reaction } from 'mobx';

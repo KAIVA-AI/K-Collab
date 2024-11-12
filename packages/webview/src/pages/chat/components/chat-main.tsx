@@ -2,10 +2,7 @@ import { useRootStore } from '../../../stores';
 import { observer } from 'mobx-react';
 import { ChatMessageItem } from './chat-message-item';
 import { useEffect, useRef } from 'react';
-import {
-  ZULIP_BASE_DOMAIN,
-  ZULIP_PROTOCOL,
-} from '../../../../../common/src/services/zulip.service';
+import { Constants } from '../../../../../common/src/constants/constants';
 
 export const ChatMainComponent = observer(() => {
   const { messageStore, realmStore } = useRootStore();
@@ -24,21 +21,19 @@ export const ChatMainComponent = observer(() => {
       const anchorElement = document.querySelector(
         'div.message_inline_image a',
       );
-      console.log('BINGO', anchorElement);
 
       // Check if the <a> tag exists and update the href attribute
       if (anchorElement) {
         const currentHref = anchorElement.getAttribute('href');
         const image = anchorElement.querySelector('img');
-        console.log('IMG ', image);
 
         if (currentHref && image) {
           // Add prefix to the existing href
           const prefix = !realmStore.currentRealm?.realm_string
             ? ''
             : `${realmStore.currentRealm?.realm_string}.`;
-          const newHref = `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/${currentHref}`;
-          const imgSrc = `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/${image.getAttribute('src')}`;
+          const newHref = `${Constants.ZULIP_PROTOCOL}${prefix}${Constants.ZULIP_SECONDARY_DOMAIN}/${currentHref}`;
+          const imgSrc = `${Constants.ZULIP_PROTOCOL}${prefix}${Constants.ZULIP_SECONDARY_DOMAIN}/${image.getAttribute('src')}`;
           anchorElement.setAttribute('href', newHref);
           image.setAttribute('src', imgSrc);
         }

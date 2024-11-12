@@ -92,6 +92,13 @@ module.exports = {
 
       'process.env.PUBLIC_URL': JSON.stringify(publicUrl),
       'process.env.WEBVIEW_VERSION': JSON.stringify(packageJson.version),
+      'process.env.ZULIP_PROTOCOL': JSON.stringify(process.env.ZULIP_PROTOCOL),
+      'process.env.ZULIP_BASE_DOMAIN': JSON.stringify(
+        process.env.ZULIP_BASE_DOMAIN,
+      ),
+      'process.env.ZULIP_SECONDARY_DOMAIN': JSON.stringify(
+        process.env.ZULIP_SECONDARY_DOMAIN,
+      ),
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],

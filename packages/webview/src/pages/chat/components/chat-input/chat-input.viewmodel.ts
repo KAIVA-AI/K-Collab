@@ -382,13 +382,13 @@ export class ChatInputViewModel {
   };
 
   @action onSubmitInput = async () => {
+    if (this.prompt.startsWith('/')) {
+      this.setSelectedCommandHistory(this.prompt); // Save the command as history
+    }
     const inputValue = `@**${Constants.BOT_CODING}** ${this.prompt}`;
     this.filterMention = undefined;
     this.prompt = '';
     this.sending = true;
     this.sendingInputValue = inputValue;
-    if (this.prompt.startsWith('/')) {
-      this.setSelectedCommandHistory(this.prompt); // Save the command as history
-    }
   };
 }

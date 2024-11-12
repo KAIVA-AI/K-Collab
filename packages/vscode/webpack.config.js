@@ -60,6 +60,13 @@ const extensionConfig = {
       'process.env.USER_API_KEY': JSON.stringify(process.env.USER_API_KEY),
 
       'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+      'process.env.ZULIP_PROTOCOL': JSON.stringify(process.env.ZULIP_PROTOCOL),
+      'process.env.ZULIP_BASE_DOMAIN': JSON.stringify(
+        process.env.ZULIP_BASE_DOMAIN,
+      ),
+      'process.env.ZULIP_SECONDARY_DOMAIN': JSON.stringify(
+        process.env.ZULIP_SECONDARY_DOMAIN,
+      ),
     }),
     new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],
