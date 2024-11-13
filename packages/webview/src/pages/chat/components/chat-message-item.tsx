@@ -1,20 +1,39 @@
 import { Observer } from 'mobx-react';
 import { IMessage } from '../../../models';
 import { useRootStore } from '../../../stores';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MessageContent from './chat-input/messageContent';
 
 export const ChatMessageItem = (props: { message: IMessage }) => {
   const { message } = props;
   const { chatViewModel } = useRootStore();
   const renderedMarkdownRef = useRef<HTMLDivElement | null>(null);
+  const [expanded, setExpanded] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const codeBlockList =
       renderedMarkdownRef.current?.querySelectorAll('div.codehilite');
     if (codeBlockList) {
-      codeBlockList.forEach(codehilite => {
+      codeBlockList.forEach((codehilite, index) => {
         const preCode = codehilite.querySelector('pre');
+        if (!preCode) return;
+        const codeText = preCode.innerText;
+        const isLong = codeText.length > 200; // Define length threshold for "Read more"
+        if (isLong && !expanded[index]) {
+          preCode.innerText = codeText.substring(0, 200) + '...'; // Show preview initially
+
+          const toggleButton = document.createElement('span');
+          toggleButton.className = 'message_length_toggle';
+          toggleButton.innerText = 'Read more';
+          toggleButton.style.color = 'blue';
+          toggleButton.style.cursor = 'pointer';
+          toggleButton.onclick = () => {
+            setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
+          };
+
+          codehilite.appendChild(toggleButton);
+        }
+
         const codeAction = document.createElement('div');
         codeAction.className = 'message-code-action';
 
@@ -40,7 +59,34 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         codehilite.prepend(codeAction);
       });
     }
-  }, [message]);
+  }, [message, expanded]);
+
+  useEffect(() => {
+    const codeBlockList =
+      renderedMarkdownRef.current?.querySelectorAll('div.codehilite');
+    if (codeBlockList) {
+      codeBlockList.forEach((codehilite, index) => {
+        const preCode = codehilite.querySelector('pre');
+        if (!preCode) return;
+
+        const codeText = message.content; // Full text to toggle
+
+        if (expanded[index]) {
+          preCode.innerText = codeText; // Show full content
+          const toggleButton = codehilite.querySelector(
+            '.message_length_toggle',
+          );
+          if (toggleButton) toggleButton.innerHTML = 'Show less';
+        } else {
+          preCode.innerText = codeText.substring(0, 200) + '...'; // Show preview
+          const toggleButton = codehilite.querySelector(
+            '.message_length_toggle',
+          );
+          if (toggleButton) toggleButton.innerHTML = 'Read more';
+        }
+      });
+    }
+  }, [expanded, message.content]);
 
   return (
     <Observer>
@@ -54,15 +100,15 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
             />
             <div>{message.sender_full_name}</div>
           </div>
-          <MessageContent htmlContent={message.content} />
+          {/* <MessageContent htmlContent={message.content} /> */}
 
-          {/* <div className="message-content vc-border">
+          <div className="message-content vc-border">
             <div
               ref={renderedMarkdownRef}
               dangerouslySetInnerHTML={{ __html: message.content }}
               className="rendered_markdown"
             ></div>
-          </div> */}
+          </div>
         </div>
       )}
     </Observer>
