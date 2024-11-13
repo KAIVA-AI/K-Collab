@@ -2,7 +2,6 @@ import { Observer } from 'mobx-react';
 import { IMessage } from '../../../models';
 import { useRootStore } from '../../../stores';
 import { useEffect, useRef, useState } from 'react';
-import MessageContent from './chat-input/messageContent';
 
 export const ChatMessageItem = (props: { message: IMessage }) => {
   const { message } = props;
@@ -100,7 +99,6 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
             />
             <div>{message.sender_full_name}</div>
           </div>
-          {/* <MessageContent htmlContent={message.content} /> */}
 
           <div className="message-content vc-border">
             <div
