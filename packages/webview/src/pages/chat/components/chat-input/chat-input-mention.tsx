@@ -27,93 +27,40 @@ export class ChatInputMentionComponent extends Component<IProps> {
     return classes.join(' ');
   }
 
+  get mentionPrefix() {
+    if (this.viewModel.currentInput.includes('/img:')) return 'img:';
+    if (this.viewModel.currentInput.includes('/element:')) return 'item:';
+    if (this.viewModel.currentInput.includes('/attr:')) return 'attr:';
+    return '';
+  }
+
   render() {
-    const showSlashCommands = this.viewModel.currentInput.includes('/');
-    const showFileInputs = this.viewModel.currentInput.includes('/img:');
-    const showElementHtml = this.viewModel.currentInput.includes('/element:');
-    const showAttribute = this.viewModel.currentInput.includes('/attribute:');
+    const showMentions = this.viewModel.currentInput.includes('/');
+    const mentionPrefix = this.mentionPrefix;
+    console.log('INPUT MENTION ', mentionPrefix);
 
     return (
       <div
         ref={this.viewModel.mentionListRef}
         className={this.mentionListClass}
       >
-        {showSlashCommands && (
+        {showMentions && (
           <div className="mention-group">
-            {this.viewModel.filteredSlashCommands.length > 0 ? (
-              this.viewModel.filteredSlashCommands.map(command => (
+            {this.viewModel.filteredMentions.length > 0 ? (
+              this.viewModel.filteredMentions.map(mention => (
                 <div
-                  key={command.index}
-                  className={command.className}
+                  key={mention.index}
+                  className={mention.className}
                   onClick={() => {
-                    this.viewModel.handleSelectMention(command.value);
+                    this.viewModel.handleSelectMention(`${mention.value}`);
                   }}
                 >
-                  /{command.value}
+                  {mentionPrefix}
+                  {mention.value}
                 </div>
               ))
             ) : (
-              <div className="mention-item">No available command</div>
-            )}
-          </div>
-        )}
-
-        {showFileInputs && (
-          <div className="mention-group">
-            {this.viewModel.filteredContextImages.length > 0 ? (
-              this.viewModel.filteredContextImages.map(file => (
-                <div
-                  key={file.index}
-                  className={file.className}
-                  onClick={() => {
-                    this.viewModel.handleSelectMention(`img:${file.value}`);
-                  }}
-                >
-                  img:{file.value}
-                </div>
-              ))
-            ) : (
-              <div className="mention-item">No available files</div>
-            )}
-          </div>
-        )}
-        {showElementHtml && (
-          <div className="mention-group">
-            {this.viewModel.filteredElements.length > 0 ? (
-              this.viewModel.filteredElements.map(file => (
-                <div
-                  key={file.index}
-                  className={file.className}
-                  onClick={() => {
-                    this.viewModel.handleSelectMention(`item:${file.value}`);
-                  }}
-                >
-                  item:{file.value}
-                </div>
-              ))
-            ) : (
-              <div className="mention-item">No available elements</div>
-            )}
-          </div>
-        )}
-        {showAttribute && (
-          <div className="mention-group">
-            {this.viewModel.filteredSlashAttribute.length > 0 ? (
-              this.viewModel.filteredSlashAttribute.map(file => (
-                <div
-                  key={file.index}
-                  className={file.className}
-                  onClick={() => {
-                    this.viewModel.handleSelectMention(
-                      `attribute:${file.value}`,
-                    );
-                  }}
-                >
-                  attribute:{file.value}
-                </div>
-              ))
-            ) : (
-              <div className="mention-item">No available attributes</div>
+              <div className="mention-item">No available items</div>
             )}
           </div>
         )}
