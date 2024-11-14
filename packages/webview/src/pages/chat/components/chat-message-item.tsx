@@ -8,24 +8,30 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
   const { chatViewModel } = useRootStore();
   const renderedMarkdownRef = useRef<HTMLDivElement | null>(null);
   const [expanded, setExpanded] = useState<{ [key: number]: boolean }>({});
+  const [codeTexts, setCodeTexts] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     const codeBlockList =
       renderedMarkdownRef.current?.querySelectorAll('div.codehilite');
     if (codeBlockList) {
+      const initialCodeTexts: { [key: number]: string } = {};
+
       codeBlockList.forEach((codehilite, index) => {
         const preCode = codehilite.querySelector('pre');
         if (!preCode) return;
         const codeText = preCode.innerText;
+        // setContent(codeText);
+        initialCodeTexts[index] = codeText; // Store the original full conten
         const isLong = codeText.length > 200; // Define length threshold for "Read more"
         if (isLong && !expanded[index]) {
+          // setContent(codeText);
           preCode.innerText = codeText.substring(0, 200) + '...'; // Show preview initially
 
-          const toggleButton = document.createElement('span');
+          const toggleButton = document.createElement('button');
           toggleButton.className = 'message_length_toggle';
           toggleButton.innerText = 'Read more';
-          toggleButton.style.color = 'blue';
-          toggleButton.style.cursor = 'pointer';
+          // toggleButton.style.color = 'blue';
+          // toggleButton.style.cursor = 'pointer';
           toggleButton.onclick = () => {
             setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
           };
@@ -57,8 +63,10 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
 
         codehilite.prepend(codeAction);
       });
+      // Set the full content for all code blocks
+      setCodeTexts(initialCodeTexts);
     }
-  }, [message, expanded]);
+  }, [message]);
 
   useEffect(() => {
     const codeBlockList =
@@ -68,16 +76,17 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         const preCode = codehilite.querySelector('pre');
         if (!preCode) return;
 
-        const codeText = message.content; // Full text to toggle
+        const fullText = codeTexts[index]; // Full text to toggle
+        if (!fullText) return;
 
         if (expanded[index]) {
-          preCode.innerText = codeText; // Show full content
+          preCode.innerText = fullText; // Show full content
           const toggleButton = codehilite.querySelector(
             '.message_length_toggle',
           );
           if (toggleButton) toggleButton.innerHTML = 'Show less';
         } else {
-          preCode.innerText = codeText.substring(0, 200) + '...'; // Show preview
+          preCode.innerText = fullText.substring(0, 200) + '...'; // Show preview
           const toggleButton = codehilite.querySelector(
             '.message_length_toggle',
           );
@@ -85,7 +94,7 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         }
       });
     }
-  }, [expanded, message.content]);
+  }, [expanded, codeTexts]);
 
   return (
     <Observer>

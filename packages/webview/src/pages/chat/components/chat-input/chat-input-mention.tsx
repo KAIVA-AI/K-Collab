@@ -29,7 +29,7 @@ export class ChatInputMentionComponent extends Component<IProps> {
 
   get mentionPrefix() {
     if (this.viewModel.currentInput.includes('/img:')) return 'img:';
-    if (this.viewModel.currentInput.includes('/element:')) return 'item:';
+    if (this.viewModel.currentInput.includes('/item:')) return 'item:';
     if (this.viewModel.currentInput.includes('/attr:')) return 'attr:';
     return '';
   }
@@ -37,7 +37,6 @@ export class ChatInputMentionComponent extends Component<IProps> {
   render() {
     const showMentions = this.viewModel.currentInput.includes('/');
     const mentionPrefix = this.mentionPrefix;
-    console.log('INPUT MENTION ', mentionPrefix);
 
     return (
       <div

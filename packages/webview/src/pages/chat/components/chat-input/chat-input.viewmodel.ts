@@ -167,7 +167,7 @@ export class ChatInputViewModel {
         this.rootStore.topicStore.currentTopic?.file_inputs?.map(
           file => file.name,
         ) || [];
-    } else if (this.currentInput.includes('/element:')) {
+    } else if (this.currentInput.includes('/item:')) {
       mentionList =
         this.rootStore.topicStore.currentTopic?.element_inputs?.map(
           file => file.name,
@@ -238,10 +238,7 @@ export class ChatInputViewModel {
     // Check for the mention types like /img:, /attr:, or /element:
     const imgMentionIndex = value.lastIndexOf('/img:', cursorPosition - 1);
     const attrMentionIndex = value.lastIndexOf('/attr:', cursorPosition - 1);
-    const elementMentionIndex = value.lastIndexOf(
-      '/element:',
-      cursorPosition - 1,
-    );
+    const elementMentionIndex = value.lastIndexOf('/item:', cursorPosition - 1);
     const slashCommandIndex = value.lastIndexOf('/', cursorPosition - 1);
 
     // Define which mention prefix is active
@@ -266,7 +263,6 @@ export class ChatInputViewModel {
     } else {
       this.reset();
     }
-    console.log('FILTER AFTER DETECT ', this.filterMention);
   };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -306,7 +302,6 @@ export class ChatInputViewModel {
             : '';
           const second = `${selectedMention} `; // TODO case user mention
           const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
-
           this.prompt = `${first}${second}${third}`;
         }
         return;
@@ -393,7 +388,6 @@ export class ChatInputViewModel {
     // !todo: refactor function logic later
     const _item = select || '';
     const _filter = this.filterMention || '';
-    console.log(`SECLETLKJ ${select} | ${_filter}`);
 
     const temp = this.prompt;
     const target = document.getElementById(
@@ -412,7 +406,6 @@ export class ChatInputViewModel {
     // const second = `**${_item}** `;
     const second = `${_item} `;
     const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
-    console.log(`first ${first} | `);
     this.prompt = `${first}${second}${third}`;
     target && target.focus();
   };

@@ -53,7 +53,6 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
           ),
         )
       : undefined;
-    console.log('TRIGGER messages');
     if (uploadContent !== undefined) {
       await this.rootStore.zulipService.addFile(
         this.rootStore.topicStore.currentTopic?.name
