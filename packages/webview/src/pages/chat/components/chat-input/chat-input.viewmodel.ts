@@ -44,7 +44,7 @@ const mentionTriggers: MentionTrigger[] = [
   { trigger: '/img:', type: 'image', prefix: 'img:' },
   { trigger: '/attr:', type: 'attribute', prefix: 'attr:' },
   { trigger: '/item:', type: 'item', prefix: 'item:' },
-  { trigger: '/', type: 'command' },
+  { trigger: '/', type: 'command' , prefix: ''},
 ];
 
 interface MentionItem {
@@ -188,33 +188,67 @@ export class ChatInputViewModel {
       return;
     }
 
-    let mentionFound = false;
-
-    //Iterate through triggers to find the most relevant match
-    for (const { trigger, type, prefix } of mentionTriggers) {
-      const triggerIndex = value.lastIndexOf(trigger, cursorPosition - 1);
-      if (triggerIndex >= 0 && triggerIndex < cursorPosition) {
-        const mentionText = value
-          .slice(triggerIndex + trigger.length, cursorPosition)
-          .trim();
-
-        // If a prefix is defined, remove it from the mention text
-        if (prefix && mentionText.startsWith(prefix)) {
-          this.filterMention = mentionText.slice(prefix.length);
-        } else if (!prefix) {
-          this.filterMention = mentionText;
+    const atIndexes = Array.from(value).reduce<number[]>((acc, char, index) => {
+      if (char === '@' || char === '/') acc.push(index);
+      return acc;
+    }, []);
+  
+    if (atIndexes.includes(cursorPosition - 1)) {
+      // Handle edge cases where the trigger is the last character
+      const nextChar = value[cursorPosition] || '';
+      if (value[cursorPosition - 1] === '/' && !/\s/.test(nextChar)) {
+        // Allow mentions like /command or /img:, determine type dynamically
+        if (nextChar === 'i' && value.slice(cursorPosition, cursorPosition + 4) === 'img:') {
+          this.mentionType = 'file_input';
+        } else if (nextChar === 'a' && value.slice(cursorPosition, cursorPosition + 5) === 'attr:') {
+          this.mentionType = 'attribute';
+        } else if (nextChar === 'i' && value.slice(cursorPosition, cursorPosition + 5) === 'item:') {
+          this.mentionType = 'item';
         } else {
-          this.filterMention = ''; // Reset if prefix mismatch
+          this.mentionType = 'command'; // General command
         }
-
-        this.mentionType = type;
-        this.mentionIndex = 0;
-        mentionFound = true;
-        break;
+        this.filterMention = '';
+        return;
       }
-    }
-    if (!mentionFound) {
-      this.reset();
+  
+      // If no valid character after '/', reset the filter
+      this.filterMention = '';
+    } else {
+      let mentionFound = false;
+      for (const atIndex of atIndexes) {
+        if (atIndex < cursorPosition) {
+          const mentionText =
+            value
+              .slice(atIndex + 1, cursorPosition)
+              .match(/^[^\s\n\r]*$/)?.[0] || null;
+  
+          if (mentionText) {
+            this.filterMention = mentionText;
+            this.mentionIndex = 0;
+  
+            // Determine mention type
+            if (mentionText.startsWith('img:')) {
+              this.mentionType = 'image';
+              this.filterMention = mentionText.slice(`image`.length); // Extract text after 'img:'
+            } else if (mentionText.startsWith('attr:')) {
+              this.mentionType = 'attribute';
+              this.filterMention = mentionText.slice('attr:'.length); // Extract text after 'attr:'
+            } else if (mentionText.startsWith('item:')) {
+              this.mentionType = 'item';
+              this.filterMention = mentionText.slice('item:'.length); // Extract text after 'item:'
+            } else {
+              this.mentionType = 'command';
+            }
+  
+            mentionFound = true;
+            break;
+          }
+        }
+      }
+  
+      if (!mentionFound) {
+        this.reset();
+      }
     }
   };
 
@@ -308,6 +342,7 @@ export class ChatInputViewModel {
       behavior: 'instant',
     });
     this.mentionIndex = 0;
+    this.mentionType = undefined;
     this.filterMention = undefined;
   };
 
@@ -374,6 +409,7 @@ export class ChatInputViewModel {
 
         target.value = newValue; // Update the text area
         this.filterMention = undefined; // Reset the filter
+        target.focus()
         return;
       }
     }
