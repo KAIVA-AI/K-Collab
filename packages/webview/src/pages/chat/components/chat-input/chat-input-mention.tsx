@@ -35,7 +35,6 @@ export class ChatInputMentionComponent extends Component<IProps> {
   }
 
   render() {
-    console.log("status filter ", this.viewModel.filterMention, this.viewModel.filteredMentions.length, this.viewModel.mentionType)
 
     return (
     <div
