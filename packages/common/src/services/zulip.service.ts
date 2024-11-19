@@ -5,6 +5,7 @@ import {
   ITopicFileInput,
   IZulipSendMessageParams,
   TopicFileInput,
+  ITypingStatusParams,
 } from '../models';
 import {
   IEventListener,
@@ -429,4 +430,11 @@ export class ZulipService {
       url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,
     };
   };
+
+  async setTypingStatus(params: ITypingStatusParams): Promise<any> {
+    await this.sendRequest({
+      path: 'typing',
+      formData: params,
+    }).then((json: any) => json);
+  }
 }

@@ -137,6 +137,9 @@ export class ChatPanelProvider
     let startLine: number = 1;
     let endLine: number = 1;
     let oldContent = '';
+    console.log('content showing ', newContent);
+    console.log('no selecting ', editor.selection.isEmpty);
+    console.log('editor line count ', editor.document.lineCount);
     // if no selecting, get the whole line
     if (editor.selection.isEmpty) {
       startLine = 1;
@@ -149,6 +152,7 @@ export class ChatPanelProvider
       const lineEnd = editor.document.lineAt(endLine - 1).range.end;
       oldContent = editor.document.getText(new Range(lineStart, lineEnd));
     }
+    console.log(`show diff start ${startLine} | end ${endLine}`);
     this.showDiffUsingVSCodeDiff(
       editor.document.uri,
       oldContent,

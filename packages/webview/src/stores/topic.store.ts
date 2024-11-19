@@ -3,6 +3,7 @@ import {
   TopicFileInput,
   ITopic,
   ITopicFileInput,
+  ITypingStatusParams,
 } from '../models';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';

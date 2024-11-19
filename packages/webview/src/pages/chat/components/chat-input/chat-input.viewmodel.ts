@@ -3,7 +3,7 @@ import debounce from 'lodash/debounce';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { ChangeEventHandler, createRef, KeyboardEvent } from 'react';
 import { RootStore } from '../../../../stores/index';
-
+import { ITypingStatusParams } from '../../../../../../common/src/models';
 const slashCommands = [
   //
   'gen-code',
@@ -33,6 +33,20 @@ const slashAttribute = [
   'id',
 ];
 
+interface MentionTrigger {
+  trigger: string; // The trigger string (e.g., "/", "img:", "attr:")
+  type: string; // The type of mention (e.g., "command", "file_input")
+  prefix?: string; // Optional prefix to filter text after the trigger (e.g., "img:")
+}
+
+const mentionTriggers: MentionTrigger[] = [
+  // { trigger: '@', type: 'mention' },
+  { trigger: '/img:', type: 'image', prefix: 'img:' },
+  { trigger: '/attr:', type: 'attribute', prefix: 'attr:' },
+  { trigger: '/item:', type: 'item', prefix: 'item:' },
+  { trigger: '/', type: 'command' },
+];
+
 interface MentionItem {
   index: number;
   value: string;
@@ -46,6 +60,7 @@ export class ChatInputViewModel {
   @observable sending = false;
   @observable sendingInputValue?: string = undefined;
   @observable filterMention?: string = undefined;
+  @observable mentionType?: string = undefined;
   @observable mentionIndex = 0;
 
   @observable currentInput: string = '';
@@ -80,111 +95,58 @@ export class ChatInputViewModel {
     return this.filterMention !== undefined;
   }
 
-  // @computed get filteredSlashCommands(): MentionItem[] {
-  //   return slashCommands
-  //     .filter(command =>
-  //       command
-  //         .toLowerCase()
-  //         .includes((this.filterMention || '').toLowerCase()),
-  //     )
-  //     .map((value, index) => {
-  //       const classes: string[] = ['mention-item'];
-  //       const selected = index === this.mentionIndex;
-  //       if (selected) classes.push('selected');
-  //       return {
-  //         value,
-  //         index,
-  //         selected,
-  //         className: classes.join(' '),
-  //       };
-  //     });
-  // }
-
-  // @computed get filteredSlashAttribute(): MentionItem[] {
-  //   if (!this.currentInput.includes('/attribute:')) {
-  //     return [];
-  //   }
-  //   return slashAttribute
-  //     .filter(command =>
-  //       command
-  //         .toLowerCase()
-  //         .includes((this.filterMention || '').toLowerCase()),
-  //     )
-  //     .map((value, index) => {
-  //       const classes: string[] = ['mention-item'];
-  //       const selected = index === this.mentionIndex;
-  //       if (selected) classes.push('selected');
-  //       return {
-  //         value,
-  //         index,
-  //         selected,
-  //         className: classes.join(' '),
-  //       };
-  //     });
-  // }
-
-  // @computed get filteredContextImages(): MentionItem[] {
-  //   // Filter file inputs if input starts with `/img:`
-  //   if (this.currentInput.includes('/img:')) {
-  //     const fileInputs =
-  //       this.rootStore.topicStore.currentTopic?.file_inputs ?? [];
-  //     return fileInputs.map((file, index) => ({
-  //       value: file.name,
-  //       index,
-  //       selected: index === this.mentionIndex,
-  //       className:
-  //         index === this.mentionIndex
-  //           ? 'mention-item selected'
-  //           : 'mention-item',
-  //     }));
-  //   }
-  //   return [];
-  // }
-
-  // @computed get filteredElements(): MentionItem[] {
-  //   // Filter file inputs if input starts with `/img:`
-  //   if (this.currentInput.includes('/element:')) {
-  //     const fileInputs =
-  //       this.rootStore.topicStore.currentTopic?.element_inputs ?? [];
-  //     return fileInputs.map((file, index) => ({
-  //       value: file.name,
-  //       index,
-  //       selected: index === this.mentionIndex,
-  //       className:
-  //         index === this.mentionIndex
-  //           ? 'mention-item selected'
-  //           : 'mention-item',
-  //     }));
-  //   }
-  //   return [];
-  // }
-
   @computed get filteredMentions(): MentionItem[] {
+    if (this.mentionType === undefined) {
+      return []; // No mention type detected, return an empty list
+    }
+
+    // Find the corresponding trigger configuration
+    const currentTrigger = mentionTriggers.find(
+      trigger => trigger.type === this.mentionType,
+    );
+    if (!currentTrigger) {
+      return []; // No matching trigger, return an empty list
+    }
     // Dynamically determine which mention list to show based on the current input
     let mentionList: string[] = [];
-    if (this.currentInput.includes('/img:')) {
-      mentionList =
-        this.rootStore.topicStore.currentTopic?.file_inputs?.map(
-          file => file.name,
-        ) || [];
-    } else if (this.currentInput.includes('/item:')) {
-      mentionList =
-        this.rootStore.topicStore.currentTopic?.element_inputs?.map(
-          file => file.name,
-        ) || [];
-    } else if (this.currentInput.includes('/attr:')) {
-      mentionList = slashAttribute;
-    } else {
-      mentionList = slashCommands;
+
+    switch (this.mentionType) {
+      case 'image': // For /img: trigger
+        mentionList =
+          this.rootStore.topicStore.currentTopic?.file_inputs?.map(
+            file => file.name,
+          ) || [];
+        break;
+
+      case 'item': // For /item: trigger
+        mentionList =
+          this.rootStore.topicStore.currentTopic?.element_inputs?.map(
+            file => file.name,
+          ) || [];
+        break;
+
+      case 'attribute': // For /attr: trigger
+        mentionList = slashAttribute;
+        break;
+
+      case 'command': // For / trigger (slash commands)
+        mentionList = slashCommands;
+        break;
+
+      default:
+        mentionList = []; // Empty list for unsupported types
+        break;
     }
 
     // Filter and map the list to MentionItem objects
     return mentionList
-      .filter(mention =>
-        mention
-          .toLowerCase()
-          .includes((this.filterMention || '').toLowerCase()),
-      )
+      .filter(mention => {
+        // Skip filtering if there's no current filter text
+        if (!this.filterMention) return true;
+
+        // Filter based on mention type and filterMention value
+        return mention.toLowerCase().includes(this.filterMention.toLowerCase());
+      })
       .map((value, index) => ({
         value,
         index,
@@ -196,25 +158,9 @@ export class ChatInputViewModel {
       }));
   }
 
-  // @computed get hasContextImage() {
-  //   return this.filteredContextImages.length > 0;
-  // }
-
-  // @computed get hasSlashCommand() {
-  //   return this.filteredSlashCommands.length > 0;
-  // }
-
   @computed get selectedMention() {
     return this.filteredMentions[this.mentionIndex];
   }
-
-  // @computed get selectedMentionElement() {
-  //   return this.filteredElements[this.mentionIndex];
-  // }
-
-  // @computed get selectedMentionImages() {
-  //   return this.filteredContextImages[this.mentionIndex];
-  // }
 
   constructor(rootStore: RootStore) {
     makeObservable(this);
@@ -233,34 +179,41 @@ export class ChatInputViewModel {
     const cursorPosition = target.selectionStart;
     if (cursorPosition === null) return;
 
-    // const containsMention = value.includes('@') || value.includes('/');
+    // Check for mentions only if any triggers exist
+    const containsMention = mentionTriggers.some(({ trigger }) =>
+      value.includes(trigger),
+    );
+    if (!containsMention) {
+      this.reset();
+      return;
+    }
 
-    // Check for the mention types like /img:, /attr:, or /element:
-    const imgMentionIndex = value.lastIndexOf('/img:', cursorPosition - 1);
-    const attrMentionIndex = value.lastIndexOf('/attr:', cursorPosition - 1);
-    const elementMentionIndex = value.lastIndexOf('/item:', cursorPosition - 1);
-    const slashCommandIndex = value.lastIndexOf('/', cursorPosition - 1);
+    let mentionFound = false;
 
-    // Define which mention prefix is active
-    if (imgMentionIndex !== -1 && imgMentionIndex < cursorPosition) {
-      this.filterMention = value.slice(imgMentionIndex + 5, cursorPosition); // Text after '/img:'
-      // this.mentionType = 'img'; // New property to track type of mention
-      this.mentionIndex = 0;
-    } else if (attrMentionIndex !== -1 && attrMentionIndex < cursorPosition) {
-      this.filterMention = value.slice(attrMentionIndex + 6, cursorPosition); // Text after '/attr:'
-      // this.mentionType = 'attr';
-      this.mentionIndex = 0;
-    } else if (
-      elementMentionIndex !== -1 &&
-      elementMentionIndex < cursorPosition
-    ) {
-      this.filterMention = value.slice(elementMentionIndex + 9, cursorPosition); // Text after '/element:'
-      // this.mentionType = 'element';
-      this.mentionIndex = 0;
-    } else if (slashCommandIndex !== -1 && slashCommandIndex < cursorPosition) {
-      this.filterMention = value.slice(slashCommandIndex + 1, cursorPosition); // Text after '/'
-      this.mentionIndex = 0;
-    } else {
+    //Iterate through triggers to find the most relevant match
+    for (const { trigger, type, prefix } of mentionTriggers) {
+      const triggerIndex = value.lastIndexOf(trigger, cursorPosition - 1);
+      if (triggerIndex >= 0 && triggerIndex < cursorPosition) {
+        const mentionText = value
+          .slice(triggerIndex + trigger.length, cursorPosition)
+          .trim();
+
+        // If a prefix is defined, remove it from the mention text
+        if (prefix && mentionText.startsWith(prefix)) {
+          this.filterMention = mentionText.slice(prefix.length);
+        } else if (!prefix) {
+          this.filterMention = mentionText;
+        } else {
+          this.filterMention = ''; // Reset if prefix mismatch
+        }
+
+        this.mentionType = type;
+        this.mentionIndex = 0;
+        mentionFound = true;
+        break;
+      }
+    }
+    if (!mentionFound) {
       this.reset();
     }
   };
@@ -302,8 +255,10 @@ export class ChatInputViewModel {
             : '';
           const second = `${selectedMention} `; // TODO case user mention
           const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
+
           this.prompt = `${first}${second}${third}`;
         }
+
         return;
       }
       this.onMentionNavigate(e);
@@ -403,10 +358,26 @@ export class ChatInputViewModel {
     const first = temp
       ? temp.slice(0, _cursorPosition - (_filter?.length || 0))
       : '';
-    // const second = `**${_item}** `;
     const second = `${_item} `;
     const third = temp ? temp.slice(_cursorPosition, temp.length) : '';
     this.prompt = `${first}${second}${third}`;
+
+    for (const { trigger } of mentionTriggers) {
+      const triggerIndex = temp.lastIndexOf(trigger, _cursorPosition - 1);
+
+      if (triggerIndex !== -1) {
+        const newValue =
+          temp.slice(0, triggerIndex + trigger.length) +
+          select +
+          ' ' +
+          temp.slice(_cursorPosition);
+
+        target.value = newValue; // Update the text area
+        this.filterMention = undefined; // Reset the filter
+        return;
+      }
+    }
+
     target && target.focus();
   };
 
@@ -419,5 +390,27 @@ export class ChatInputViewModel {
     this.prompt = '';
     this.sending = true;
     this.sendingInputValue = inputValue;
+  };
+  get currentChatInfo() {
+    const targetId = this.rootStore.channelStore.currentChannel?.stream_id;
+
+    return {
+      subject: this.rootStore.topicStore.currentTopic?.name || '',
+      targetId: targetId || undefined,
+    };
+  }
+
+  @action setTyping = (status: ITypingStatusParams['op']) => {
+    const { targetId, subject } = this.currentChatInfo;
+
+    const params: ITypingStatusParams | undefined = {
+      type: 'stream',
+      op: status,
+      stream_id: targetId,
+      topic: subject,
+    };
+
+    if (!params) return;
+    return this.rootStore.zulipService.setTypingStatus(params);
   };
 }

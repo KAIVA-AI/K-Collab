@@ -19,13 +19,43 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
       codeBlockList.forEach((codehilite, index) => {
         const preCode = codehilite.querySelector('pre');
         if (!preCode) return;
+
+        // Store the full HTML content for the icons
+        const fullText = preCode.innerHTML; // Use innerHTML for full HTML content
+
+        const codeAction = document.createElement('div');
+        codeAction.className = 'message-code-action';
+
+        const previewIcon = document.createElement('i');
+        previewIcon.className =
+          'c-pointer codicon codicon-git-pull-request-go-to-changes';
+        previewIcon.title = 'Preview difference';
+        previewIcon.onclick = () =>
+          chatViewModel.clickPreviewChange(fullText || '');
+        codeAction.appendChild(previewIcon);
+
+        const insertIcon = document.createElement('i');
+        insertIcon.className = 'c-pointer codicon codicon-insert';
+        insertIcon.title = 'Add to current file';
+        insertIcon.onclick = () =>
+          chatViewModel.clickInsertMessage(fullText || '');
+        codeAction.appendChild(insertIcon);
+
+        const copyIcon = document.createElement('i');
+        copyIcon.className = 'c-pointer codicon codicon-copy';
+        copyIcon.title = 'Copy code';
+        copyIcon.onclick = () => chatViewModel.clickCopyMessage(fullText || '');
+        codeAction.appendChild(copyIcon);
+
+        codehilite.prepend(codeAction);
+
+        // Store the initial inner text for toggling
         const codeText = preCode.innerText;
-        // setContent(codeText);
         initialCodeTexts[index] = codeText; // Store the original full conten
         const isLong = codeText.length > 200; // Define length threshold for "Read more"
         if (isLong && !expanded[index]) {
           // setContent(codeText);
-          preCode.innerText = codeText.substring(0, 200) + '...'; // Show preview initially
+          preCode.innerText = initialCodeTexts[index].substring(0, 200) + '...'; // Show preview initially
 
           const toggleButton = document.createElement('button');
           toggleButton.className = 'message_length_toggle';
@@ -38,30 +68,6 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
 
           codehilite.appendChild(toggleButton);
         }
-
-        const codeAction = document.createElement('div');
-        codeAction.className = 'message-code-action';
-
-        const previewIcon = document.createElement('i');
-        previewIcon.className =
-          'c-pointer codicon codicon-git-pull-request-go-to-changes';
-        previewIcon.onclick = () =>
-          chatViewModel.clickPreviewChange(preCode?.innerHTML || '');
-        codeAction.appendChild(previewIcon);
-
-        const insertIcon = document.createElement('i');
-        insertIcon.className = 'c-pointer codicon codicon-insert';
-        insertIcon.onclick = () =>
-          chatViewModel.clickInsertMessage(preCode?.innerHTML || '');
-        codeAction.appendChild(insertIcon);
-
-        const copyIcon = document.createElement('i');
-        copyIcon.className = 'c-pointer codicon codicon-copy';
-        copyIcon.onclick = () =>
-          chatViewModel.clickCopyMessage(preCode?.innerHTML || '');
-        codeAction.appendChild(copyIcon);
-
-        codehilite.prepend(codeAction);
       });
       // Set the full content for all code blocks
       setCodeTexts(initialCodeTexts);

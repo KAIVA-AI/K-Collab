@@ -87,3 +87,11 @@ export interface IDetailZulipMessage {
   raw_content: string;
   result: string;
 }
+
+export interface ITypingStatusParams {
+  op: 'start' | 'stop';
+  type?: 'direct' | 'stream';
+  to?: number[];
+  stream_id?: number | undefined;
+  topic?: string;
+}
