@@ -253,11 +253,11 @@ export class ChatInputViewModel {
   };
 
   @action handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'ArrowUp' && this.selectedCommandHistory) {
-      // On ArrowUp, set the input prompt to the last selected command
-      this.prompt = this.selectedCommandHistory;
-      e.preventDefault(); // Prevent default arrow-up behavior
-    }
+    // if (e.key === 'ArrowUp' && this.selectedCommandHistory) {
+    //   // On ArrowUp, set the input prompt to the last selected command
+    //   this.prompt = this.selectedCommandHistory;
+    //   e.preventDefault(); // Prevent default arrow-up behavior
+    // }
 
     if (!e || !e.target) return;
     if (this.isShowMentionBox && e.key === 'Escape') {
@@ -418,9 +418,9 @@ export class ChatInputViewModel {
   };
 
   @action onSubmitInput = async () => {
-    if (this.prompt.startsWith('/')) {
-      this.setSelectedCommandHistory(this.prompt); // Save the command as history
-    }
+    // if (this.prompt.startsWith('/')) {
+    //   this.setSelectedCommandHistory(this.prompt); // Save the command as history
+    // }
     const inputValue = `@**${Constants.BOT_CODING}** ${this.prompt}`;
     this.filterMention = undefined;
     this.prompt = '';
