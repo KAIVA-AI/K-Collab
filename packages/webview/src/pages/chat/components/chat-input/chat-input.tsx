@@ -127,7 +127,7 @@ export class ChatInputComponent extends Component<IProps> {
               placeholder={`Talk about the...`}
               onChange={e => {
                 this.viewModel.onChangePrompt(e);
-                this.handleTyping();
+                // this.handleTyping();
               }}
               onPaste={() => {
                 // handlePasteFile
