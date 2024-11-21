@@ -54,19 +54,22 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         initialCodeTexts[index] = codeText; // Store the original full conten
         const isLong = codeText.length > 200; // Define length threshold for "Read more"
         if (isLong && !expanded[index]) {
-          // setContent(codeText);
-          preCode.innerText = initialCodeTexts[index].substring(0, 200) + '...'; // Show preview initially
+          if (!codehilite.querySelector('.message_length_toggle')) {
+            // setContent(codeText);
+            preCode.innerText =
+              initialCodeTexts[index].substring(0, 200) + '...'; // Show preview initially
 
-          const toggleButton = document.createElement('button');
-          toggleButton.className = 'message_length_toggle';
-          toggleButton.innerText = 'Read more';
-          // toggleButton.style.color = 'blue';
-          // toggleButton.style.cursor = 'pointer';
-          toggleButton.onclick = () => {
-            setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
-          };
+            const toggleButton = document.createElement('button');
+            toggleButton.className = 'message_length_toggle';
+            toggleButton.innerText = 'Read more';
+            // toggleButton.style.color = 'blue';
+            // toggleButton.style.cursor = 'pointer';
+            toggleButton.onclick = () => {
+              setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
+            };
 
-          codehilite.appendChild(toggleButton);
+            codehilite.appendChild(toggleButton);
+          }
         }
       });
       // Set the full content for all code blocks
