@@ -11,24 +11,29 @@ const TypingIndicator = observer(() => {
 
   const Avatars = () => {
     const list = typingUsersInfo.map(
-      (user: { avatar_url: any }) => user.avatar_url,
+      (user: { avatar_url: any; user_id: number }) => ({
+        avatar_url: user.avatar_url,
+        id: user.user_id,
+      }),
     );
 
     return (
       <div className="flex -space-x-1">
         {list
           .slice(0, USERS_AVATAR_PREVIEW_AMOUNT)
-          .map((avatar_url: string | undefined) => (
-            <div className="h-[20px] w-[20px] relative inline-block rounded-full">
+          .map(({ avatar_url, id }, index) => (
+            <div
+              key={id || `avatar-${index}`} // Use a unique identifier or fallback to index
+              className="h-[20px] w-[20px] relative inline-block rounded-full"
+            >
               <img
                 className="avatar"
                 src={
                   avatar_url ||
                   'https://secure.gravatar.com/avatar/0a18525a190d4049400ec0d7fdfa0332?d=identicon&s=50'
-                } // Use provided URL or fallback to default
+                }
                 alt="avatar"
                 onError={e => {
-                  // Fallback to default image if loading fails
                   (e.target as HTMLImageElement).src =
                     'https://secure.gravatar.com/avatar/0a18525a190d4049400ec0d7fdfa0332?d=identicon&s=50';
                 }}
