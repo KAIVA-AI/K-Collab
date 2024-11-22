@@ -27,29 +27,99 @@ export class ChatInputMentionComponent extends Component<IProps> {
     return classes.join(' ');
   }
 
+  get mentionPrefix() {
+    if (this.viewModel.currentInput.includes('/img:')) return 'img:';
+    if (this.viewModel.currentInput.includes('/item:')) return 'item:';
+    if (this.viewModel.currentInput.includes('/attr:')) return 'attr:';
+    return '';
+  }
+
   render() {
     return (
       <div
         ref={this.viewModel.mentionListRef}
         className={this.mentionListClass}
       >
-        <div className="mention-group">
-          {this.viewModel.hasSlashCommand ? (
-            this.viewModel.filteredSlashCommands.map(command => (
-              <div
-                key={command.index}
-                className={command.className}
-                onClick={() => {
-                  this.viewModel.handleSelectMention(command.value);
-                }}
-              >
-                /{command.value}
-              </div>
-            ))
-          ) : (
-            <div className="mention-item">No available command</div>
-          )}
-        </div>
+        {this.viewModel.mentionType === 'image' && (
+          <div className="mention-group">
+            {this.viewModel.filteredMentions.length > 0 ? (
+              this.viewModel.filteredMentions.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(`img:${file.value}`);
+                  }}
+                >
+                  img:{file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available images</div>
+            )}
+          </div>
+        )}
+        {this.viewModel.mentionType === 'item' && (
+          <div className="mention-group">
+            {this.viewModel.filteredMentions.length > 0 ? (
+              this.viewModel.filteredMentions.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(`item:${file.value}`);
+                  }}
+                >
+                  item:{file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available items</div>
+            )}
+          </div>
+        )}
+
+        {this.viewModel.mentionType === 'command' && (
+          <div className="mention-group">
+            {this.viewModel.filteredMentions.length > 0 ? (
+              this.viewModel.filteredMentions.map(file => (
+                <div
+                  key={file.index}
+                  className={file.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(`${file.value}`);
+                  }}
+                >
+                  {file.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available commands</div>
+            )}
+          </div>
+        )}
+
+        {this.viewModel.mentionType === 'attribute' && (
+          <div className="mention-group">
+            {this.viewModel.filteredMentions.length > 0 ? (
+              this.viewModel.filteredMentions.map(attribute => (
+                <div
+                  key={attribute.index}
+                  className={attribute.className}
+                  onClick={() => {
+                    this.viewModel.handleSelectMention(
+                      `attr:${attribute.value}`,
+                    );
+                  }}
+                >
+                  attr:{attribute.value}
+                </div>
+              ))
+            ) : (
+              <div className="mention-item">No available attributes</div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

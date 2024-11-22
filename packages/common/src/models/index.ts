@@ -10,3 +10,4 @@ export interface IWebviewMessage {
 export * from './message';
 export * from './event';
 export * from './workspace';
+export * from './chatbox';

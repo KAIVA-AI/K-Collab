@@ -49,6 +49,8 @@ export interface ITopic {
   name: string;
   max_id?: number;
   file_inputs?: TopicFileInput[];
+  image_inputs?: TopicFileInput[];
+  element_inputs?: TopicFileInput[];
 }
 export interface IMessage {
   id: number;
@@ -59,6 +61,7 @@ export interface IMessage {
   timestamp: number;
   recipient_id?: number;
   is_me_message?: boolean;
+  sender_id: number;
 }
 
 export interface IZulipSendMessageParams {
@@ -66,4 +69,29 @@ export interface IZulipSendMessageParams {
   to: number;
   topic?: string;
   content: string;
+}
+
+export interface ZulipAcceptedFile {
+  type: [];
+}
+
+export interface IZulipUserFileUpload {
+  type: string;
+  name: string;
+  file: File;
+}
+
+export interface IDetailZulipMessage {
+  message: IMessage;
+  msg: string;
+  raw_content: string;
+  result: string;
+}
+
+export interface ITypingStatusParams {
+  op: 'start' | 'stop';
+  type?: 'direct' | 'stream';
+  to?: number[];
+  stream_id?: number | undefined;
+  topic?: string;
 }

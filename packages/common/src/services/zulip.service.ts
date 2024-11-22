@@ -5,6 +5,7 @@ import {
   ITopicFileInput,
   IZulipSendMessageParams,
   TopicFileInput,
+  ITypingStatusParams,
 } from '../models';
 import {
   IEventListener,
@@ -14,9 +15,10 @@ import {
   IUnreadListeners,
   IZulipEvent,
 } from '../models';
+import { Constants } from '../../../common/src/constants/constants';
 
-const ZULIP_PROTOCOL = 'https://';
-const ZULIP_BASE_DOMAIN = 'collab.vietis.com.vn:9981';
+export const ZULIP_PROTOCOL = Constants.ZULIP_PROTOCOL;
+export const ZULIP_BASE_DOMAIN = Constants.ZULIP_BASE_DOMAIN;
 
 const DEBUG = false;
 
@@ -62,6 +64,15 @@ export class ZulipService {
     }
     const prefix = !this.realm ? '' : `${this.realm}.`;
     return `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}/api/v1/${path}`;
+  };
+
+  removeHost = (url: string) => {
+    if (this.realm === undefined) {
+      throw new Error('Realm is not set');
+    }
+    const prefix = !this.realm ? '' : `${this.realm}.`;
+    const host = `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}`;
+    return url.replace(host, '');
   };
 
   private sendRequest = async ({
@@ -270,9 +281,10 @@ export class ZulipService {
       try {
         if (!queueId) {
           [queueId, lastEventId] = await this.registerEventQueue();
+          console.log('BINGOOOO queueId ', queueId, lastEventId);
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);
-        DEBUG && console.log('subscribeEventQueue events', events);
+        console.log('subscribeEventQueue events', events);
         if (retrying) {
           // receive events success, reset attempts
           attempts = 5;
@@ -345,6 +357,7 @@ export class ZulipService {
       external_id: topic,
       path: path,
       input_type: inputType,
+      content: content,
     };
     if (name !== undefined) {
       formData['name'] = name;
@@ -356,6 +369,7 @@ export class ZulipService {
     if (content !== undefined) {
       formData['content'] = content;
     }
+    console.log('FORM DATA', formData);
     return this.sendRequest({
       path: 'assistant/add-file',
       formData,
@@ -381,5 +395,58 @@ export class ZulipService {
           return new TopicFileInput(f as ITopicFileInput);
         }),
       );
+  };
+
+  getElementInput = async (topic: string): Promise<TopicFileInput[]> => {
+    return this.sendRequest({
+      path: 'assistant/get-element-input',
+      formData: {
+        external_id: topic,
+        input_type: 'html_element',
+      },
+    })
+      .then((json: any) => (json.files || []) as ITopicFileInput[])
+      .then((files: ITopicFileInput[]) =>
+        files.map((f: ITopicFileInput) => {
+          if (f.start === null) {
+            f.start = undefined;
+          }
+          if (f.end === null) {
+            f.end = undefined;
+          }
+          return new TopicFileInput(f as ITopicFileInput);
+        }),
+      );
+  };
+
+  postUserUpload = async (data: any) => {
+    const result = await this.sendRequest({
+      path: 'user_uploads',
+      formData: data,
+    });
+    const prefix = !this.realm ? '' : `${this.realm}.`;
+
+    return {
+      name: data.name,
+      url: `${ZULIP_PROTOCOL}${prefix}${ZULIP_BASE_DOMAIN}${result?.url}`,
+    };
+  };
+
+  async setTypingStatus(params: ITypingStatusParams): Promise<any> {
+    await this.sendRequest({
+      path: 'typing',
+      formData: params,
+    }).then((json: any) => json);
+  }
+
+  getWorkspaceMembers = async (params?: any) => {
+    return this.sendRequest({
+      path: 'users',
+      method: 'GET',
+      formData: params,
+    }).then((json: any) => {
+      console.log('RESPONSE GET MEMBER ', json);
+      return json;
+    });
   };
 }

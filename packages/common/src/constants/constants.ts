@@ -10,4 +10,10 @@ export const Constants = {
 
   WEB_URL: process.env.PUBLIC_URL || 'http://localhost:3000',
   WEB_VERSION: process.env.WEBVIEW_VERSION || '1.0.0',
+  ZULIP_PROTOCOL: process.env.ZULIP_PROTOCOL || 'http://',
+  ZULIP_BASE_DOMAIN: process.env.ZULIP_BASE_DOMAIN || 'zulipdev.com:9991',
+  ZULIP_SECONDARY_DOMAIN:
+    process.env.ZULIP_SECONDARY_DOMAIN || 'ide-ext.collab.vietis.com.vn:9981',
 };
+
+export const EMOJI_REGEX = /([\uD800-\uDBFF][\uDC00-\uDFFF])/g;

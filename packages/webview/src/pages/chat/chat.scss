@@ -1,5 +1,6 @@
 @use '../../assets/scss/zilip-codehilite.scss';
 
+
 .chat-page {
   display: flex;
   flex-direction: column;
@@ -32,6 +33,7 @@
         }
       }
       .message-content {
+        position: relative;
         padding: 0 6px;
         .rendered_markdown {
           padding: 13px 0;
@@ -56,6 +58,25 @@
             }
           }
         }
+        .message_length_toggle {
+          display: inline-block;
+          width: 100%;
+          height: 24px;
+          color: var(--color-text-show-more-less-button);
+          background-color: var(--color-show-more-less-button-background);
+          border-radius: 4px;
+          border: none;
+          outline: none;
+          font-feature-settings: "smcp", "c2sc";
+          font-variant: all-small-caps;
+          cursor: pointer;
+          padding: 0 10px; /* Add some padding for better appearance */
+          position: absolute;
+          bottom: 8px; /* Position 8px from the bottom */
+          left: 50%;
+          transform: translateX(-50%); /* Center horizontally */
+          text-align: center;
+        } 
       }
     }
   }
@@ -121,6 +142,13 @@
           outline: none;
         }
       }
+      .image-preview {
+        position: absolute;
+        height: 100%; 
+        width: 100%; 
+        inset: 0px; 
+        color: transparent;
+      }
     }
     .action-block {
       display: flex;
@@ -132,6 +160,51 @@
         cursor: pointer;
         padding: 2px;
       }
+    }
+  }
+  #typing_notifications {
+    margin-left: 10px;
+    font-style: italic;
+    color: hsl(0deg 0% 53%);
+    display: flex;
+  }
+  #typing_notifications .flex {
+    display: flex;
+    align-items: center;
+  }
+  
+  #typing_notifications .space-x-2 {
+    margin-right: 8px; /* space between avatar and text */
+  }
+  
+  .avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white; /* Optional: creates a border around the avatars */
+  }
+  
+  .dots-loader {
+    border-top: 2px solid #3498db;
+    border-right: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    border-left: 2px solid transparent;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    animation: dots 1.2s infinite linear;
+  }
+  
+  @keyframes dots {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }
