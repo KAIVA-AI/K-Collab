@@ -165,11 +165,9 @@ export class RootStore {
       return;
     }
     if (message.store === 'MessageStore') {
-      console.log('message from vscode ', message);
       this.messageStore.onMessageFromVSCode(message);
       return;
     }
-    console.log('');
     const handler = this.eventListeners[message.store || ''];
     handler && handler(message);
   };
