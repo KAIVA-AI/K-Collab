@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { ChatMessageItem } from './chat-message-item';
 import { useEffect, useRef } from 'react';
 import { Constants } from '../../../../../common/src/constants/constants';
-
+import TypingIndicator from './chat-input/typing-indicator';
 export const ChatMainComponent = observer(() => {
   const { messageStore, realmStore } = useRootStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +70,7 @@ export const ChatMainComponent = observer(() => {
       {messageStore.topicMessages.map((message, index) => (
         <ChatMessageItem key={index} message={message} />
       ))}
+      <TypingIndicator />
     </div>
   );
 });

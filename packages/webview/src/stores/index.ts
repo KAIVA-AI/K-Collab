@@ -11,7 +11,7 @@ import {
   runInAction,
 } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
-import { IWebviewMessage } from '../models';
+import { IWebviewMessage, IZulipUser } from '../models';
 import { Constants, WorkspaceService, ZulipService } from '@v-collab/common';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthStore } from './auth.store';
@@ -51,6 +51,9 @@ export class RootStore {
   workspaceService = new WorkspaceService();
   zulipService: ZulipService;
 
+  @observable currentProjectMembers: IZulipUser[] = [];
+
+  @observable typingUsers: number[] = [];
   @observable private initialized = false;
   @observable currentTheme = 'dark';
   @observable webviewVersion = '1.0.0';
@@ -162,9 +165,11 @@ export class RootStore {
       return;
     }
     if (message.store === 'MessageStore') {
+      console.log('message from vscode ', message);
       this.messageStore.onMessageFromVSCode(message);
       return;
     }
+    console.log('');
     const handler = this.eventListeners[message.store || ''];
     handler && handler(message);
   };
@@ -203,6 +208,37 @@ export class RootStore {
         context,
       },
     });
+  };
+
+  @computed get typingUsersInfo() {
+    if (
+      !this.currentProjectMembers ||
+      !this.typingUsers ||
+      this.typingUsers.length === 0
+    ) {
+      return [];
+    }
+
+    const find: IZulipUser[] = [];
+
+    this.typingUsers.forEach(id => {
+      const item = this.currentProjectMembers.find(mem => mem.user_id === id);
+      item && find.push(item);
+    });
+
+    return find;
+  }
+
+  @action getWorkspaceMembers = async () => {
+    if (this.currentProjectMembers.length > 0) {
+      return;
+    }
+    const response = await this.zulipService.getWorkspaceMembers();
+    if (response && response.members) {
+      this.currentProjectMembers = response.members
+        ? response.members.filter((x: IZulipUser) => x.full_name && x.is_active)
+        : [];
+    }
   };
 }
 

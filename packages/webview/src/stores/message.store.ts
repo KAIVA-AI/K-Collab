@@ -45,6 +45,17 @@ export class MessageStore {
       if (event.type === 'message' && event.message) {
         this.messages.push(event.message);
         // TODO scroll to bottom
+      } else if (event.type === 'typing' && event.sender) {
+        const userId = event.sender.user_id;
+        if (event.op === 'start') {
+          if (!this.rootStore.typingUsers.includes(userId)) {
+            this.rootStore.typingUsers.push(userId);
+          }
+        } else if (event.op === 'stop') {
+          this.rootStore.typingUsers = this.rootStore.typingUsers.filter(
+            id => id !== userId,
+          );
+        }
       }
     }
   };

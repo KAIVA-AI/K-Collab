@@ -281,9 +281,10 @@ export class ZulipService {
       try {
         if (!queueId) {
           [queueId, lastEventId] = await this.registerEventQueue();
+          console.log('BINGOOOO queueId ', queueId, lastEventId);
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);
-        DEBUG && console.log('subscribeEventQueue events', events);
+        console.log('subscribeEventQueue events', events);
         if (retrying) {
           // receive events success, reset attempts
           attempts = 5;
@@ -437,4 +438,15 @@ export class ZulipService {
       formData: params,
     }).then((json: any) => json);
   }
+
+  getWorkspaceMembers = async (params?: any) => {
+    return this.sendRequest({
+      path: 'users',
+      method: 'GET',
+      formData: params,
+    }).then((json: any) => {
+      console.log('RESPONSE GET MEMBER ', json);
+      return json;
+    });
+  };
 }
