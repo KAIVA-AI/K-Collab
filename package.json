@@ -134,6 +134,51 @@
         "category": "V-Collab"
       },
       {
+        "command": "v-collab.command.coding.db_create_table",
+        "title": "Db Create Table",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_create_query",
+        "title": "DB Create Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_modify_table",
+        "title": "DB Modify Table",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_modify_query",
+        "title": "DB Modify Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_optimize_query",
+        "title": "DB Optimize Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_fix_query",
+        "title": "DB Fix Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_format_query",
+        "title": "DB Format Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_explain_query",
+        "title": "DB Explain Query",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.db_generate_data",
+        "title": "DB Generate Data",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.chat.new-topic",
         "title": "New topic",
         "icon": "$(add)",
@@ -236,6 +281,42 @@
         {
           "command": "v-collab.command.coding.porting",
           "group": "2_code@5"
+        },
+        {
+          "command": "v-collab.command.coding.db_create_table",
+          "group": "2_code@6"
+        },
+        {
+          "command": "v-collab.command.coding.db_create_query",
+          "group": "2_code@7"
+        },
+        {
+          "command": "v-collab.command.coding.db_modify_table",
+          "group": "2_code@8"
+        },
+        {
+          "command": "v-collab.command.coding.db_modify_query",
+          "group": "2_code@9"
+        },
+        {
+          "command": "v-collab.command.coding.db_optimize_query",
+          "group": "2_code@10"
+        },
+        {
+          "command": "v-collab.command.coding.db_fix_query",
+          "group": "2_code@11"
+        },
+        {
+          "command": "v-collab.command.coding.db_format_query",
+          "group": "2_code@12"
+        },
+        {
+          "command": "v-collab.command.coding.db_explain_query",
+          "group": "2_code@13"
+        },
+        {
+          "command": "v-collab.command.coding.db_generate_data",
+          "group": "2_code@14"
         },
         {
           "command": "v-collab.command.coding.explain",

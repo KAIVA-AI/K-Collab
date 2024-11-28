@@ -17,6 +17,15 @@ const slashCommands = [
   'fixbug',
   'html',
   'html_item',
+  'db_create_table',
+  'db_create_query',
+  'db_modify_table',
+  'db_modify_query',
+  'db_optimize_query',
+  'db_fix_query',
+  'db_format_query',
+  'db_explain_query',
+  'db_generate_data',
 ];
 // const userMentions: string[] = [];
 // TODO combine slash and users to single array
@@ -44,7 +53,7 @@ const mentionTriggers: MentionTrigger[] = [
   { trigger: '/img:', type: 'image', prefix: 'img:' },
   { trigger: '/attr:', type: 'attribute', prefix: 'attr:' },
   { trigger: '/item:', type: 'item', prefix: 'item:' },
-  { trigger: '/', type: 'command' , prefix: ''},
+  { trigger: '/', type: 'command', prefix: '' },
 ];
 
 interface MentionItem {
@@ -192,17 +201,26 @@ export class ChatInputViewModel {
       if (char === '@' || char === '/') acc.push(index);
       return acc;
     }, []);
-  
+
     if (atIndexes.includes(cursorPosition - 1)) {
       // Handle edge cases where the trigger is the last character
       const nextChar = value[cursorPosition] || '';
       if (value[cursorPosition - 1] === '/' && !/\s/.test(nextChar)) {
         // Allow mentions like /command or /img:, determine type dynamically
-        if (nextChar === 'i' && value.slice(cursorPosition, cursorPosition + 4) === 'img:') {
+        if (
+          nextChar === 'i' &&
+          value.slice(cursorPosition, cursorPosition + 4) === 'img:'
+        ) {
           this.mentionType = 'file_input';
-        } else if (nextChar === 'a' && value.slice(cursorPosition, cursorPosition + 5) === 'attr:') {
+        } else if (
+          nextChar === 'a' &&
+          value.slice(cursorPosition, cursorPosition + 5) === 'attr:'
+        ) {
           this.mentionType = 'attribute';
-        } else if (nextChar === 'i' && value.slice(cursorPosition, cursorPosition + 5) === 'item:') {
+        } else if (
+          nextChar === 'i' &&
+          value.slice(cursorPosition, cursorPosition + 5) === 'item:'
+        ) {
           this.mentionType = 'item';
         } else {
           this.mentionType = 'command'; // General command
@@ -210,7 +228,7 @@ export class ChatInputViewModel {
         this.filterMention = '';
         return;
       }
-  
+
       // If no valid character after '/', reset the filter
       this.filterMention = '';
     } else {
@@ -221,11 +239,11 @@ export class ChatInputViewModel {
             value
               .slice(atIndex + 1, cursorPosition)
               .match(/^[^\s\n\r]*$/)?.[0] || null;
-  
+
           if (mentionText) {
             this.filterMention = mentionText;
             this.mentionIndex = 0;
-  
+
             // Determine mention type
             if (mentionText.startsWith('img:')) {
               this.mentionType = 'image';
@@ -239,13 +257,13 @@ export class ChatInputViewModel {
             } else {
               this.mentionType = 'command';
             }
-  
+
             mentionFound = true;
             break;
           }
         }
       }
-  
+
       if (!mentionFound) {
         this.reset();
       }
@@ -409,7 +427,7 @@ export class ChatInputViewModel {
 
         target.value = newValue; // Update the text area
         this.filterMention = undefined; // Reset the filter
-        target.focus()
+        target.focus();
         return;
       }
     }
