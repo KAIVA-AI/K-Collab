@@ -46,12 +46,14 @@ export class MessageStore {
         this.messages.push(event.message);
         // TODO scroll to bottom
       } else if (event.type === 'update_message') {
+        // update new subject to current Topic
         const topicChanged: ITopic = {
           stream_id: event.stream_id ?? 0,
           name: event.subject ?? '',
           file_inputs:
             this.rootStore.topicStore.currentTopic?.file_inputs ?? [],
         };
+        // update new subject for message list
         this.messages.forEach(message => {
           message.subject = topicChanged.name;
         });
