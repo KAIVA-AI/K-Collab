@@ -62,6 +62,16 @@ export class RootStore {
   reviewCommand = new CodingCommand(this, 'review');
   fixbugCommand = new CodingCommand(this, 'fixbug');
 
+  createTableCommand = new CodingCommand(this, 'db_create_table');
+  createQueryCommand = new CodingCommand(this, 'db_create_query');
+  modifyTableCommand = new CodingCommand(this, 'db_modify_table');
+  modifyQueryCommand = new CodingCommand(this, 'db_modify_query');
+  optimizeQueryCommand = new CodingCommand(this, 'db_optimize_query');
+  fixQueryCommand = new CodingCommand(this, 'db_fix_query');
+  formatQuery = new CodingCommand(this, 'db_format_query');
+  explainQuery = new CodingCommand(this, 'db_explain_query');
+  generateData = new CodingCommand(this, 'db_generate_data');
+
   acceptChangeCommand = new AcceptChangeCommand(this);
   rejectChangeCommand = new RejectChangeCommand(this);
 
@@ -104,6 +114,17 @@ export class RootStore {
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.fixbugCommand.register());
+
+    // db command
+    this.context.subscriptions.push(this.createTableCommand.register());
+    this.context.subscriptions.push(this.createQueryCommand.register());
+    this.context.subscriptions.push(this.modifyTableCommand.register());
+    this.context.subscriptions.push(this.modifyQueryCommand.register());
+    this.context.subscriptions.push(this.optimizeQueryCommand.register());
+    this.context.subscriptions.push(this.fixQueryCommand.register());
+    this.context.subscriptions.push(this.formatQuery.register());
+    this.context.subscriptions.push(this.explainQuery.register());
+    this.context.subscriptions.push(this.generateData.register());
 
     this.context.subscriptions.push(this.acceptChangeCommand.register());
     this.context.subscriptions.push(this.rejectChangeCommand.register());

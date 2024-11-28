@@ -9,6 +9,7 @@ export const ChatMainComponent = observer(() => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    console.log('OBSERVER ', messageStore.topicMessages);
     if (messagesEndRef.current) {
       const lastMessage = messagesEndRef.current.lastElementChild;
       lastMessage?.scrollIntoView({ behavior: 'smooth' });

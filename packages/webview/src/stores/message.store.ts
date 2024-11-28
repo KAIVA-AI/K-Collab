@@ -1,4 +1,4 @@
-import { IMessage, IWebviewMessage, IZulipEvent } from '../models';
+import { IMessage, IWebviewMessage, IZulipEvent, ITopic } from '../models';
 import {
   action,
   computed,
@@ -45,6 +45,17 @@ export class MessageStore {
       if (event.type === 'message' && event.message) {
         this.messages.push(event.message);
         // TODO scroll to bottom
+      } else if (event.type === 'update_message') {
+        const topicChanged: ITopic = {
+          stream_id: event.stream_id ?? 0,
+          name: event.subject ?? '',
+          file_inputs:
+            this.rootStore.topicStore.currentTopic?.file_inputs ?? [],
+        };
+        this.messages.forEach(message => {
+          message.subject = topicChanged.name;
+        });
+        this.rootStore.topicStore.currentTopic = topicChanged;
       } else if (event.type === 'typing' && event.sender) {
         const userId = event.sender.user_id;
         if (event.op === 'start') {
