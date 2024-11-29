@@ -28,6 +28,9 @@ class LoginPage extends Component<BaseComponentProps> {
         </div>
         <form
           className="login-form d-flex flex-col f-g-24px"
+          style={{
+            minWidth: '20rem',
+          }}
           onSubmit={e => {
             e.preventDefault();
           }}
@@ -62,12 +65,6 @@ class LoginPage extends Component<BaseComponentProps> {
             onClick={() => this.vm.login()}
           >
             Sign in
-          </button>
-          <button
-            className="vc-border pa-10px c-pointer"
-            onClick={() => this.vm.loginTest()}
-          >
-            Test account: {Constants.USER_EMAIL}
           </button>
         </form>
       </div>
