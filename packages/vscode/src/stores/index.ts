@@ -42,7 +42,7 @@ export class RootStore {
   chatPanelProvider = new ChatPanelProvider(this);
   previewPanelProvider = new PreviewPanelProvider(this);
   // handlers
-  uriHandler: UriHandler = new UriHandler(this);
+  uriHandler = new UriHandler(this);
   // commands
   historyCommand = new HistoryCommand(this);
   inlineChatCommand = new InlineChatCommand(this);
@@ -54,13 +54,15 @@ export class RootStore {
   askAICommand = new AskAICommand(this);
   genCodeCommand = new CodingCommand(this, 'gen-code');
   genTestCommand = new CodingCommand(this, 'gen-test');
-  debugCommand = new CodingCommand(this, 'debug');
   commendCommand = new CodingCommand(this, 'comment');
   portingCommand = new CodingCommand(this, 'porting');
   explainCommand = new CodingCommand(this, 'explain');
   improveCommand = new CodingCommand(this, 'improve');
   reviewCommand = new CodingCommand(this, 'review');
   fixbugCommand = new CodingCommand(this, 'fixbug');
+
+  htmlCommand = new CodingCommand(this, 'html');
+  htmlItemCommand = new CodingCommand(this, 'html_item');
 
   createTableCommand = new CodingCommand(this, 'db_create_table');
   createQueryCommand = new CodingCommand(this, 'db_create_query');
@@ -96,24 +98,26 @@ export class RootStore {
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
     this.context.subscriptions.push(this.uriHandler.register());
+
     // commands
     this.context.subscriptions.push(this.historyCommand.register());
     this.context.subscriptions.push(this.inlineChatCommand.register());
     this.context.subscriptions.push(this.newTopicCommand.register());
-
     this.context.subscriptions.push(this.addFileCommand.register());
     this.context.subscriptions.push(this.addImageCommand.register());
     this.context.subscriptions.push(this.addSelectionCommand.register());
     this.context.subscriptions.push(this.askAICommand.register());
     this.context.subscriptions.push(this.genCodeCommand.register());
     this.context.subscriptions.push(this.genTestCommand.register());
-    this.context.subscriptions.push(this.debugCommand.register());
     this.context.subscriptions.push(this.commendCommand.register());
     this.context.subscriptions.push(this.portingCommand.register());
     this.context.subscriptions.push(this.explainCommand.register());
     this.context.subscriptions.push(this.improveCommand.register());
     this.context.subscriptions.push(this.reviewCommand.register());
     this.context.subscriptions.push(this.fixbugCommand.register());
+    // fe commands
+    this.context.subscriptions.push(this.htmlCommand.register());
+    this.context.subscriptions.push(this.htmlItemCommand.register());
 
     // db command
     this.context.subscriptions.push(this.createTableCommand.register());

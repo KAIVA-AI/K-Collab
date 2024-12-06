@@ -35,6 +35,18 @@ export class LoginViewModel {
     }
   };
 
+  @action LogginSuccess = () => {
+    this.rootStore.authStore.isLogin = true;
+  };
+
+  @action loginUri = async (token: string, realm: string) => {
+    await this.rootStore.authStore.loginUri(token, realm);
+    // if (!result.status) {
+    //   this.errorMessage = result.message || 'Login fail';
+    //   // return;
+    // }
+  };
+
   @action loginTest = () => {
     this.rootStore.authStore.onLoggedInTest();
   };

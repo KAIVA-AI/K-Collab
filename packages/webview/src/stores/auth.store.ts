@@ -2,6 +2,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 import { IWebviewMessage } from 'src/models';
 import { Constants } from '@v-collab/common';
+import { IWorkspace } from '../../../common/src/models';
 
 export class AuthStore {
   @observable isLogin: boolean = false;
@@ -22,6 +23,24 @@ export class AuthStore {
     }
   };
 
+  private getRealmFromUrl(url: string): string | undefined {
+    const match = url.match(/^https?:\/\/([a-zA-Z0-9-]+)/);
+    return match ? match[0] : undefined;
+  }
+
+  getLastBiggestIdObject = (
+    workspaces: IWorkspace[],
+  ): IWorkspace | undefined => {
+    return workspaces.reduce(
+      (maxWorkspace, currentWorkspace) => {
+        return (maxWorkspace?.id ?? 0) > currentWorkspace.id
+          ? maxWorkspace
+          : currentWorkspace;
+      },
+      undefined as IWorkspace | undefined,
+    );
+  };
+
   @action login = async (username: string, password: string) => {
     const result = await this.rootStore.workspaceService.login(
       username,
@@ -32,7 +51,40 @@ export class AuthStore {
       return result;
     }
     this.onLoggedIn(result.token!);
+    const workspaces = await this.rootStore.workspaceService.listWorkspace();
+    const lastWorkspace = this.getLastBiggestIdObject(workspaces);
+    if (!lastWorkspace) {
+      return result;
+    }
+    this.rootStore.zulipService.setRealm(lastWorkspace.workspace_realm);
+    this.rootStore.postMessageToVSCode({
+      command: 'onSelectRealm',
+      data: {
+        realm: lastWorkspace.workspace_realm,
+      },
+    });
+    await this.rootStore.channelStore.loadData();
+    this.rootStore.realmStore.currentRealm = {
+      realm_string: lastWorkspace.workspace_realm,
+    };
+    this.isLogin = true;
     return result;
+  };
+
+  @action loginUri = async (token: string, realm: string) => {
+    this.onLoggedIn(token);
+    this.rootStore.zulipService.setRealm(realm);
+    this.rootStore.postMessageToVSCode({
+      command: 'onSelectRealm',
+      data: {
+        realm: realm,
+      },
+    });
+    await this.rootStore.channelStore.loadData();
+    this.rootStore.realmStore.currentRealm = {
+      realm_string: realm,
+    };
+    this.isLogin = true;
   };
 
   @action logout() {
@@ -64,7 +116,37 @@ export class AuthStore {
   @action onMessageFromVSCode = async (message: IWebviewMessage) => {
     if (message.command === 'doLogout') {
       return this.onLoggedOut();
+    } else if (message.command === 'loginUri') {
+      if (message.data) {
+        const token = message.data?.token;
+        const realm = message.data?.realm;
+        this.loginUri(token, realm);
+      }
     }
+  };
+
+  @action onLoggedUri = async () => {
+    this.rootStore.cleanup();
+    this.rootStore.zulipService.setBasicAuth(
+      Constants.USER_EMAIL,
+      Constants.USER_API_KEY,
+    );
+    this.rootStore.postMessageToVSCode({
+      command: 'onLoggedInTest',
+    });
+    const realm = Constants.REALM_STRING;
+    this.rootStore.zulipService.setRealm(realm);
+    this.rootStore.postMessageToVSCode({
+      command: 'onSelectRealm',
+      data: {
+        realm,
+      },
+    });
+    await this.rootStore.channelStore.loadData();
+    this.rootStore.realmStore.currentRealm = {
+      realm_string: realm,
+    };
+    this.isLogin = true;
   };
 
   @action onLoggedInTest = async () => {

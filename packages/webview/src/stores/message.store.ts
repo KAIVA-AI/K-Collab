@@ -1,4 +1,10 @@
-import { IMessage, IWebviewMessage, IZulipEvent, ITopic } from '../models';
+import {
+  IMessage,
+  IWebviewMessage,
+  IZulipEvent,
+  ITopic,
+  IZulipUser,
+} from '../models';
 import {
   action,
   computed,
@@ -10,15 +16,24 @@ import { RootStore } from '.';
 
 export class MessageStore {
   @observable messages: IMessage[] = [];
+  @observable currentStreamedMessage: IMessage | undefined;
+  @observable loadingMore = false;
 
   @computed get topicMessages() {
     const topic = this.rootStore.topicStore.currentTopic;
     if (!topic) {
       return [];
     }
-    return this.messages.filter(
-      m => m.stream_id === topic.stream_id && m.subject === topic.name,
-    );
+    return [
+      ...this.messages.filter(
+        m => m.stream_id === topic.stream_id && m.subject === topic.name,
+      ),
+      ...(this.currentStreamedMessage &&
+      this.currentStreamedMessage.stream_id === topic.stream_id &&
+      this.currentStreamedMessage.subject === topic.name
+        ? [this.currentStreamedMessage]
+        : []),
+    ];
   }
 
   constructor(private rootStore: RootStore) {
@@ -39,13 +54,90 @@ export class MessageStore {
     });
   };
 
+  /**
+   * Load more messages (older) from the server
+   */
+  @action loadMoreMessages = async (count: number = 20) => {
+    const topic = this.rootStore.topicStore.currentTopic;
+    if (!topic || this.loadingMore) {
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const oldestMessage = this.messages[0]; // Oldest message in the current list
+      const olderMessages = await this.rootStore.zulipService.getMessages(
+        topic.stream_id,
+        topic.name,
+        oldestMessage?.id.toString(), // Pass the ID of the oldest message as anchor
+        0, // Number of messages to fetch
+        count, // Number of messages to fetch
+      );
+
+      runInAction(() => {
+        this.messages = [...olderMessages, ...this.messages]; // Prepend older messages
+      });
+    } catch (error) {
+      console.error('Failed to load more messages:', error);
+    } finally {
+      runInAction(() => {
+        this.loadingMore = false;
+      });
+    }
+  };
+
+  @action processStreamingMessage = (streamedMessage: IMessage) => {
+    const topic = this.rootStore.topicStore.currentTopic;
+
+    if (
+      topic &&
+      streamedMessage.stream_id === topic.stream_id &&
+      streamedMessage.subject === topic.name
+    ) {
+      runInAction(() => {
+        this.currentStreamedMessage = streamedMessage;
+      });
+
+      // Optionally, you can add it to the main message list for persistence
+      setTimeout(() => {
+        runInAction(() => {
+          this.messages.push(streamedMessage);
+          this.currentStreamedMessage = undefined; // Reset after persisting
+        });
+      }, 1000); // Delay merging for smoother UX if needed
+    }
+  };
+
   @action onMessageFromVSCode = (message: IWebviewMessage) => {
     if (message.command === 'onZulipEventMessage') {
       const event: IZulipEvent = message.data.event;
       if (event.type === 'message' && event.message) {
-        this.messages.push(event.message);
-        // TODO scroll to bottom
+        const userIsMember = this.rootStore.currentProjectMembers.some(
+          member => member.user_id === event.message?.sender_id,
+        );
+        if (userIsMember) {
+          this.messages.push(event.message);
+        }
       } else if (event.type === 'update_message') {
+        // check propagate_mode
+        if (event.propagate_mode === 'change_one') {
+          const user_trigger_event =
+            this.rootStore.currentProjectMembers.filter(
+              user => user.user_id === event.user_id,
+            );
+          if (user_trigger_event) {
+            const editedMessage: IMessage = {
+              id: event.message_id ?? 0,
+              stream_id: event.stream_id ?? 0,
+              subject: this.rootStore.topicStore.currentTopic?.name ?? '',
+              content: event.content ?? '',
+              sender_id: event.user_id,
+              sender_full_name: user_trigger_event[0].full_name,
+              timestamp: 0,
+            };
+            this.processStreamingMessage(editedMessage);
+          }
+        }
         // update new subject to current Topic
         const topicChanged: ITopic = {
           stream_id: event.stream_id ?? 0,

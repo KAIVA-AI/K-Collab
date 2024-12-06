@@ -14,7 +14,29 @@ class LoginPage extends Component<BaseComponentProps> {
 
   componentDidMount(): void {
     this.rootStore.setCurrentWebviewPageContext('login-page');
+    window.addEventListener('message', event => {
+      const message = event.data;
+      if (message.token && message.realm) {
+        // You can now use the accessToken and realmString to handle login
+        this.vm.loginUri(message.token, message.realm);
+        // Optionally, call your login handler here with accessToken and realmString
+        // handleLogin(message.accessToken, message.realmString);
+      }
+    });
+    const handleMessage = (event: MessageEvent) => {
+      const message = event.data;
+
+      if (message.command === 'loadChatPage') {
+        this.handleLoginSuccess();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
   }
+
+  handleLoginSuccess = () => {
+    this.vm.LogginSuccess(); // Switch to chat page after successful login
+  };
 
   render() {
     return (
@@ -65,6 +87,12 @@ class LoginPage extends Component<BaseComponentProps> {
             onClick={() => this.vm.login()}
           >
             Sign in
+          </button>
+          <button
+            className="vc-border pa-10px c-pointer"
+            onClick={() => this.vm.loginTest()}
+          >
+            Test account: {Constants.USER_EMAIL}
           </button>
         </form>
       </div>

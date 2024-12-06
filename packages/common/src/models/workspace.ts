@@ -3,4 +3,5 @@ export interface IWorkspace {
   workspace_code: string;
   workspace_realm: string;
   workspace_flag: number;
+  serverChat: string;
 }

@@ -40,6 +40,23 @@
     "package": "vsce package"
   },
   "contributes": {
+    "handlers": {
+      "authentication": {
+      "sessions": [
+        {
+          "id": "v-collab",
+          "label": "v-collab",
+          "scheme": "v-collab"
+        }
+      ]
+    },
+      "uri": [
+        {
+          "scheme": "vscode",
+          "command": "v-collab.handleUri"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {
@@ -99,11 +116,6 @@
         "category": "V-Collab"
       },
       {
-        "command": "v-collab.command.coding.debug",
-        "title": "Debug",
-        "category": "V-Collab"
-      },
-      {
         "command": "v-collab.command.coding.comment",
         "title": "Comment",
         "category": "V-Collab"
@@ -131,6 +143,16 @@
       {
         "command": "v-collab.command.coding.fixbug",
         "title": "Fixbug",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.html",
+        "title": "HTML",
+        "category": "V-Collab"
+      },
+      {
+        "command": "v-collab.command.coding.html_item",
+        "title": "HTML Item",
         "category": "V-Collab"
       },
       {
@@ -263,80 +285,84 @@
           "group": "1_add@2"
         },
         {
-          "command": "v-collab.command.coding.gen-code",
+          "command": "v-collab.command.coding.explain",
           "group": "2_code@1"
         },
         {
-          "command": "v-collab.command.coding.gen-test",
+          "command": "v-collab.command.coding.improve",
           "group": "2_code@2"
         },
         {
-          "command": "v-collab.command.coding.debug",
+          "command": "v-collab.command.coding.review",
           "group": "2_code@3"
         },
         {
-          "command": "v-collab.command.coding.comment",
-          "group": "2_code@4"
+          "command": "v-collab.command.coding.fixbug",
+          "group": "2-code@4"
         },
         {
-          "command": "v-collab.command.coding.porting",
+          "command": "v-collab.command.coding.gen-code",
           "group": "2_code@5"
         },
         {
-          "command": "v-collab.command.coding.db_create_table",
+          "command": "v-collab.command.coding.gen-test",
           "group": "2_code@6"
         },
         {
-          "command": "v-collab.command.coding.db_create_query",
+          "command": "v-collab.command.coding.comment",
           "group": "2_code@7"
         },
         {
-          "command": "v-collab.command.coding.db_modify_table",
+          "command": "v-collab.command.coding.porting",
           "group": "2_code@8"
         },
         {
+          "command": "v-collab.command.coding.html",
+          "group": "3_code@1"
+        },
+        {
+          "command": "v-collab.command.coding.html_item",
+          "group": "3_code@2"
+        },
+        {
+          "command": "v-collab.command.coding.db_create_table",
+          "group": "4_code@1"
+        },
+        {
+          "command": "v-collab.command.coding.db_create_query",
+          "group": "4_code@2"
+        },
+        {
+          "command": "v-collab.command.coding.db_modify_table",
+          "group": "4_code@3"
+        },
+        {
           "command": "v-collab.command.coding.db_modify_query",
-          "group": "2_code@9"
+          "group": "4_code@4"
         },
         {
           "command": "v-collab.command.coding.db_optimize_query",
-          "group": "2_code@10"
+          "group": "4_code@5"
         },
         {
           "command": "v-collab.command.coding.db_fix_query",
-          "group": "2_code@11"
+          "group": "4_code@6"
         },
         {
           "command": "v-collab.command.coding.db_format_query",
-          "group": "2_code@12"
+          "group": "4_code@7"
         },
         {
           "command": "v-collab.command.coding.db_explain_query",
-          "group": "2_code@13"
+          "group": "4_code@8"
         },
         {
           "command": "v-collab.command.coding.db_generate_data",
-          "group": "2_code@14"
-        },
-        {
-          "command": "v-collab.command.coding.explain",
-          "group": "3_ask@1"
-        },
-        {
-          "command": "v-collab.command.coding.improve",
-          "group": "3_ask@2"
-        },
-        {
-          "command": "v-collab.command.coding.review",
-          "group": "3_ask@3"
-        },
-        {
-          "command": "v-collab.command.coding.fixbug",
-          "group": "3_ask@4"
+          "group": "4_code@9"
         },
         {
           "command": "v-collab.command.ask-ai",
-          "group": "4_ask@1"
+          "group": "5_ask@1"
         }
       ],
       "view/title": [

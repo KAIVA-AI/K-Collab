@@ -24,9 +24,12 @@ interface IZulipEventEditMessage {
   message_id?: number;
   stream_id?: number;
   content?: string;
+  orig_content: string;
   rendered_content?: string;
   edit_timestamp?: number;
-  flags?: string[]; // read
+  flags?: string[]; // a mention or alert word was added by the edit
+  user_id: number; // who sent the message
+  propagate_mode?: string; // change_one, change_all, change_later
 }
 
 interface IZulipEventMoveMessage {
@@ -34,9 +37,9 @@ interface IZulipEventMoveMessage {
   stream_id?: number;
   new_stream_id?: number;
   edit_timestamp?: number;
-  orig_subject?: string;
-  subject?: string;
-  propagate_mode?: string; // change_one, change_all
+  orig_subject?: string; // Only present if this event moved messages to a different topic and/or channel
+  subject?: string; // Only present if this event moved messages to a different topic and/or channel
+  propagate_mode?: string; // change_one, change_all, change_later
   message_ids?: number[];
   flags?: string[]; // read
   /**

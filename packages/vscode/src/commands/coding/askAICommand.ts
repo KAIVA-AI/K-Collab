@@ -1,6 +1,7 @@
 import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../../stores';
 import path from 'path';
+import { Logger } from 'src/utils/logger';
 
 const COMMAND_ID = 'v-collab.command.ask-ai';
 
@@ -9,6 +10,7 @@ export class AskAICommand {
   constructor(private rootStore: RootStore) {}
 
   register = (): Disposable => {
+    Logger.log(`REGISTER ASK COMMAND ${this.rootStore}`);
     return commands.registerCommand(COMMAND_ID, this.#execute);
   };
 

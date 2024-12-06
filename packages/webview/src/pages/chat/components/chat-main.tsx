@@ -1,19 +1,23 @@
 import { useRootStore } from '../../../stores';
 import { observer } from 'mobx-react';
 import { ChatMessageItem } from './chat-message-item';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Constants } from '../../../../../common/src/constants/constants';
 import TypingIndicator from './chat-input/typing-indicator';
+
 export const ChatMainComponent = observer(() => {
   const { messageStore, realmStore } = useRootStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const mainBlockRef = useRef<HTMLDivElement | null>(null);
+
+  const [visibleMessageCount, setVisibleMessageCount] = useState(10);
 
   useEffect(() => {
     if (messagesEndRef.current) {
       const lastMessage = messagesEndRef.current.lastElementChild;
       lastMessage?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messageStore.topicMessages]);
+  }, [messageStore.topicMessages, visibleMessageCount]);
 
   useEffect(() => {
     const updateAnchorHref = () => {
@@ -65,12 +69,35 @@ export const ChatMainComponent = observer(() => {
     return () => observer.disconnect();
   }, []);
 
+  const handleScroll = () => {
+    if (mainBlockRef.current) {
+      if (mainBlockRef.current.scrollTop === 0) {
+        // Load more messages when scrolling to the top
+        setVisibleMessageCount(prevCount =>
+          Math.min(prevCount + 10, messageStore.topicMessages.length),
+        );
+      }
+    }
+  };
+
   return (
-    <div className="main-block" ref={messagesEndRef}>
-      {messageStore.topicMessages.map((message, index) => (
-        <ChatMessageItem key={index} message={message} />
-      ))}
+    <div
+      className="main-block"
+      ref={mainBlockRef}
+      onScroll={handleScroll}
+      style={{ overflowY: 'auto', maxHeight: '100vh' }} // Ensure the div is scrollable
+    >
+      {messageStore.topicMessages
+        .slice(-visibleMessageCount) // Show only the last `visibleMessageCount` messages
+        .map((message, index) => (
+          <ChatMessageItem key={index} message={message} />
+        ))}
+      {/* Render the streaming message */}
+      {/* {messageStore.currentStreamedMessage && (
+        <ChatMessageItem message={messageStore.currentStreamedMessage} />
+      )} */}
       <TypingIndicator />
+      <div ref={messagesEndRef}></div>
     </div>
   );
 });
