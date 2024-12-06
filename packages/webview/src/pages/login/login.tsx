@@ -82,7 +82,7 @@ class LoginPage extends Component<BaseComponentProps> {
               onChange={this.vm.onChangePassword}
             />
           </div>
-          <button
+          {/* <button
             className="vc-border pa-10px c-pointer bg-primary"
             onClick={() => this.vm.login()}
           >
@@ -93,7 +93,7 @@ class LoginPage extends Component<BaseComponentProps> {
             onClick={() => this.vm.loginTest()}
           >
             Test account: {Constants.USER_EMAIL}
-          </button>
+          </button> */}
         </form>
       </div>
     );
