@@ -129,11 +129,6 @@ export class AuthStore {
       if (message.data) {
         const token = message.data?.token;
         const realm = message.data?.realm;
-        console.log(
-          'RECEIVE DATA FROM COMMMAND AUTH STORE LOGINRUI',
-          token,
-          realm,
-        );
         this.loginUri(token, realm);
       }
     }
@@ -173,7 +168,6 @@ export class AuthStore {
       command: 'onLoggedInTest',
     });
     const realm = Constants.REALM_STRING;
-    console.log('smt lekwjhr ljk', realm);
     this.rootStore.zulipService.setRealm(realm);
     this.rootStore.postMessageToVSCode({
       command: 'onSelectRealm',

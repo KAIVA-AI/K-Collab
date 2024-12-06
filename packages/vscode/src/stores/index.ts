@@ -88,7 +88,6 @@ export class RootStore {
   constructor(private context: ExtensionContext) {}
 
   register = () => {
-    console.log('REQESUT LASDKFJADSLKJ ');
     Logger.register();
     // providers
     this.context.subscriptions.push(this.memoryFileProvider.register());
@@ -99,7 +98,6 @@ export class RootStore {
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
     this.context.subscriptions.push(this.uriHandler.register());
-    console.log('REQEUST URIHANDLER DONE');
 
     // commands
     this.context.subscriptions.push(this.historyCommand.register());
