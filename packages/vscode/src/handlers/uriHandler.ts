@@ -6,8 +6,7 @@ export class UriHandler {
   constructor(private rootStore: RootStore) {}
 
   #handleUri(uri: Uri) {
-    console.log(`Handling uri: ${uri} ${this.rootStore}`);
-    // vscode.window.showInformationMessage('Handling uri: ' + uri);
+    Logger.log(`Handling uri: ${uri}`);
     const queryParams = new URLSearchParams(uri.query);
     const accessToken = queryParams.get('token'); // Assuming token is returned as a query param
     const realm = queryParams.get('realm');
@@ -23,17 +22,10 @@ export class UriHandler {
       });
     } else {
       window.showErrorMessage('Invalid or missing login token.');
-      if (realm) {
-        this.rootStore.setState('realm_string', realm);
-      }
-      window.showInformationMessage(
-        `${realm} Authentication successful! ${accessToken} | ${realm}`,
-      );
     }
   }
 
   register(): Disposable {
-    Logger.log(`### , ${this.rootStore.chatPanelProvider}`);
     return window.registerUriHandler({
       handleUri: (uri: Uri) => this.#handleUri(uri), // Arrow function ensures 'this' context is correct
     });

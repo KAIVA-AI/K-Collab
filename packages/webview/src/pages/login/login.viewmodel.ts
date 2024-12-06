@@ -31,7 +31,7 @@ export class LoginViewModel {
     );
     if (!result.status) {
       this.errorMessage = result.message || 'Login fail';
-      // return;
+      return;
     }
   };
 

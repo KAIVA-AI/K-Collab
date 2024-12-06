@@ -1,6 +1,6 @@
 import { Constants } from '@v-collab/common';
 import { inject, observer } from 'mobx-react';
-import { Component, useEffect } from 'react';
+import { Component } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { LoginViewModel } from './login.viewmodel';
 
@@ -14,7 +14,6 @@ class LoginPage extends Component<BaseComponentProps> {
 
   componentDidMount(): void {
     this.rootStore.setCurrentWebviewPageContext('login-page');
-    console.log('APP REACT LISTTENSER');
     window.addEventListener('message', event => {
       const message = event.data;
       if (message.token && message.realm) {

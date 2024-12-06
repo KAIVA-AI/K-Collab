@@ -50,7 +50,7 @@ export class ChatPanelProvider
   }
 
   register = (): Disposable => {
-    console.log('REGISTER CHAT PANEL ', this.rootStore);
+    console.log('REGISTER CHAT PANEL');
     this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
     return this.#webProvider;
   };
