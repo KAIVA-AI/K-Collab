@@ -167,11 +167,17 @@ export class ZulipService {
     });
   };
 
-  getMessages = async (streamId: number, topic: string) => {
+  getMessages = async (
+    streamId: number,
+    topic: string,
+    anchor: string = 'newest',
+    num_before: number = 50,
+    num_after: number = 0,
+  ) => {
     const queryParams = {
-      anchor: 'newest',
-      num_before: 50,
-      num_after: 0,
+      anchor: anchor,
+      num_before: num_before,
+      num_after: num_after,
       narrow: JSON.stringify([
         { operator: 'stream', operand: streamId },
         { operator: 'topic', operand: topic },

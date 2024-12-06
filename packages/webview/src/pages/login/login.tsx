@@ -1,6 +1,6 @@
 import { Constants } from '@v-collab/common';
 import { inject, observer } from 'mobx-react';
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import { BaseComponentProps } from 'src/models/base';
 import { LoginViewModel } from './login.viewmodel';
 
@@ -14,7 +14,32 @@ class LoginPage extends Component<BaseComponentProps> {
 
   componentDidMount(): void {
     this.rootStore.setCurrentWebviewPageContext('login-page');
+    console.log('APP REACT LISTTENSER');
+    window.addEventListener('message', event => {
+      const message = event.data;
+      if (message.token && message.realm) {
+        // You can now use the accessToken and realmString to handle login
+        console.log('Received accessToken:', message.token);
+        console.log('Received realmString:', message.realm);
+        this.vm.loginUri(message.token, message.realm);
+        // Optionally, call your login handler here with accessToken and realmString
+        // handleLogin(message.accessToken, message.realmString);
+      }
+    });
+    const handleMessage = (event: MessageEvent) => {
+      const message = event.data;
+
+      if (message.command === 'loadChatPage') {
+        this.handleLoginSuccess();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
   }
+
+  handleLoginSuccess = () => {
+    this.vm.LogginSuccess(); // Switch to chat page after successful login
+  };
 
   render() {
     return (
@@ -65,6 +90,12 @@ class LoginPage extends Component<BaseComponentProps> {
             onClick={() => this.vm.login()}
           >
             Sign in
+          </button>
+          <button
+            className="vc-border pa-10px c-pointer"
+            onClick={() => this.vm.loginTest()}
+          >
+            Test account: {Constants.USER_EMAIL}
           </button>
         </form>
       </div>
