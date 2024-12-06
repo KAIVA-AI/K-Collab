@@ -47,7 +47,6 @@ class TopicPage extends Component<BaseComponentProps, TopicPageState> {
     if (!listElement) return;
 
     const { scrollTop, scrollHeight, clientHeight } = listElement;
-    console.log('check scroll ', scrollTop + clientHeight >= scrollHeight - 10);
     // Check if scrolled near the bottom
     if (scrollTop + clientHeight >= scrollHeight - 10) {
       this.setState(prevState => ({

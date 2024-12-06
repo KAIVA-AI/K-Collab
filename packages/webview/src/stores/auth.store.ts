@@ -52,7 +52,6 @@ export class AuthStore {
     }
     this.onLoggedIn(result.token!);
     const workspaces = await this.rootStore.workspaceService.listWorkspace();
-    console.log('WORKSAC LIST ', workspaces);
     const lastWorkspace = this.getLastBiggestIdObject(workspaces);
     if (!lastWorkspace) {
       return result;
@@ -73,14 +72,7 @@ export class AuthStore {
   };
 
   @action loginUri = async (token: string, realm: string) => {
-    console.log('BINGO AUTOLOGIN ', token, realm);
     this.onLoggedIn(token);
-    // const workspaces = await this.rootStore.workspaceService.listWorkspace();
-    // console.log('WORKSAC LIST ', workspaces);
-    // const lastWorkspace = this.getLastBiggestIdObject(workspaces);
-    // if (!lastWorkspace) {
-    //   return result;
-    // }
     this.rootStore.zulipService.setRealm(realm);
     this.rootStore.postMessageToVSCode({
       command: 'onSelectRealm',
@@ -93,7 +85,6 @@ export class AuthStore {
       realm_string: realm,
     };
     this.isLogin = true;
-    // return result;
   };
 
   @action logout() {

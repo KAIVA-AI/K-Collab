@@ -24,11 +24,6 @@ export class MessageStore {
     if (!topic) {
       return [];
     }
-    // return this.messages.filter(
-    //   m => m.stream_id === topic.stream_id && m.subject === topic.name,
-    // );
-
-    // Combine static messages and streamed messages if applicable
     return [
       ...this.messages.filter(
         m => m.stream_id === topic.stream_id && m.subject === topic.name,

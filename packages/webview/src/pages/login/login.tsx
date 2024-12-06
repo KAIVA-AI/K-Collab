@@ -18,8 +18,6 @@ class LoginPage extends Component<BaseComponentProps> {
       const message = event.data;
       if (message.token && message.realm) {
         // You can now use the accessToken and realmString to handle login
-        console.log('Received accessToken:', message.token);
-        console.log('Received realmString:', message.realm);
         this.vm.loginUri(message.token, message.realm);
         // Optionally, call your login handler here with accessToken and realmString
         // handleLogin(message.accessToken, message.realmString);
