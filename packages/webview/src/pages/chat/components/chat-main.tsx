@@ -17,7 +17,6 @@ export const ChatMainComponent = observer(() => {
       const lastMessage = messagesEndRef.current.lastElementChild;
       lastMessage?.scrollIntoView({ behavior: 'smooth' });
     }
-    console.log('LIST MESSAGES ', messageStore.topicMessages);
   }, [messageStore.topicMessages, visibleMessageCount]);
 
   useEffect(() => {
