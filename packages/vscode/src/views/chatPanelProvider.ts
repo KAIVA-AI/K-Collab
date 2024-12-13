@@ -74,6 +74,7 @@ export class ChatPanelProvider
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
+    console.log('MESAGE LISTENER PANEL ', event);
     this.postMessageToWebview({
       store: 'MessageStore',
       command: 'onZulipEventMessage',

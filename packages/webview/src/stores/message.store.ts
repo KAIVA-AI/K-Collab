@@ -13,6 +13,7 @@ import {
   runInAction,
 } from 'mobx';
 import { RootStore } from '.';
+import { marked } from 'marked';
 
 export class MessageStore {
   @observable messages: IMessage[] = [];
@@ -86,7 +87,12 @@ export class MessageStore {
     }
   };
 
-  @action processStreamingMessage = (streamedMessage: IMessage) => {
+  parseMarkdow = async (content: string | Promise<string>) => {
+    const resolvedContent = await content; // Ensure content is resolved
+    return marked(resolvedContent);
+  };
+
+  @action processStreamingMessage = async (streamedMessage: IMessage) => {
     const topic = this.rootStore.topicStore.currentTopic;
 
     if (
@@ -94,6 +100,10 @@ export class MessageStore {
       streamedMessage.stream_id === topic.stream_id &&
       streamedMessage.subject === topic.name
     ) {
+      // Resolve content if it's a Promise<string>
+      streamedMessage.content = await this.parseMarkdow(
+        streamedMessage.content,
+      );
       runInAction(() => {
         this.currentStreamedMessage = streamedMessage;
       });
@@ -101,8 +111,9 @@ export class MessageStore {
       // Optionally, you can add it to the main message list for persistence
       setTimeout(() => {
         runInAction(() => {
-          this.messages.push(streamedMessage);
-          this.currentStreamedMessage = undefined; // Reset after persisting
+          if (!this.messages.some(msg => msg.id === streamedMessage.id)) {
+            this.messages.push(streamedMessage);
+          }
         });
       }, 1000); // Delay merging for smoother UX if needed
     }
@@ -120,36 +131,34 @@ export class MessageStore {
         }
       } else if (event.type === 'update_message') {
         // check propagate_mode
-        if (event.propagate_mode === 'change_one') {
-          const user_trigger_event =
-            this.rootStore.currentProjectMembers.filter(
-              user => user.user_id === event.user_id,
-            );
-          if (user_trigger_event) {
-            const editedMessage: IMessage = {
-              id: event.message_id ?? 0,
-              stream_id: event.stream_id ?? 0,
-              subject: this.rootStore.topicStore.currentTopic?.name ?? '',
-              content: event.content ?? '',
-              sender_id: event.user_id,
-              sender_full_name: user_trigger_event[0].full_name,
-              timestamp: 0,
-            };
-            this.processStreamingMessage(editedMessage);
-          }
+        const user_trigger_event = this.rootStore.currentProjectMembers.filter(
+          user => user.user_id === event.user_id,
+        );
+        if (user_trigger_event) {
+          const editedMessage: IMessage = {
+            id: event.message_id ?? 0,
+            stream_id: event.stream_id ?? 0,
+            subject: this.rootStore.topicStore.currentTopic?.name ?? '',
+            content: event.content ?? '',
+            sender_id: event.user_id,
+            sender_full_name: user_trigger_event[0].full_name,
+            timestamp: 0,
+          };
+          this.processStreamingMessage(editedMessage);
         }
+        // comment pending feature suggest topic name from openai
         // update new subject to current Topic
-        const topicChanged: ITopic = {
-          stream_id: event.stream_id ?? 0,
-          name: event.subject ?? '',
-          file_inputs:
-            this.rootStore.topicStore.currentTopic?.file_inputs ?? [],
-        };
-        // update new subject for message list
-        this.messages.forEach(message => {
-          message.subject = topicChanged.name;
-        });
-        this.rootStore.topicStore.currentTopic = topicChanged;
+        // const topicChanged: ITopic = {
+        //   stream_id: event.stream_id ?? 0,
+        //   name: event.subject ?? '',
+        //   file_inputs:
+        //     this.rootStore.topicStore.currentTopic?.file_inputs ?? [],
+        // };
+        // // update new subject for message list
+        // this.messages.forEach(message => {
+        //   message.subject = topicChanged.name;
+        // });
+        // this.rootStore.topicStore.currentTopic = topicChanged;
       } else if (event.type === 'typing' && event.sender) {
         const userId = event.sender.user_id;
         if (event.op === 'start') {
