@@ -19,6 +19,7 @@ export class MessageStore {
   @observable messages: IMessage[] = [];
   @observable currentStreamedMessage: IMessage | undefined;
   @observable loadingMore = false;
+  @observable isTyping = false; // Observable to track typing events
 
   @computed get topicMessages() {
     const topic = this.rootStore.topicStore.currentTopic;
@@ -161,14 +162,32 @@ export class MessageStore {
         // this.rootStore.topicStore.currentTopic = topicChanged;
       } else if (event.type === 'typing' && event.sender) {
         const userId = event.sender.user_id;
+        // Check if the typing event was triggered by the current user
+        if (
+          this.rootStore.currentUser?.user_id &&
+          userId === this.rootStore.currentUser.user_id
+        ) {
+          return; // Exit early if triggered by the current user
+        }
+        this.rootStore.typingUsers = this.rootStore.typingUsers.filter(
+          id => id !== userId,
+        );
+
         if (event.op === 'start') {
+          runInAction(() => {
+            this.isTyping = true;
+          });
+
           if (!this.rootStore.typingUsers.includes(userId)) {
             this.rootStore.typingUsers.push(userId);
           }
         } else if (event.op === 'stop') {
-          this.rootStore.typingUsers = this.rootStore.typingUsers.filter(
-            id => id !== userId,
-          );
+          runInAction(() => {
+            this.rootStore.typingUsers = this.rootStore.typingUsers.filter(
+              id => id !== userId,
+            );
+            this.isTyping = false;
+          });
         }
       }
     }

@@ -52,6 +52,7 @@ export class RootStore {
   zulipService: ZulipService;
 
   @observable currentProjectMembers: IZulipUser[] = [];
+  @observable currentUser: IZulipUser | null = null;
 
   @observable typingUsers: number[] = [];
   @observable private initialized = false;
@@ -199,6 +200,10 @@ export class RootStore {
     });
   };
 
+  @action raiseErrorMessageToVscodeWindow = async (message: string) => {
+    !(window as any).showErrorMessage(message);
+  };
+
   @action setCurrentWebviewPageContext = async (context: string) => {
     await this.postMessageToVSCode({
       command: 'setCurrentWebviewPageContext',
@@ -221,7 +226,7 @@ export class RootStore {
 
     this.typingUsers.forEach(id => {
       const item = this.currentProjectMembers.find(mem => mem.user_id === id);
-      item && find.push(item);
+      item && item.user_id !== this.currentUser?.user_id && find.push(item);
     });
 
     return find;

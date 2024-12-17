@@ -6,6 +6,7 @@ import {
   IZulipSendMessageParams,
   TopicFileInput,
   ITypingStatusParams,
+  IZulipUser,
 } from '../models';
 import {
   IEventListener,
@@ -150,6 +151,15 @@ export class ZulipService {
     });
   };
 
+  getProfileUser = async (): Promise<IZulipUser> => {
+    return this.sendRequest({
+      path: 'users/me',
+      method: 'GET',
+    }).then((json: IZulipUser) => {
+      return json;
+    });
+  };
+
   getTopics = async (streamId: number): Promise<ITopic[]> => {
     return this.sendRequest({
       path: `users/me/${streamId}/topics`,
@@ -287,7 +297,6 @@ export class ZulipService {
       try {
         if (!queueId) {
           [queueId, lastEventId] = await this.registerEventQueue();
-          console.log('BINGOOOO queueId ', queueId, lastEventId);
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);
         console.log('subscribeEventQueue events', events);
@@ -375,7 +384,6 @@ export class ZulipService {
     if (content !== undefined) {
       formData['content'] = content;
     }
-    console.log('FORM DATA', formData);
     return this.sendRequest({
       path: 'assistant/add-file',
       formData,

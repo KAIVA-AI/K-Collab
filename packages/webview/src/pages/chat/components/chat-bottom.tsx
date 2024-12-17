@@ -2,7 +2,7 @@ import { inject, observer } from 'mobx-react';
 import { ChatInputComponent } from './chat-input';
 import React, { Component, createRef, RefObject } from 'react';
 import { BaseComponentProps } from 'src/models/base';
-import { reaction } from 'mobx';
+import { reaction, IReactionDisposer, observable, runInAction } from 'mobx';
 import UserUploadFormWrapper from './chat-input/user-form-wrapper';
 import {
   handleSendFile,
@@ -12,6 +12,10 @@ import {
 @inject('rootStore')
 @observer
 export class ChatBottomComponent extends Component<BaseComponentProps> {
+  @observable isTyping = false; // Local observable to track typing state
+
+  private disposers: (() => void)[] = []; // Array to hold disposers for cleanup
+
   formComponentRef: any;
   private get rootStore() {
     return this.props.rootStore!;
@@ -21,6 +25,9 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
   }
   private get topicStore() {
     return this.rootStore.topicStore;
+  }
+  private get messageStore() {
+    return this.rootStore.messageStore;
   }
   private chatInputRef: RefObject<ChatInputComponent>;
 
@@ -42,6 +49,29 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
         this.rootStore.zulipService.postUserUpload(payload);
       },
     );
+  }
+
+  componentDidMount() {
+    const messageStore = this.messageStore;
+    // Create a reaction to track `messageStore.isTyping` and update `isTyping`
+    if (messageStore) {
+      const isTypingDisposer = reaction(
+        () => messageStore.isTyping,
+        isTyping => {
+          runInAction(() => {
+            this.isTyping = isTyping ?? false; // Default to false if undefined
+          });
+        },
+        { fireImmediately: true }, // Ensures this effect runs on initialization
+      );
+      // Add disposer to the list
+      this.disposers.push(isTypingDisposer);
+    }
+  }
+
+  componentWillUnmount() {
+    // Clean up all reactions
+    this.disposers.forEach(dispose => dispose());
   }
 
   handleSendMessage = async (inputValue?: string) => {
@@ -126,10 +156,30 @@ export class ChatBottomComponent extends Component<BaseComponentProps> {
           </div>
           <div className="action-right">
             <div
-              className="action-icon"
-              onClick={() => this.chatInputRef.current?.onSubmitInput()}
+              className={`action-icon ${
+                this.messageStore.isTyping ? 'disabled' : ''
+              }`} // Optionally add a disabled class for styling
+              onClick={() => {
+                if (!this.messageStore.isTyping) {
+                  this.chatInputRef.current?.onSubmitInput();
+                } else {
+                  this.rootStore.postMessageToVSCode({
+                    command: 'raiseMessageToVscodeWindow',
+                    data: {
+                      message:
+                        "Cannot send a message while waiting agent's response",
+                    },
+                  });
+                }
+              }}
             >
-              <i className="codicon codicon-send" />
+              <i
+                className={`codicon ${
+                  this.messageStore.isTyping
+                    ? 'codicon-debug-stop'
+                    : 'codicon-send'
+                }`}
+              />
             </div>
           </div>
         </div>

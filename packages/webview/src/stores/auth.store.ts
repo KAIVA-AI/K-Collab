@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
 import { IWebviewMessage } from 'src/models';
 import { Constants } from '@v-collab/common';
@@ -91,7 +91,7 @@ export class AuthStore {
     this.onLoggedOut();
   }
 
-  @action private onLoggedIn = (token: string) => {
+  @action private onLoggedIn = async (token: string) => {
     this.rootStore.workspaceService.setToken(token);
     this.rootStore.zulipService.setToken(token);
     this.rootStore.postMessageToVSCode({
@@ -100,7 +100,14 @@ export class AuthStore {
         token,
       },
     });
-    this.isLogin = true;
+    // load profile current user
+    const profileUser = await this.rootStore.zulipService.getProfileUser();
+    if (!!profileUser.user_id && profileUser.is_active) {
+      runInAction(() => {
+        this.rootStore.currentUser = JSON.parse(JSON.stringify(profileUser));
+        this.isLogin = true;
+      });
+    }
   };
 
   @action private onLoggedOut = () => {
@@ -170,6 +177,12 @@ export class AuthStore {
     this.rootStore.realmStore.currentRealm = {
       realm_string: realm,
     };
-    this.isLogin = true;
+    const profileUser = await this.rootStore.zulipService.getProfileUser();
+    if (!!profileUser.user_id && profileUser.is_active) {
+      runInAction(() => {
+        this.rootStore.currentUser = JSON.parse(JSON.stringify(profileUser));
+        this.isLogin = true;
+      });
+    }
   };
 }
