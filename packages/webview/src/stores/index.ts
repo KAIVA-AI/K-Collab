@@ -201,7 +201,7 @@ export class RootStore {
   };
 
   @action raiseErrorMessageToVscodeWindow = async (message: string) => {
-    !(window as any).showErrorMessage(message);
+    (window as any).showErrorMessage(message);
   };
 
   @action setCurrentWebviewPageContext = async (context: string) => {
