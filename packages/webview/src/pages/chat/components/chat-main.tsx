@@ -92,10 +92,6 @@ export const ChatMainComponent = observer(() => {
         .map((message, index) => (
           <ChatMessageItem key={index} message={message} />
         ))}
-      {/* Render the streaming message */}
-      {/* {messageStore.currentStreamedMessage && (
-        <ChatMessageItem message={messageStore.currentStreamedMessage} />
-      )} */}
       <TypingIndicator />
       <div ref={messagesEndRef}></div>
     </div>

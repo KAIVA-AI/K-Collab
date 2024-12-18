@@ -88,12 +88,6 @@ class LoginPage extends Component<BaseComponentProps> {
           >
             Sign in
           </button>
-          {/* <button
-            className="vc-border pa-10px c-pointer"
-            onClick={() => this.vm.loginTest()}
-          >
-            Test account: {Constants.USER_EMAIL}
-          </button> */}
         </form>
       </div>
     );

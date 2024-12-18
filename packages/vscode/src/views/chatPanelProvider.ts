@@ -50,7 +50,6 @@ export class ChatPanelProvider
   }
 
   register = (): Disposable => {
-    console.log('REGISTER CHAT PANEL');
     this.zulipService.addEventListener(VIEW_ID, this.#onZulipEventMessage);
     return this.#webProvider;
   };
@@ -71,6 +70,7 @@ export class ChatPanelProvider
     onSelectRealm: this.onSelectRealm,
     getLastTopic: this.getLastTopic,
     setLastTopic: this.setLastTopic,
+    raiseMessageToVscodeWindow: this.raiseMessageToVscodeWindow,
   });
 
   #onZulipEventMessage = (event: IZulipEvent) => {
@@ -101,6 +101,12 @@ export class ChatPanelProvider
         file,
       },
     });
+  };
+
+  private raiseMessageToVscodeWindow = (message: IWebviewMessage) => {
+    if (message.data?.message) {
+      window.showErrorMessage(message.data?.message);
+    }
   };
 
   private selectAddContextMethod = async () => {
