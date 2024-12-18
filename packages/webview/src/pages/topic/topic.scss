@@ -1,12 +1,12 @@
 .topic-page {
   user-select: none;
+  height: inherit;
   .topic-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin: 3px;
     overflow-y: auto;
-    max-height: 400px;
     .topic-item {
       padding: 3px 10px 6px 10px;
       cursor: pointer;

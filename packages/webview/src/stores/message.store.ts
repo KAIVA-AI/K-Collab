@@ -26,16 +26,31 @@ export class MessageStore {
     if (!topic) {
       return [];
     }
-    return [
-      ...this.messages.filter(
-        m => m.stream_id === topic.stream_id && m.subject === topic.name,
-      ),
-      ...(this.currentStreamedMessage &&
-      this.currentStreamedMessage.stream_id === topic.stream_id &&
-      this.currentStreamedMessage.subject === topic.name
-        ? [this.currentStreamedMessage]
-        : []),
-    ];
+    if (this.currentStreamedMessage) {
+      // Check if any message in the messages array matches the currentStreamedMessage.id
+      const existingMessageIndex = this.messages.findIndex(
+        m => m.id === this.currentStreamedMessage?.id,
+      );
+
+      if (existingMessageIndex !== -1) {
+        // Replace the existing message with the currentStreamedMessage
+        this.messages[existingMessageIndex] = this.currentStreamedMessage;
+      } else {
+        // If no match, push the currentStreamedMessage
+        this.messages.push(this.currentStreamedMessage);
+      }
+
+      // Log the content of the currentStreamedMessage (optional for debugging)
+      console.log(
+        'Updated currentStreamedMessage:',
+        this.currentStreamedMessage.content,
+      );
+    }
+
+    // Return filtered messages based on topic
+    return this.messages.filter(
+      m => m.stream_id === topic.stream_id && m.subject === topic.name,
+    );
   }
 
   constructor(private rootStore: RootStore) {
@@ -108,15 +123,6 @@ export class MessageStore {
       runInAction(() => {
         this.currentStreamedMessage = streamedMessage;
       });
-
-      // Optionally, you can add it to the main message list for persistence
-      setTimeout(() => {
-        runInAction(() => {
-          if (!this.messages.some(msg => msg.id === streamedMessage.id)) {
-            this.messages.push(streamedMessage);
-          }
-        });
-      }, 1000); // Delay merging for smoother UX if needed
     }
   };
 
