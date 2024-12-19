@@ -33,21 +33,12 @@ export class MessageStore {
       );
 
       if (existingMessageIndex !== -1) {
-        // Replace the existing message with the currentStreamedMessage
         this.messages[existingMessageIndex] = this.currentStreamedMessage;
       } else {
-        // If no match, push the currentStreamedMessage
         this.messages.push(this.currentStreamedMessage);
       }
-
-      // Log the content of the currentStreamedMessage (optional for debugging)
-      console.log(
-        'Updated currentStreamedMessage:',
-        this.currentStreamedMessage.content,
-      );
     }
 
-    // Return filtered messages based on topic
     return this.messages.filter(
       m => m.stream_id === topic.stream_id && m.subject === topic.name,
     );
