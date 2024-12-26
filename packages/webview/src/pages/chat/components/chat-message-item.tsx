@@ -19,6 +19,7 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
       codeBlockList.forEach((codehilite, index) => {
         const preCode = codehilite.querySelector('pre');
         if (!preCode) return;
+        preCode.className = 'block-code';
 
         // Store the full HTML content for the icons
         const fullText = preCode.innerHTML; // Use innerHTML for full HTML content
