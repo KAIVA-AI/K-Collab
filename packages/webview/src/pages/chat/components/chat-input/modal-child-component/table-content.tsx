@@ -27,7 +27,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ content }) => {
 
   const renderCell = (item: any) => {
     const cells = [];
-    // add more cells by listing of keys except 'type' to he
+    // add more cells for listing of keys except 'type'
     const keys = Object.keys(item);
     for (let i = 0; i < keys.length; i++) {
       if (keys[i] !== 'type') {
