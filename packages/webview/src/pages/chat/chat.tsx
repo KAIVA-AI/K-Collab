@@ -16,7 +16,7 @@ class ChatPage extends Component<BaseComponentProps> {
   async componentDidMount(): Promise<void> {
     this.rootStore.setCurrentWebviewPageContext('chat-page');
     this.rootStore.messageStore.loadData();
-    await this.rootStore.getWorkspaceMembers();
+    console.log(' LOAD MESSAGE ', this.rootStore.messageStore.messages);
   }
 
   render() {

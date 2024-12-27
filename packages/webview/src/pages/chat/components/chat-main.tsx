@@ -89,8 +89,8 @@ export const ChatMainComponent = observer(() => {
     >
       {messageStore.topicMessages
         .slice(-visibleMessageCount) // Show only the last `visibleMessageCount` messages
-        .map((message, index) => (
-          <ChatMessageItem key={index} message={message} />
+        .map(message => (
+          <ChatMessageItem key={message.id} message={message} />
         ))}
       <TypingIndicator />
       <div ref={messagesEndRef}></div>

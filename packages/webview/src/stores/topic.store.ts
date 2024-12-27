@@ -40,6 +40,28 @@ export class TopicStore {
   @action onMessageFromVSCode = async (message: IWebviewMessage) => {
     if (message.command === 'addFileToTopic') {
       const file: TopicFileInput = new TopicFileInput(message.data.file);
+      // add create new topic when add selection chat
+      if (this.currentTopic === undefined) {
+        const topic_name = `${file.name}-${new Date().getTime()}`;
+        this.rootStore.zulipService.sendMessage({
+          type: 'stream',
+          to: this.rootStore.channelStore.currentChannel?.stream_id ?? 0,
+          topic: topic_name,
+          content: `@**${Constants.BOT_CODING}** Let's analyze this selected code below \n ##${file.content}`,
+        });
+        this.currentTopic = {
+          stream_id: this.rootStore.channelStore.currentChannel?.stream_id ?? 0,
+          name: topic_name,
+          file_inputs: [],
+        };
+        this.rootStore.postMessageToVSCode({
+          command: 'setLastTopic',
+          data: {
+            realm: this.rootStore.realmStore.currentRealm?.realm_string,
+            topic: this.currentTopic?.name,
+          },
+        });
+      }
       this.rootStore.chatViewModel.eventFocusInput = true;
       return this.addFileToTopic(file);
     }
@@ -98,7 +120,12 @@ export class TopicStore {
         f => f.isFile && f.path === file.path,
       );
       if (exists) {
-        console.log('file already exists');
+        this.rootStore.postMessageToVSCode({
+          command: 'raiseMessageToVscodeWindow',
+          data: {
+            message: `File ${file.name} already exists`,
+          },
+        });
         return;
       }
       this.currentTopic?.file_inputs?.push(file);
@@ -112,7 +139,12 @@ export class TopicStore {
           f.end === file.end,
       );
       if (exists) {
-        console.log('selection already exists');
+        this.rootStore.postMessageToVSCode({
+          command: 'raiseMessageToVscodeWindow',
+          data: {
+            message: `Selection ${file.name} already exists`,
+          },
+        });
         return;
       }
       this.currentTopic?.file_inputs?.push(file);
@@ -135,7 +167,12 @@ export class TopicStore {
       f => f.isFile && f.path === file.path,
     );
     if (exists) {
-      console.log('file already exists');
+      this.rootStore.postMessageToVSCode({
+        command: 'raiseMessageToVscodeWindow',
+        data: {
+          message: `Image ${file.name} already exists`,
+        },
+      });
       return;
     }
     this.currentTopic?.file_inputs?.push(file);

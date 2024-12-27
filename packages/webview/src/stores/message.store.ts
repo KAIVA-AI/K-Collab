@@ -14,7 +14,8 @@ import {
 } from 'mobx';
 import { RootStore } from '.';
 import { marked } from 'marked';
-
+type HTML = { text: string };
+type Tag = { content: string };
 export class MessageStore {
   @observable messages: IMessage[] = [];
   @observable currentStreamedMessage: IMessage | undefined;
@@ -96,7 +97,29 @@ export class MessageStore {
 
   parseMarkdow = async (content: string | Promise<string>) => {
     const resolvedContent = await content; // Ensure content is resolved
-    return marked(resolvedContent);
+    // Custom Renderer to keep precode content
+    // const renderer = new marked.Renderer();
+    // renderer.html = (html: any | Tag): string => {
+    //   // Log incoming raw HTML
+    //   console.log('Incoming HTML:', html);
+
+    //   // Check if the HTML contains a 'codehilite' div
+    //   if (
+    //     html.includes('class="codehilite"') &&
+    //     html.includes('data-code-language="')
+    //   ) {
+    //     return html; // Return the div unchanged
+    //   }
+
+    //   // For other HTML, return it directly or modify as needed
+    //   return html;
+    // };
+    // // Set the renderer in marked
+    // marked.setOptions({ renderer });
+
+    const htmlOutput = marked(resolvedContent);
+
+    return htmlOutput;
   };
 
   @action processStreamingMessage = async (streamedMessage: IMessage) => {
@@ -141,6 +164,7 @@ export class MessageStore {
             sender_id: event.user_id,
             sender_full_name: user_trigger_event[0].full_name,
             timestamp: 0,
+            // is_stream: true
           };
           this.processStreamingMessage(editedMessage);
         }
