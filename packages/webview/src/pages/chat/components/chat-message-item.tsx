@@ -19,7 +19,6 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
       codeBlockList.forEach((codehilite, index) => {
         const preCode = codehilite.querySelector('pre');
         if (!preCode) return;
-<<<<<<< HEAD
         const initialCodeText = handleCodeBlocks(
           codehilite,
           preCode,
@@ -28,73 +27,18 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
           setExpanded,
           chatViewModel,
         );
+        // update codeTexts
         Object.assign(initialCodeTexts, initialCodeText);
-=======
-        preCode.className = 'block-code';
->>>>>>> dc03fceb1aee045c931741386220cfcdc9f26fdd
-
-        // Store the full HTML content for the icons
-        // const fullText = preCode.innerHTML; // Use innerHTML for full HTML content
-
-        // const codeAction = document.createElement('div');
-        // codeAction.className = 'message-code-action';
-
-        // const previewIcon = document.createElement('i');
-        // previewIcon.className =
-        //   'c-pointer codicon codicon-git-pull-request-go-to-changes';
-        // previewIcon.title = 'Preview difference';
-        // previewIcon.onclick = () =>
-        //   chatViewModel.clickPreviewChange(fullText || '');
-        // codeAction.appendChild(previewIcon);
-
-        // const insertIcon = document.createElement('i');
-        // insertIcon.className = 'c-pointer codicon codicon-insert';
-        // insertIcon.title = 'Add to current file';
-        // insertIcon.onclick = () =>
-        //   chatViewModel.clickInsertMessage(fullText || '');
-        // codeAction.appendChild(insertIcon);
-
-        // const copyIcon = document.createElement('i');
-        // copyIcon.className = 'c-pointer codicon codicon-copy';
-        // copyIcon.title = 'Copy code';
-        // copyIcon.onclick = () => chatViewModel.clickCopyMessage(fullText || '');
-        // codeAction.appendChild(copyIcon);
-
-        // codehilite.prepend(codeAction);
-
-        // // Store the initial inner text for toggling
-        // const codeText = preCode.innerText;
-        // initialCodeTexts[index] = codeText; // Store the original full conten
-        // const isLong = codeText.length > 200; // Define length threshold for "Read more"
-        // if (isLong && !expanded[index]) {
-        //   if (!codehilite.querySelector('.message_length_toggle')) {
-        //     // setContent(codeText);
-        //     preCode.innerText =
-        //       initialCodeTexts[index].substring(0, 200) + '...'; // Show preview initially
-
-        //     const toggleButton = document.createElement('button');
-        //     toggleButton.className = 'message_length_toggle';
-        //     toggleButton.innerText = 'Read more';
-        //     // toggleButton.style.color = 'blue';
-        //     // toggleButton.style.cursor = 'pointer';
-        //     toggleButton.onclick = () => {
-        //       setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
-        //     };
-
-        //     codehilite.appendChild(toggleButton);
-        //   }
-        // }
       });
       // Set the full content for all code blocks
       setCodeTexts(initialCodeTexts);
     } else {
       // handler message streaming  content. Waiting content successfully render
-
       const PrecodeList = renderedMarkdownRef.current?.querySelectorAll('pre');
       if (PrecodeList === undefined) {
         return;
       }
-      // get list of children to find index of pre tag
+      // get list of children to find index of pre tag. Purpose is nested pre code to codeBlock and add action button
       const markdownChilds = renderedMarkdownRef.current?.children;
       if (!markdownChilds || markdownChilds.length === 0) {
         return;
@@ -106,7 +50,6 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
         codeBlockListAdded.append(precode);
         const preCode = codeBlockListAdded.querySelector('pre');
         if (!preCode) return;
-        console.log('HANDLER ');
         const initialCodeTexts = handleCodeBlocks(
           codeBlockListAdded,
           precode,
@@ -115,55 +58,7 @@ export const ChatMessageItem = (props: { message: IMessage }) => {
           setExpanded,
           chatViewModel,
         );
-        // Store the full HTML content for the icons
-        // const fullText = preCode.innerHTML; // Use innerHTML for full HTML content
-
-        // const codeAction = document.createElement('div');
-        // codeAction.className = 'message-code-action';
-
-        // const previewIcon = document.createElement('i');
-        // previewIcon.className =
-        //   'c-pointer codicon codicon-git-pull-request-go-to-changes';
-        // previewIcon.title = 'Preview difference';
-        // previewIcon.onclick = () =>
-        //   chatViewModel.clickPreviewChange(fullText || '');
-        // codeAction.appendChild(previewIcon);
-
-        // const insertIcon = document.createElement('i');
-        // insertIcon.className = 'c-pointer codicon codicon-insert';
-        // insertIcon.title = 'Add to current file';
-        // insertIcon.onclick = () =>
-        //   chatViewModel.clickInsertMessage(fullText || '');
-        // codeAction.appendChild(insertIcon);
-
-        // const copyIcon = document.createElement('i');
-        // copyIcon.className = 'c-pointer codicon codicon-copy';
-        // copyIcon.title = 'Copy code';
-        // copyIcon.onclick = () => chatViewModel.clickCopyMessage(fullText || '');
-        // codeAction.appendChild(copyIcon);
-
-        // codeBlockListAdded.prepend(codeAction);
-
-        // // Store the initial inner text for toggling
-        // const codeText = preCode.innerText;
-        // initialCodeTexts[index] = codeText;
-        // const isLong = codeText.length > 200;
-        // if (isLong && !expanded[index]) {
-        //   if (!codeBlockListAdded.querySelector('.message_length_toggle')) {
-        //     preCode.innerText =
-        //       initialCodeTexts[index].substring(0, 200) + '...';
-
-        //     const toggleButton = document.createElement('button');
-        //     toggleButton.className = 'message_length_toggle';
-        //     toggleButton.innerText = 'Read more';
-        //     toggleButton.onclick = () => {
-        //       setExpanded(prev => ({ ...prev, [index]: !prev[index] }));
-        //     };
-
-        //     codeBlockListAdded.appendChild(toggleButton);
-        //   }
-        // }
-
+        // insert back to index of initial pre tag
         renderedMarkdownRef.current?.insertBefore(
           codeBlockListAdded,
           markdownChilds[preIndex],

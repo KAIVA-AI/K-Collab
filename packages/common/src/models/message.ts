@@ -62,7 +62,6 @@ export interface IMessage {
   recipient_id?: number;
   is_me_message?: boolean;
   sender_id: number;
-  is_stream?: boolean;
 }
 
 export interface IZulipSendMessageParams {

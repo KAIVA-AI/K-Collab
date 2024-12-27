@@ -67,7 +67,7 @@ export class AuthStore {
       realm_string: lastWorkspace.workspace_realm,
     };
     await this.rootStore.channelStore.loadData();
-    await this.rootStore.zulipService.getProfileUser();
+    await this.rootStore.getCurrentUser();
     await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
     return result;
@@ -86,7 +86,7 @@ export class AuthStore {
       realm_string: realm,
     };
     await this.rootStore.channelStore.loadData();
-    await this.rootStore.zulipService.getProfileUser();
+    await this.rootStore.getCurrentUser();
     await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
   };
@@ -104,7 +104,7 @@ export class AuthStore {
         token,
       },
     });
-    await this.rootStore.zulipService.getProfileUser();
+    await this.rootStore.getCurrentUser();
     await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
   };
@@ -153,7 +153,7 @@ export class AuthStore {
     };
 
     await this.rootStore.channelStore.loadData();
-    await this.rootStore.zulipService.getProfileUser();
+    await this.rootStore.getCurrentUser();
     await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
   };
@@ -179,5 +179,6 @@ export class AuthStore {
       realm_string: realm,
     };
     await this.rootStore.channelStore.loadData();
+    await this.rootStore.getCurrentUser();
   };
 }

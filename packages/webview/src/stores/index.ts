@@ -223,8 +223,6 @@ export class RootStore {
     }
 
     const find: IZulipUser[] = [];
-    console.log('CURRETN USER ', this.currentUser);
-    console.log('list typing ', this.typingUsers);
     this.typingUsers.forEach(id => {
       const item = this.currentProjectMembers.find(mem => mem.user_id === id);
       item && item.user_id !== this.currentUser?.user_id && find.push(item);
