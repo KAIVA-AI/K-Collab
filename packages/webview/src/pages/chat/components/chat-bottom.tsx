@@ -263,6 +263,21 @@ export class ChatBottomComponent extends Component<
                   `,
                 },
                 {
+                  type: 'html',
+                  command: '<p>/vuejs</p>',
+                  instruction: `<p>Giúp đỡ bạn trong việc thực hiện coding với framework Vuejs, các thành phần HTML, CSS, Javascript và bất kỳ ảnh chụp màn hình nào đi kèm (nếu có). Hãy cung cấp theo cấu trúc như sau:</p>
+                  <ol> 
+                    <li>/vuejs --option</li>
+                    <li>Giá trị option bạn có thể lựa chọn sau đây
+                      <ul>
+                        <li>Options API</li>
+                        <li>Composition API</li>
+                      </ul>
+                    </li>
+                  </ol>
+                  `,
+                },
+                {
                   type: 'text',
                   command: '/gen-code',
                   instruction: `Tạo mã tiếp theo dựa trên đoạn mã được bạn cung cấp.`,
