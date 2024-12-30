@@ -1,5 +1,11 @@
 import { Constants } from '@v-collab/common';
-import { observable, action, computed, makeObservable } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  makeObservable,
+  runInAction,
+} from 'mobx';
 import { ChangeEventHandler } from 'react';
 import { RootStore } from 'src/stores';
 
@@ -35,7 +41,7 @@ export class LoginViewModel {
     }
   };
 
-  @action LogginSuccess = () => {
+  @action LogginSuccess = async () => {
     this.rootStore.authStore.isLogin = true;
   };
 

@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 import { IWebviewMessage } from 'src/models';
 import { Constants } from '@v-collab/common';
@@ -63,10 +63,12 @@ export class AuthStore {
         realm: lastWorkspace.workspace_realm,
       },
     });
-    await this.rootStore.channelStore.loadData();
     this.rootStore.realmStore.currentRealm = {
       realm_string: lastWorkspace.workspace_realm,
     };
+    await this.rootStore.channelStore.loadData();
+    await this.rootStore.getCurrentUser();
+    await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
     return result;
   };
@@ -80,10 +82,12 @@ export class AuthStore {
         realm: realm,
       },
     });
-    await this.rootStore.channelStore.loadData();
     this.rootStore.realmStore.currentRealm = {
       realm_string: realm,
     };
+    await this.rootStore.channelStore.loadData();
+    await this.rootStore.getCurrentUser();
+    await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
   };
 
@@ -100,14 +104,9 @@ export class AuthStore {
         token,
       },
     });
-    // load profile current user
-    const profileUser = await this.rootStore.zulipService.getProfileUser();
-    if (!!profileUser.user_id && profileUser.is_active) {
-      runInAction(() => {
-        this.rootStore.currentUser = JSON.parse(JSON.stringify(profileUser));
-        this.isLogin = true;
-      });
-    }
+    await this.rootStore.getCurrentUser();
+    await this.rootStore.getWorkspaceMembers();
+    this.isLogin = true;
   };
 
   @action private onLoggedOut = () => {
@@ -149,10 +148,13 @@ export class AuthStore {
         realm,
       },
     });
-    await this.rootStore.channelStore.loadData();
     this.rootStore.realmStore.currentRealm = {
       realm_string: realm,
     };
+
+    await this.rootStore.channelStore.loadData();
+    await this.rootStore.getCurrentUser();
+    await this.rootStore.getWorkspaceMembers();
     this.isLogin = true;
   };
 
@@ -173,16 +175,10 @@ export class AuthStore {
         realm,
       },
     });
-    await this.rootStore.channelStore.loadData();
     this.rootStore.realmStore.currentRealm = {
       realm_string: realm,
     };
-    const profileUser = await this.rootStore.zulipService.getProfileUser();
-    if (!!profileUser.user_id && profileUser.is_active) {
-      runInAction(() => {
-        this.rootStore.currentUser = JSON.parse(JSON.stringify(profileUser));
-        this.isLogin = true;
-      });
-    }
+    await this.rootStore.channelStore.loadData();
+    await this.rootStore.getCurrentUser();
   };
 }

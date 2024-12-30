@@ -14,7 +14,8 @@ import {
 } from 'mobx';
 import { RootStore } from '.';
 import { marked } from 'marked';
-
+type HTML = { text: string };
+type Tag = { content: string };
 export class MessageStore {
   @observable messages: IMessage[] = [];
   @observable currentStreamedMessage: IMessage | undefined;

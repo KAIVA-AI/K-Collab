@@ -223,7 +223,6 @@ export class RootStore {
     }
 
     const find: IZulipUser[] = [];
-
     this.typingUsers.forEach(id => {
       const item = this.currentProjectMembers.find(mem => mem.user_id === id);
       item && item.user_id !== this.currentUser?.user_id && find.push(item);
@@ -241,6 +240,16 @@ export class RootStore {
       this.currentProjectMembers = response.members
         ? response.members.filter((x: IZulipUser) => x.full_name && x.is_active)
         : [];
+    }
+  };
+
+  @action getCurrentUser = async () => {
+    if (this.currentUser !== null) {
+      return;
+    }
+    const response = await this.zulipService.getProfileUser();
+    if (response) {
+      this.currentUser = response;
     }
   };
 }

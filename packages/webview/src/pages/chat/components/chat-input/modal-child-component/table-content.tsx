@@ -6,6 +6,7 @@ interface TableComponentProps {
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({ content }) => {
+  // handler in the case of extends column each row by key of data
   const createGroupedRows = (columnsPerRow: number = 2) => {
     const flatData = content.rows[0]?.data || [];
 
@@ -47,7 +48,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ content }) => {
     <table className="table table-striped table-rounded table-bordered help-table">
       <thead>
         <tr>
-          {content.headers.map((header, index) => (
+          {content.headers.map((header: any, index: number) => (
             <th key={`header-${index}`}>{header}</th>
           ))}
         </tr>
