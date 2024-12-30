@@ -180,5 +180,7 @@ export class AuthStore {
     };
     await this.rootStore.channelStore.loadData();
     await this.rootStore.getCurrentUser();
+    await this.rootStore.getWorkspaceMembers();
+    this.isLogin = true;
   };
 }
