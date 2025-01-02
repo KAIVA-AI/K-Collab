@@ -188,6 +188,10 @@ body {
         padding-top: 20px;
       }
       
+      .tab-content.d-none {
+        display: none;
+      }
+
       .tab-switcher {
           display: flex;
           gap: 10px;
