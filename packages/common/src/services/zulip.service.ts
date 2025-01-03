@@ -215,6 +215,22 @@ export class ZulipService {
     return this.sendRequest({ path: 'messages', formData });
   };
 
+  editTopic = async (topic: ITopic, message_id: number) => {
+    const formData = {
+      propagate_mode: 'change_all',
+      send_notification_to_old_thread: false,
+      send_notification_to_new_thread: false,
+      topic: topic.name,
+      stream_id: topic.stream_id,
+      message_id: message_id,
+    };
+    return this.sendRequest({
+      path: `messages/${message_id}`,
+      formData,
+      method: 'PATCH',
+    });
+  };
+
   private getEventFromQueue = async (
     queueId?: string,
     lastEventId?: number,
@@ -459,7 +475,6 @@ export class ZulipService {
       method: 'GET',
       formData: params,
     }).then((json: any) => {
-      console.log('RESPONSE GET MEMBER ', json);
       return json;
     });
   };

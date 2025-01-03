@@ -6,7 +6,7 @@ import { Constants } from '../../../../../common/src/constants/constants';
 import TypingIndicator from './chat-input/typing-indicator';
 
 export const ChatMainComponent = observer(() => {
-  const { messageStore, realmStore } = useRootStore();
+  const { messageStore, realmStore, topicStore } = useRootStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const mainBlockRef = useRef<HTMLDivElement | null>(null);
 
@@ -17,7 +17,11 @@ export const ChatMainComponent = observer(() => {
       const lastMessage = messagesEndRef.current.lastElementChild;
       lastMessage?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messageStore.topicMessages, visibleMessageCount]);
+  }, [
+    messageStore.topicMessages,
+    topicStore.currentTopic?.name,
+    visibleMessageCount,
+  ]);
 
   useEffect(() => {
     const updateAnchorHref = () => {
