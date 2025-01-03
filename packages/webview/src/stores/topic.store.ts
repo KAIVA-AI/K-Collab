@@ -240,6 +240,16 @@ export class TopicStore {
     });
   };
 
+  @action EditTopic = (topic: ITopic, message_id: number) => {
+    this.rootStore.chatViewModel.eventFocusInput = true;
+    this.rootStore.zulipService.editTopic(topic, message_id).then(res => {
+      if (res['result'] === 'success') {
+        this.currentTopic = topic;
+        this.rootStore.messageStore.loadData();
+      }
+    });
+  };
+
   @action cleanup = () => {
     this.topics = [];
     this.currentTopic = undefined;
