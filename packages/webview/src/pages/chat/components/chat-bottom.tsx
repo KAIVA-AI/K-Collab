@@ -134,6 +134,29 @@ export class ChatBottomComponent extends Component<
   render() {
     const tabs = [
       {
+        key: 'onboarding',
+        label: 'Onboarding',
+        content: {
+          type: 'table',
+          headers: ['Group Command', 'How to Use'],
+          rows: [
+            {
+              type: 'row',
+              data: [
+                {
+                  type: 'html',
+                  command: `<p>Yêu cầu trợ giúp cơ sở dữ liệu
+                  `,
+                  instruction: `<p>Quy định chung cho các command dành cho hỗ trợ coding cơ sở dữ liệu. /db_command + --RDBs=<name>, các cơ sở dữ liệu quan hệ được hỡ trợ MySQL, PostgreSQL, SQLServer, Oracle chỉ chọn 1 với từng yêu cầu, Ví dụ:</p>
+                  <strong>/db_create_table --RDBs=MySQL</strong>
+                  `,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
         key: 'command-instruction',
         label: 'Command Instruction',
         content: {
@@ -143,6 +166,20 @@ export class ChatBottomComponent extends Component<
             {
               type: 'row',
               data: [
+                {
+                  type: 'html',
+                  command: `<p>/db_command + --RDBs=<name>, các cơ sở dữ liệu quan hệ được hỡ trợ MySQL, PostgreSQL, SQLServer, Oracle chỉ chọn 1 với từng yêu cầu, Ví dụ:</p>
+                  /db_create_table --RDBs=MySQL
+                  `,
+                  instruction: `Quy định chung cho các command dành cho hỗ trợ coding cơ sở dữ liệu
+                  <ol>
+                  <li>Tên cơ sử dữ liệu bạn đang sử dụng.</li>
+                  <li>Tên bảng và mục đích sử dụng.</li>
+                  <li>Tên cột, kiểu dữ liệu, và các ràng buộc (ví dụ: khóa chính, khóa ngoại, ràng buộc duy nhất).</li>
+                  <li>Quan hệ giữa các bảng (nếu có).</li>
+                  </ol>
+                  `,
+                },
                 {
                   type: 'html',
                   command: '<p>/db_create_table</p>',
@@ -229,7 +266,7 @@ export class ChatBottomComponent extends Component<
                 {
                   type: 'html',
                   command: '<p>/db_generate_data</p>',
-                  instruction: `<p>Yêu cầu dành cho prompting tạo mã SQL commands dành cho tạo mới dữ liệu mẫu, để promting hiệu quả hãy cung cấp đầy đủ các thông tin sau</p>
+                  instruction: `<p>Yêu cầu dành cho prompting tạo mã SQL commands dành cho tạo mới dữ liệu mẫu, để promting hiệu quả hãy cung cấp đầy đủ các thông tin sau:</p>
                   <ol> 
                     <li>Tên cơ sử dữ liệu bạn đang sử dụng.</li>
                     <li>Tên bảng và mục đích sử dụng.</li>
