@@ -32,7 +32,6 @@ export class ChatHeaderComponent extends Component<BaseComponentProps> {
     if (this.topicStore.currentTopic) {
       const oldestMessage = this.rootStore.messageStore.messages[0].id;
       this.topicStore.currentTopic.name = this.state.topicName;
-      console.log('CURERUO IF ', this.topicStore.currentTopic);
       this.topicStore.EditTopic(this.topicStore.currentTopic, oldestMessage);
     } else {
       this.rootStore.postMessageToVSCode({
