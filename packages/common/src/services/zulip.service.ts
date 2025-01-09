@@ -43,7 +43,7 @@ export class ZulipService {
     return !!this.token;
   }
 
-  constructor() {}
+  constructor() { }
 
   setToken = (token: string) => {
     this.token = token;
@@ -382,6 +382,7 @@ export class ZulipService {
     start: string | undefined,
     end: string | undefined,
     content: string | undefined,
+    openaiModel: string | undefined,
     inputType: string = 'coding_context_file',
   ) => {
     const formData: any = {
@@ -389,6 +390,7 @@ export class ZulipService {
       path: path,
       input_type: inputType,
       content: content,
+      openai_model: openaiModel,
     };
     if (name !== undefined) {
       formData['name'] = name;
@@ -476,6 +478,22 @@ export class ZulipService {
       formData: params,
     }).then((json: any) => {
       return json;
+    });
+  };
+
+  getAiModel = async (
+    realmString: string,
+    botEmail: string,
+  ): Promise<string> => {
+    const formData: any = {
+      realm_string_id: realmString,
+      bot_email: botEmail,
+    };
+    return this.sendRequest({
+      path: 'bot/get-bot-api-key',
+      formData,
+    }).then((json: any) => {
+      return json?.ai_model;
     });
   };
 }

@@ -11,6 +11,7 @@ import { Constants } from '@v-collab/common';
 export class TopicStore {
   @observable topics: ITopic[] = [];
   @observable currentTopic?: ITopic;
+  @observable aiModel?: string;
 
   constructor(private rootStore: RootStore) {
     makeObservable(this);
@@ -25,6 +26,15 @@ export class TopicStore {
     runInAction(() => {
       this.topics = topics;
     });
+
+    const aiModel = await this.rootStore.zulipService.getAiModel(
+      this.rootStore.realmStore.currentRealm?.realm_string!,
+      this.rootStore.currentUser?.email!,
+    );
+    runInAction(() => {
+      this.aiModel = aiModel;
+    });
+
     const lastTopic = await this.rootStore.postMessageToVSCode({
       command: 'getLastTopic',
       hasReturn: true,
@@ -151,14 +161,30 @@ export class TopicStore {
     }
 
     if (this.currentTopic?.name) {
-      await this.rootStore.zulipService.addFile(
-        this.currentTopic?.name,
-        file.name,
-        file.path,
-        file.start,
-        file.end,
-        file.content ?? '',
-      );
+      await this.rootStore.zulipService
+        .addFile(
+          this.currentTopic?.name,
+          file.name,
+          file.path,
+          file.start,
+          file.end,
+          file.content ?? '',
+          this.aiModel,
+        )
+        .then(res => {
+          if (res.result === 'error') {
+            this.rootStore.postMessageToVSCode({
+              command: 'raiseMessageToVscodeWindow',
+              data: {
+                message: `${res.msg}`,
+              },
+            });
+            return;
+          }
+        })
+        .catch(error => {
+          console.error('Đã xảy ra lỗi khi thêm file:', error);
+        });
     }
   };
 
