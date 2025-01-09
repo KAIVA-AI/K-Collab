@@ -125,8 +125,6 @@ export class TopicStore {
   };
 
   private addFileToTopic = async (file: TopicFileInput) => {
-    console.log('ai model', this.aiModel);
-
     if (file.isFile) {
       const exists = this.currentTopic?.file_inputs?.find(
         f => f.isFile && f.path === file.path,
