@@ -254,6 +254,12 @@
         "category": "V-Collab"
       },
       {
+          "command": "v-collab.command.setting.setting",
+        "title": "setting",
+        "icon": "$(gear)",
+        "category": "V-Collab"
+      },
+      {
         "command": "v-collab.command.setting.logout",
         "title": "Logout",
         "icon": "$(log-out)",

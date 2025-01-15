@@ -1,0 +1,75 @@
+:root {
+  --base-font-size: 16px;
+  --background-color: #1e1e1e;
+  --content-bg-color: #2c2f33;
+  --text-color: #ffffff;
+  --text-color-muted: #b9bbbe;
+  --border-color: #4f545c;
+  --primary-color: #7289da;
+}
+
+body {
+  font-size: var(--base-font-size);
+  color: var(--text-color);
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.settings-container {
+  display: flex;
+  // height: 100vh;
+  color: var(--text-color);
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 3;
+  border-right: 1px solid var(--border-color);
+}
+
+.tab-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tab-item {
+  padding: 10px 20px;
+  color: var(--text-color-muted);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.tab-item.active {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+/* Content */
+.content {
+  flex: 7;
+  padding: 20px;
+  background-color: var(--content-bg-color);
+}
+
+h2 {
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+.setting-item {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color-muted);
+}
+
+select {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}

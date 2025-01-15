@@ -58,8 +58,7 @@ export class ChatHeaderComponent extends Component<BaseComponentProps> {
     return (
       <div className="header-block">
         <div className="current-workspace">
-          Workspace: {this.rootStore.realmStore.currentRealm?.realm_string} /
-          Topic:
+          {this.rootStore.realmStore.currentRealm?.realm_string} /
           {isEditing ? (
             <div className="edit-topic">
               <input
