@@ -28,6 +28,7 @@ import {
 } from '../providers';
 import { Logger } from '../utils/logger';
 import { AuthStore } from './auth.store';
+import { SettingCommand } from 'src/commands/settings/settingCommand';
 
 export class RootStore {
   // stores
@@ -80,12 +81,13 @@ export class RootStore {
   openSettingCommand = new OpenSettingCommand(this);
   changeWorkspaceCommand = new ChangeWorkspaceCommand(this);
   logoutCommand = new LogoutCommand(this);
+  settingCommand = new SettingCommand(this);
 
   get extensionVersion(): string {
     return this.context.extension.packageJSON.version;
   }
 
-  constructor(private context: ExtensionContext) {}
+  constructor(private context: ExtensionContext) { }
 
   register = () => {
     Logger.register();
@@ -135,6 +137,7 @@ export class RootStore {
 
     this.context.subscriptions.push(this.openSettingCommand.register());
     this.context.subscriptions.push(this.changeWorkspaceCommand.register());
+    this.context.subscriptions.push(this.settingCommand.register());
     this.context.subscriptions.push(this.logoutCommand.register());
   };
 

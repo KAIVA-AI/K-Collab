@@ -10,9 +10,11 @@ export class ChatHeaderComponent extends Component<BaseComponentProps> {
     isEditing: false,
     topicName: this.topicStore.currentTopic?.name || '',
   };
+
   get rootStore() {
     return this.props.rootStore!;
   }
+
   get topicStore() {
     return this.rootStore.topicStore;
   }
@@ -57,9 +59,15 @@ export class ChatHeaderComponent extends Component<BaseComponentProps> {
 
     return (
       <div className="header-block">
+        {/* Workspace Name */}
         <div className="current-workspace">
-          Workspace: {this.rootStore.realmStore.currentRealm?.realm_string} /
-          Topic:
+          <span>
+            {this.rootStore.realmStore.currentRealm?.realm_string}&nbsp;/&nbsp;
+          </span>
+        </div>
+
+        {/* Topic Name / Edit Mode */}
+        <div className="topic-section">
           {isEditing ? (
             <div className="edit-topic">
               <input
@@ -78,7 +86,7 @@ export class ChatHeaderComponent extends Component<BaseComponentProps> {
           ) : (
             <div className="topic-name">
               <span>
-                {this.topicStore.currentTopic?.name}
+                {this.topicStore.currentTopic?.name}&nbsp;&nbsp;
                 <i
                   className="codicon codicon-edit edit-icon"
                   onClick={this.handleEditClick}

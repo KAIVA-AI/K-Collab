@@ -1,16 +1,16 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from 'src/stores';
 
-const COMMAND_ID = 'v-collab.command.setting.logout';
-const COMMAND_TITLE = '$(log-out) Logout';
+const COMMAND_ID = 'v-collab.command.setting.setting';
+const COMMAND_TITLE = '$(gear) setting';
 
-export class LogoutCommand {
+export class SettingCommand {
   static COMMAND_ID = COMMAND_ID;
   static COMMAND_TITLE = COMMAND_TITLE;
   static get quickPickItem() {
     return {
-      label: LogoutCommand.COMMAND_TITLE,
-      command: LogoutCommand.COMMAND_ID,
+      label: SettingCommand.COMMAND_TITLE,
+      command: SettingCommand.COMMAND_ID,
     };
   }
 
@@ -21,6 +21,6 @@ export class LogoutCommand {
   };
 
   #execute = async (): Promise<void> => {
-    this.rootStore.chatPanelProvider.doLogout();
+    this.rootStore.chatPanelProvider.openSetting();
   };
 }

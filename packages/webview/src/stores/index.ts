@@ -15,6 +15,7 @@ import { IWebviewMessage, IZulipUser } from '../models';
 import { Constants, WorkspaceService, ZulipService } from '@v-collab/common';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthStore } from './auth.store';
+import { SettingStore } from './setting.store';
 
 declare function acquireVsCodeApi(): {
   postMessage: (message: any) => void;
@@ -25,9 +26,9 @@ declare function acquireVsCodeApi(): {
 const getVSCodeApi = () => {
   if (typeof acquireVsCodeApi === 'undefined') {
     return {
-      postMessage: () => {},
-      getState: () => {},
-      setState: () => {},
+      postMessage: () => { },
+      getState: () => { },
+      setState: () => { },
     };
   }
   return acquireVsCodeApi();
@@ -45,6 +46,7 @@ export class RootStore {
   channelStore = new ChannelStore(this);
   topicStore = new TopicStore(this);
   messageStore = new MessageStore(this);
+  settingStore = new SettingStore(this);
   chatViewModel = new ChatViewModel(this);
   private eventListeners: IWebviewMessageHandlerMap = {};
 
@@ -169,6 +171,11 @@ export class RootStore {
       this.messageStore.onMessageFromVSCode(message);
       return;
     }
+    //
+    if (message.store === 'SettingStore') {
+      this.settingStore.onMessageFromVSCode(message);
+    }
+
     const handler = this.eventListeners[message.store || ''];
     handler && handler(message);
   };

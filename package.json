@@ -2,7 +2,7 @@
   "name": "v-collab",
   "displayName": "V-Collab",
   "description": "VIETIS AI powered collaborative chat for developers",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -251,6 +251,12 @@
         "command": "v-collab.command.setting.change-workspace",
         "title": "Change workspace",
         "icon": "$(account)",
+        "category": "V-Collab"
+      },
+      {
+          "command": "v-collab.command.setting.setting",
+        "title": "setting",
+        "icon": "$(gear)",
         "category": "V-Collab"
       },
       {

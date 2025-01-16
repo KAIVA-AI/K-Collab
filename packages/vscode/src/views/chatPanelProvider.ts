@@ -28,8 +28,7 @@ const VIEW_ID = 'v-collab_bar.chat';
 
 export class ChatPanelProvider
   extends IBaseWebview
-  implements WebviewViewProvider
-{
+  implements WebviewViewProvider {
   private view?: Webview;
   readonly #webProvider: Disposable;
   private zulipService: ZulipService;
@@ -299,7 +298,12 @@ export class ChatPanelProvider
       Constants.USER_API_KEY,
     );
   };
-
+  openSetting = () => {
+    this.postMessageToWebview({
+      store: 'SettingStore',
+      command: 'openSetting',
+    });
+  };
   toWorkspaceList = () => {
     this.postMessageToWebview({
       store: 'RootStore',
