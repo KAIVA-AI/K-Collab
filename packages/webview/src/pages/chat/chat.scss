@@ -20,22 +20,26 @@
   height: 100%;
 
   .header-block {
-    padding-left: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    width: 100%;
+    margin-left: 10px;
 
-    .current-workspace {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .topic-name {
+      span {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
     }
 
     .edit-topic {
-      display: inline-block;
-      margin: 0;
-      height: 22px;
-      padding-left: 20px;
-      padding-right: 3px;
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 5px;
       line-height: 22px;
-      margin-left: -15px;
     }
 
     .edit-topic input {
@@ -45,6 +49,7 @@
       padding: 6px 10px;
       border-radius: 4px;
       transition: border-color 0.3s ease;
+      width: 200px;
     }
 
     .edit-topic input:focus {
@@ -90,7 +95,6 @@
 
     .edit-icon {
       background-color: #888888;
-      margin-left: 0.5rem;
       color: #ffffff;
       border: none;
       padding: 6px 12px;
