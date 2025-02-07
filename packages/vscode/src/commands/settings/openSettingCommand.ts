@@ -4,7 +4,7 @@ import { ChangeWorkspaceCommand } from './changeWorkspaceCommand';
 import { LogoutCommand } from './logoutCommand';
 import { SettingCommand } from './settingCommand';
 
-const COMMAND_ID = 'v-collab.command.setting.open';
+const COMMAND_ID = 'k-collab.command.setting.open';
 
 interface ISettingOption extends QuickPickItem {
   command: string;
@@ -25,7 +25,7 @@ export class OpenSettingCommand {
       LogoutCommand.quickPickItem,
     ];
     const selection = await window.showQuickPick<ISettingOption>(options, {
-      title: 'V-Collab Menu',
+      title: 'K-Collab Menu',
       placeHolder: 'Select an option',
     });
     if (!selection) {

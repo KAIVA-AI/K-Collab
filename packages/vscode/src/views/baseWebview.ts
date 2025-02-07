@@ -1,6 +1,6 @@
 import { Webview, Disposable, window, ColorThemeKind } from 'vscode';
 import { IWebviewMessage } from 'src/models';
-import { Constants } from '@v-collab/common';
+import { Constants } from '@k-collab/common';
 import { RootStore } from 'src/stores';
 
 interface IMessageHandler {

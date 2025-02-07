@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from 'src/stores';
 
-const COMMAND_ID = 'v-collab.command.setting.logout';
+const COMMAND_ID = 'k-collab.command.setting.logout';
 const COMMAND_TITLE = '$(log-out) Logout';
 
 export class LogoutCommand {

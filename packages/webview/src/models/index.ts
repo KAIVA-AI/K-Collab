@@ -1,2 +1,2 @@
-export * from '@v-collab/common/src/models';
+export * from '@k-collab/common/src/models';
 export * from './user';

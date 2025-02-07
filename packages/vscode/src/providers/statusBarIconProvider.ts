@@ -6,8 +6,8 @@ export class StatusBarIconProvider {
 
   constructor() {
     this.statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right);
-    this.statusBarItem.text = '$(v-collab-icon) V-Collab';
-    this.statusBarItem.tooltip = 'V-Collab Menu';
+    this.statusBarItem.text = '$(k-collab-icon) K-Collab';
+    this.statusBarItem.tooltip = 'K-Collab Menu';
     this.statusBarItem.command = OpenSettingCommand.COMMAND_ID;
   }
 

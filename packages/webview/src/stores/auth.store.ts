@@ -1,7 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 import { IWebviewMessage } from 'src/models';
-import { Constants } from '@v-collab/common';
+import { Constants } from '@k-collab/common';
 import { IWorkspace } from '../../../common/src/models';
 
 export class AuthStore {

@@ -2,7 +2,7 @@ import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../../stores';
 import path from 'path';
 
-const COMMAND_ID = 'v-collab.command.coding';
+const COMMAND_ID = 'k-collab.command.coding';
 
 export class CodingCommand {
   static COMMAND_ID = COMMAND_ID;

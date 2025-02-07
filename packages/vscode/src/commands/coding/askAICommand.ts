@@ -3,7 +3,7 @@ import { RootStore } from '../../stores';
 import path from 'path';
 import { Logger } from 'src/utils/logger';
 
-const COMMAND_ID = 'v-collab.command.ask-ai';
+const COMMAND_ID = 'k-collab.command.ask-ai';
 
 export class AskAICommand {
   static COMMAND_ID = COMMAND_ID;

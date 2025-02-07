@@ -1,14 +1,11 @@
 {
-  "name": "v-collab",
-  "displayName": "V-Collab",
+  "name": "k-collab",
+  "displayName": "K-Collab",
   "description": "VIETIS AI powered collaborative chat for developers",
   "version": "1.3.4",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://repo.vietis.com.vn:8009/idt/v-collab-ide-ext"
-  },
-  "publisher": "vietis",
+  "repository": "https://github.com/KAIVA-AI/K-Collab.git",
+  "publisher": "prototorX",
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -32,52 +29,52 @@
   "main": "./dist/vscode/extension.js",
   "scripts": {
     "lint": "eslint packages",
-    "start-webview": "yarn workspace @v-collab/webview start",
-    "start-vscode": "yarn workspace @v-collab/vscode start",
-    "build-webview": "yarn workspace @v-collab/webview build",
-    "build-vscode": "yarn workspace @v-collab/vscode build",
+    "start-webview": "yarn workspace @k-collab/webview start",
+    "start-vscode": "yarn workspace @k-collab/vscode start",
+    "build-webview": "yarn workspace @k-collab/webview build",
+    "build-vscode": "yarn workspace @k-collab/vscode build",
     "prepackage": "yarn build-vscode",
     "package": "vsce package"
   },
   "contributes": {
     "handlers": {
       "authentication": {
-      "sessions": [
-        {
-          "id": "v-collab",
-          "label": "v-collab",
-          "scheme": "v-collab"
-        }
-      ]
-    },
+        "sessions": [
+          {
+            "id": "k-collab",
+            "label": "k-collab",
+            "scheme": "k-collab"
+          }
+        ]
+      },
       "uri": [
         {
           "scheme": "vscode",
-          "command": "v-collab.handleUri"
+          "command": "k-collab.handleUri"
         }
       ]
     },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "v-collab_bar",
-          "title": "V-Collab",
+          "id": "k-collab_bar",
+          "title": "K-collab",
           "icon": "static/icon_sidebar.svg"
         }
       ]
     },
     "views": {
-      "v-collab_bar": [
+      "k-collab_bar": [
         {
-          "id": "v-collab_bar.chat",
+          "id": "k-collab_bar.chat",
           "type": "webview",
           "name": "Chat"
         }
       ]
     },
-    "icons":{
-      "v-collab-icon": {
-        "description": "v-collab-icon",
+    "icons": {
+      "k-collab-icon": {
+        "description": "k-collab-icon",
         "default": {
           "fontPath": "./static/icon_themes.woff",
           "fontCharacter": "\\e900"
@@ -86,332 +83,333 @@
     },
     "commands": [
       {
-        "command": "v-collab.command.add-selection",
+        "command": "k-collab.command.add-selection",
         "title": "Add Selection to Chat",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.add-file",
+        "command": "k-collab.command.add-file",
         "title": "Add File to Chat",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.add-image",
+        "command": "k-collab.command.add-image",
         "title": "Add Image to Chat",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.gen-code",
+        "command": "k-collab.command.coding.gen-code",
         "title": "Generate Code",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.gen-test",
+        "command": "k-collab.command.coding.gen-test",
         "title": "Generate Test",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.gen-docs",
+        "command": "k-collab.command.coding.gen-docs",
         "title": "Generate Docs",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.comment",
+        "command": "k-collab.command.coding.comment",
         "title": "Comment",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.porting",
+        "command": "k-collab.command.coding.porting",
         "title": "Porting",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.explain",
+        "command": "k-collab.command.coding.explain",
         "title": "Explain",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.improve",
+        "command": "k-collab.command.coding.improve",
         "title": "Improve",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.review",
+        "command": "k-collab.command.coding.review",
         "title": "Review",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.fixbug",
+        "command": "k-collab.command.coding.fixbug",
         "title": "Fixbug",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.html",
+        "command": "k-collab.command.coding.html",
         "title": "HTML",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.html_item",
+        "command": "k-collab.command.coding.html_item",
         "title": "HTML Item",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_create_table",
+        "command": "k-collab.command.coding.db_create_table",
         "title": "Db Create Table",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_create_query",
+        "command": "k-collab.command.coding.db_create_query",
         "title": "DB Create Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_modify_table",
+        "command": "k-collab.command.coding.db_modify_table",
         "title": "DB Modify Table",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_modify_query",
+        "command": "k-collab.command.coding.db_modify_query",
         "title": "DB Modify Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_optimize_query",
+        "command": "k-collab.command.coding.db_optimize_query",
         "title": "DB Optimize Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_fix_query",
+        "command": "k-collab.command.coding.db_fix_query",
         "title": "DB Fix Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_format_query",
+        "command": "k-collab.command.coding.db_format_query",
         "title": "DB Format Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_explain_query",
+        "command": "k-collab.command.coding.db_explain_query",
         "title": "DB Explain Query",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.coding.db_generate_data",
+        "command": "k-collab.command.coding.db_generate_data",
         "title": "DB Generate Data",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.chat.new-topic",
+        "command": "k-collab.command.chat.new-topic",
         "title": "New topic",
         "icon": "$(add)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.chat.history",
+        "command": "k-collab.command.chat.history",
         "title": "History",
         "icon": "$(history)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.chat.preview",
+        "command": "k-collab.command.chat.preview",
         "title": "Preview",
         "icon": "static/icon_preview_dark.svg",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.inline.chat",
+        "command": "k-collab.command.inline.chat",
         "title": "Ask VietIS-Coding",
-        "category": "V-Collab",
+        "category": "K-Collab",
         "enablement": "!commentIsEmpty"
       },
       {
-        "command": "v-collab.command.ask-ai",
+        "command": "k-collab.command.ask-ai",
         "title": "Ask VietIS-Coding",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.preview.accept",
+        "command": "k-collab.command.preview.accept",
         "title": "Accept",
         "icon": "$(check)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.preview.reject",
+        "command": "k-collab.command.preview.reject",
         "title": "Reject",
         "icon": "$(close)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.setting.open",
-        "title": "V-Collab Setting",
+        "command": "k-collab.command.setting.open",
+        "title": "K-Collab Setting",
         "icon": "$(gear)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.setting.change-workspace",
+        "command": "k-collab.command.setting.change-workspace",
         "title": "Change workspace",
         "icon": "$(account)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-          "command": "v-collab.command.setting.setting",
+        "command": "k-collab.command.setting.setting",
         "title": "setting",
         "icon": "$(gear)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       },
       {
-        "command": "v-collab.command.setting.logout",
+        "command": "k-collab.command.setting.logout",
         "title": "Logout",
         "icon": "$(log-out)",
-        "category": "V-Collab"
+        "category": "K-Collab"
       }
     ],
     "submenus": [
       {
-        "id": "v-collab.submenu.editor",
-        "label": "V-Collab"
+        "id": "k-collab.submenu.editor",
+        "label": "K-Collab"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "submenu": "v-collab.submenu.editor",
+          "submenu": "k-collab.submenu.editor",
           "when": "resourceScheme != output",
-          "group": "2_v-collab"
+          "group": "2_k-collab"
         }
       ],
-      "v-collab.submenu.editor": [
+      "k-collab.submenu.editor": [
         {
-          "command": "v-collab.command.add-selection",
+          "command": "k-collab.command.add-selection",
           "when": "editorHasSelection",
           "group": "1_add@1"
         },
         {
-          "command": "v-collab.command.add-file",
+          "command": "k-collab.command.add-file",
           "group": "1_add@2"
         },
         {
-          "command": "v-collab.command.coding.explain",
+          "command": "k-collab.command.coding.explain",
           "group": "2_code@1"
         },
         {
-          "command": "v-collab.command.coding.improve",
+          "command": "k-collab.command.coding.improve",
           "group": "2_code@2"
         },
         {
-          "command": "v-collab.command.coding.review",
+          "command": "k-collab.command.coding.review",
           "group": "2_code@3"
         },
         {
-          "command": "v-collab.command.coding.fixbug",
+          "command": "k-collab.command.coding.fixbug",
           "group": "2-code@4"
         },
         {
-          "command": "v-collab.command.coding.gen-code",
+          "command": "k-collab.command.coding.gen-code",
           "group": "2_code@5"
         },
         {
-          "command": "v-collab.command.coding.gen-test",
+          "command": "k-collab.command.coding.gen-test",
           "group": "2_code@6"
         },
         {
-          "command": "v-collab.command.coding.comment",
+          "command": "k-collab.command.coding.comment",
           "group": "2_code@7"
         },
         {
-          "command": "v-collab.command.coding.porting",
+          "command": "k-collab.command.coding.porting",
           "group": "2_code@8"
         },
         {
-          "command": "v-collab.command.coding.html",
+          "command": "k-collab.command.coding.html",
           "group": "3_code@1"
         },
         {
-          "command": "v-collab.command.coding.html_item",
+          "command": "k-collab.command.coding.html_item",
           "group": "3_code@2"
         },
         {
-          "command": "v-collab.command.coding.db_create_table",
+          "command": "k-collab.command.coding.db_create_table",
           "group": "4_code@1"
         },
         {
-          "command": "v-collab.command.coding.db_create_query",
+          "command": "k-collab.command.coding.db_create_query",
           "group": "4_code@2"
         },
         {
-          "command": "v-collab.command.coding.db_modify_table",
+          "command": "k-collab.command.coding.db_modify_table",
           "group": "4_code@3"
         },
         {
-          "command": "v-collab.command.coding.db_modify_query",
+          "command": "k-collab.command.coding.db_modify_query",
           "group": "4_code@4"
         },
         {
-          "command": "v-collab.command.coding.db_optimize_query",
+          "command": "k-collab.command.coding.db_optimize_query",
           "group": "4_code@5"
         },
         {
-          "command": "v-collab.command.coding.db_fix_query",
+          "command": "k-collab.command.coding.db_fix_query",
           "group": "4_code@6"
         },
         {
-          "command": "v-collab.command.coding.db_format_query",
+          "command": "k-collab.command.coding.db_format_query",
           "group": "4_code@7"
         },
         {
-          "command": "v-collab.command.coding.db_explain_query",
+          "command": "k-collab.command.coding.db_explain_query",
           "group": "4_code@8"
         },
         {
-          "command": "v-collab.command.coding.db_generate_data",
+          "command": "k-collab.command.coding.db_generate_data",
           "group": "4_code@9"
         },
         {
-          "command": "v-collab.command.ask-ai",
+          "command": "k-collab.command.ask-ai",
           "group": "5_ask@1"
         }
       ],
       "view/title": [
         {
-          "command": "v-collab.command.chat.new-topic",
-          "when": "view == v-collab_bar.chat && (currentWebviewPage == 'chat-page' || currentWebviewPage == 'topic-page')",
+          "command": "k-collab.command.chat.new-topic",
+          "when": "view == k-collab_bar.chat && (currentWebviewPage == 'chat-page' || currentWebviewPage == 'topic-page')",
           "group": "navigation@1"
         },
         {
-          "command": "v-collab.command.chat.history",
-          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
+          "command": "k-collab.command.chat.history",
+          "when": "view == k-collab_bar.chat && currentWebviewPage == 'chat-page'",
           "group": "navigation@2"
         },
         {
-          "command": "v-collab.command.chat.preview",
-          "when": "view == v-collab_bar.chat && currentWebviewPage == 'chat-page'",
+          "command": "k-collab.command.chat.preview",
+          "when": "view == k-collab_bar.chat && currentWebviewPage == 'chat-page'",
           "group": "navigation@3"
         },
         {
-          "command": "v-collab.command.setting.open",
-          "when": "view == v-collab_bar.chat",
+          "command": "k-collab.command.setting.open",
+          "when": "view == k-collab_bar.chat",
           "group": "navigation@4"
         }
       ],
       "comments/commentThread/context": [
         {
-          "command": "v-collab.command.inline.chat",
+          "command": "k-collab.command.inline.chat",
           "group": "inline",
-          "when": "commentController == v-collab.comment.ask"
+          "when": "commentController == k-collab.comment.ask"
         }
       ],
       "editor/title": [
         {
-          "command": "v-collab.command.preview.accept",
+          "command": "k-collab.command.preview.accept",
           "group": "navigation@1",
-          "when": "isInDiffEditor && resourceScheme == 'v-collab-memory'"
+          "when": "isInDiffEditor && resourceScheme == 'k-collab-memory'"
         },
         {
-          "command": "v-collab.command.preview.reject",
+          "command": "k-collab.command.preview.reject",
           "group": "navigation@2",
-          "when": "isInDiffEditor && resourceScheme == 'v-collab-memory'"
+          "when": "isInDiffEditor && resourceScheme == 'k-collab-memory'"
         }
       ]
     }
-  }
+  },
+  "author": "namdtavailable <163511609+namdtavailable@users.noreply.github.com>"
 }

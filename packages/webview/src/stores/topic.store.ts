@@ -6,7 +6,7 @@ import {
 } from '../models';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
-import { Constants } from '@v-collab/common';
+import { Constants } from '@k-collab/common';
 
 export class TopicStore {
   @observable topics: ITopic[] = [];

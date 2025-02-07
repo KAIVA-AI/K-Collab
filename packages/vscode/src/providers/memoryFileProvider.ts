@@ -9,7 +9,7 @@ import {
   TabInputTextDiff,
 } from 'vscode';
 
-const URI_SCHEME = 'v-collab-memory';
+const URI_SCHEME = 'k-collab-memory';
 
 interface MemoryDocument {
   oldContents: string;

@@ -2,7 +2,7 @@ import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../../stores';
 import path from 'path';
 
-const COMMAND_ID = 'v-collab.command.add-selection';
+const COMMAND_ID = 'k-collab.command.add-selection';
 const COMMAND_TITLE = 'Add Selection to Chat';
 
 export class AddSelectionCommand {

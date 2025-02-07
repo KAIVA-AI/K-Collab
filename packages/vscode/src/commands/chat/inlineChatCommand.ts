@@ -2,7 +2,7 @@ import { commands, Disposable, window, CommentReply } from 'vscode';
 import { RootStore } from '../../stores';
 import path from 'path';
 
-const COMMAND_ID = 'v-collab.command.inline.chat';
+const COMMAND_ID = 'k-collab.command.inline.chat';
 
 export class InlineChatCommand {
   static COMMAND_ID = COMMAND_ID;

@@ -1,4 +1,4 @@
-import { IWorkspace } from '@v-collab/common';
+import { IWorkspace } from '@k-collab/common';
 import { IRealm } from '../models';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
