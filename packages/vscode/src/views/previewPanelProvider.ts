@@ -9,7 +9,7 @@ import {
 import { IBaseWebview } from './baseWebview';
 import { RootStore } from 'src/stores';
 
-const VIEW_ID = 'v-collab.panel.preview';
+const VIEW_ID = 'k-collab.panel.preview';
 const VIEW_NAME = 'Preview';
 
 export class PreviewPanelProvider extends IBaseWebview {

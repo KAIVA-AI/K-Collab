@@ -6,7 +6,7 @@ import {
 } from '../models';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { RootStore } from '.';
-import { Constants } from '@v-collab/common';
+import { Constants } from '@k-collab/common';
 
 export class TopicStore {
   @observable topics: ITopic[] = [];
@@ -19,6 +19,7 @@ export class TopicStore {
 
   @action loadData = async () => {
     const channelId = this.rootStore.channelStore.currentChannel?.stream_id;
+    console.log('CHECK STREAMID ', this.rootStore.channelStore.currentChannel);
     if (!channelId) {
       return;
     }

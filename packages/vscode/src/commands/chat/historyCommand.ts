@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from '../../stores';
 
-const COMMAND_ID = 'v-collab.command.chat.history';
+const COMMAND_ID = 'k-collab.command.chat.history';
 
 export class HistoryCommand {
   static COMMAND_ID = COMMAND_ID;

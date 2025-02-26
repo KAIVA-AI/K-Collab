@@ -1,5 +1,5 @@
 {
-  "name": "@v-collab/webview",
+  "name": "@k-collab/webview",
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.36",
+    "electron": "*",
     "lodash": "^4.17.21",
     "marked": "^15.0.3",
     "mobx": "^6.13.3",

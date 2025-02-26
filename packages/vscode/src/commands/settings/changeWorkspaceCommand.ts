@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from 'src/stores';
 
-const COMMAND_ID = 'v-collab.command.setting.change-workspace';
+const COMMAND_ID = 'k-collab.command.setting.change-workspace';
 const COMMAND_TITLE = '$(account) Change workspace';
 
 export class ChangeWorkspaceCommand {

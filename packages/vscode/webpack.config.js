@@ -67,6 +67,13 @@ const extensionConfig = {
       'process.env.ZULIP_SECONDARY_DOMAIN': JSON.stringify(
         process.env.ZULIP_SECONDARY_DOMAIN,
       ),
+      'process.env.GITHUB_CLIENT_ID': JSON.stringify(
+        process.env.GITHUB_CLIENT_ID,
+      ),
+      'process.env.GITHUB_REDIRECT_URL': JSON.stringify(
+        process.env.GITHUB_REDIRECT_URL,
+      ),
+      'process.env.GITHUB_SCOPE': JSON.stringify(process.env.GITHUB_SCOPE),
     }),
     new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],

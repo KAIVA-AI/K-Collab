@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from '../../stores';
 
-const COMMAND_ID = 'v-collab.command.chat.new-topic';
+const COMMAND_ID = 'k-collab.command.chat.new-topic';
 
 export class NewTopicCommand {
   static COMMAND_ID = COMMAND_ID;

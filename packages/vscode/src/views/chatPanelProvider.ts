@@ -19,16 +19,17 @@ import {
   AddImageCommand,
   AddSelectionCommand,
 } from '../commands';
-import { ZulipService, IZulipEvent, Constants } from '@v-collab/common';
+import { ZulipService, IZulipEvent, Constants } from '@k-collab/common';
 import { IBaseWebview } from './baseWebview';
 import * as path from 'path';
 import { MemoryFileProvider } from 'src/providers/memoryFileProvider';
 
-const VIEW_ID = 'v-collab_bar.chat';
+const VIEW_ID = 'k-collab_bar.chat';
 
 export class ChatPanelProvider
   extends IBaseWebview
-  implements WebviewViewProvider {
+  implements WebviewViewProvider
+{
   private view?: Webview;
   readonly #webProvider: Disposable;
   private zulipService: ZulipService;
@@ -257,14 +258,30 @@ export class ChatPanelProvider
     }
   };
 
+  // private getAuth = (message: IWebviewMessage) => {
+  //   const token = this.rootStore.authStore.getToken();
+  //   const realm = this.rootStore.authStore.getRealm();
+
+  //   this.postMessageToWebview({
+  //     store: 'RootStore',
+  //     command: 'webviewCallbackKey',
+  //     webviewCallbackKey: message.webviewCallbackKey,
+  //     data: {
+  //       token,
+  //       realm,
+  //     },
+  //   });
+  // };
   private getToken = (message: IWebviewMessage) => {
     const token = this.rootStore.authStore.getToken();
+    const realm = this.rootStore.authStore.getRealm();
     this.postMessageToWebview({
       store: 'RootStore',
       command: 'webviewCallbackKey',
       webviewCallbackKey: message.webviewCallbackKey,
       data: {
         token,
+        realm,
       },
     });
   };
@@ -319,8 +336,8 @@ export class ChatPanelProvider
   };
 
   private getLastTopic = (message: IWebviewMessage) => {
-    const realm = this.rootStore.getState('v-collab-last-realm') as string;
-    const topic = this.rootStore.getState('v-collab-last-topic') as string;
+    const realm = this.rootStore.getState('k-collab-last-realm') as string;
+    const topic = this.rootStore.getState('k-collab-last-topic') as string;
 
     this.postMessageToWebview({
       store: 'RootStore',
@@ -334,7 +351,7 @@ export class ChatPanelProvider
   };
 
   private setLastTopic = (message: IWebviewMessage) => {
-    this.rootStore.setState('v-collab-last-realm', message.data.realm);
-    this.rootStore.setState('v-collab-last-topic', message.data.topic);
+    this.rootStore.setState('k-collab-last-realm', message.data.realm);
+    this.rootStore.setState('k-collab-last-topic', message.data.topic);
   };
 }

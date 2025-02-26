@@ -43,11 +43,12 @@ export class ZulipService {
     return !!this.token;
   }
 
-  constructor() { }
+  constructor() {}
 
   setToken = (token: string) => {
     this.token = token;
     this.tokenType = 'Bearer';
+    console.log(`TOKEN WAS SETTED ${this.tokenType} : ${this.token}`);
   };
 
   setBasicAuth = (email: string, apiKey: string) => {
@@ -91,8 +92,12 @@ export class ZulipService {
   }): Promise<any> => {
     try {
       let url = this.buildUrl(path);
+      console.log('url ', url);
       const headers = new Headers();
       headers.set('Authorization', `${this.tokenType} ${this.token}`);
+      if (path === 'register') {
+        console.log('AUTHRIZATION ', `${this.tokenType} ${this.token}`);
+      }
       const request: RequestInit = {
         method: method,
         headers: headers,
@@ -312,6 +317,7 @@ export class ZulipService {
     while (true) {
       try {
         if (!queueId) {
+          console.log(`authorization ${this.tokenType} : ${this.token}`);
           [queueId, lastEventId] = await this.registerEventQueue();
         }
         const events = await this.getEventFromQueue(queueId, lastEventId);

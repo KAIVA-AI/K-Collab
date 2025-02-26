@@ -27,6 +27,7 @@ class TopicPage extends Component<BaseComponentProps, TopicPageState> {
   componentDidMount(): void {
     this.rootStore.setCurrentWebviewPageContext('topic-page');
     this.topicStore.loadData();
+    console.log('LOAD TOPICS DONE');
 
     // Add scroll event listener
     const listElement = this.listRef.current;

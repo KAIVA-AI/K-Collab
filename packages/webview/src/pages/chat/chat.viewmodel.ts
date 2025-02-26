@@ -1,4 +1,4 @@
-import { IZulipSendMessageParams, TopicFileInput } from '@v-collab/common';
+import { IZulipSendMessageParams, TopicFileInput } from '@k-collab/common';
 import { RootStore } from '../../stores';
 import { action, makeObservable, observable } from 'mobx';
 

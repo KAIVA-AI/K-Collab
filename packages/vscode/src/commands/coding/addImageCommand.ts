@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from '../../stores';
 
-const COMMAND_ID = 'v-collab.command.add-image';
+const COMMAND_ID = 'k-collab.command.add-image';
 const COMMAND_TITLE = 'Add Image to Chat';
 
 export class AddImageCommand {

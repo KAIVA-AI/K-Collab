@@ -1,7 +1,7 @@
 import { commands, Disposable } from 'vscode';
 import { RootStore } from 'src/stores';
 
-const COMMAND_ID = 'v-collab.command.setting.setting';
+const COMMAND_ID = 'k-collab.command.setting.setting';
 const COMMAND_TITLE = '$(gear) setting';
 
 export class SettingCommand {
@@ -14,7 +14,7 @@ export class SettingCommand {
     };
   }
 
-  constructor(private rootStore: RootStore) { }
+  constructor(private rootStore: RootStore) {}
 
   register = (): Disposable => {
     return commands.registerCommand(COMMAND_ID, this.#execute);

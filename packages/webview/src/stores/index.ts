@@ -12,7 +12,7 @@ import {
 } from 'mobx';
 import { ChatViewModel } from '../pages/chat/chat.viewmodel';
 import { IWebviewMessage, IZulipUser } from '../models';
-import { Constants, WorkspaceService, ZulipService } from '@v-collab/common';
+import { Constants, WorkspaceService, ZulipService } from '@k-collab/common';
 import { v4 as uuidV4 } from 'uuid';
 import { AuthStore } from './auth.store';
 import { SettingStore } from './setting.store';
@@ -26,9 +26,9 @@ declare function acquireVsCodeApi(): {
 const getVSCodeApi = () => {
   if (typeof acquireVsCodeApi === 'undefined') {
     return {
-      postMessage: () => { },
-      getState: () => { },
-      setState: () => { },
+      postMessage: () => {},
+      getState: () => {},
+      setState: () => {},
     };
   }
   return acquireVsCodeApi();
@@ -72,7 +72,7 @@ export class RootStore {
     return this.webviewVersion !== this.extensionVersion;
   }
   @computed get linkToDownload() {
-    return `${Constants.WEB_URL}/vscode/v-collab-${this.webviewVersion}.vsix`;
+    return `${Constants.WEB_URL}/vscode/k-collab-${this.webviewVersion}.vsix`;
   }
 
   constructor() {

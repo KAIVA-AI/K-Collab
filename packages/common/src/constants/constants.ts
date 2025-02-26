@@ -14,6 +14,11 @@ export const Constants = {
   ZULIP_BASE_DOMAIN: process.env.ZULIP_BASE_DOMAIN || 'zulipdev.com:9991',
   ZULIP_SECONDARY_DOMAIN:
     process.env.ZULIP_SECONDARY_DOMAIN || 'ide-ext.collab.vietis.com.vn:9981',
+  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || 'Ov23liJvUHSfWdWvlqdl',
+  GITHUB_REDIRECT_URL:
+    process.env.GITHUB_REDIRECT_URL ||
+    'http://localhost:8080/auth/github/callback',
+  GITHUB_SCOPE: process.env.GITHUB_SCOPE || 'read:user user:email',
 };
 
 export const EMOJI_REGEX = /([\uD800-\uDBFF][\uDC00-\uDFFF])/g;

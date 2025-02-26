@@ -1,6 +1,6 @@
 import { ExtensionContext, WebviewPanel, commands } from 'vscode';
 import { ChatPanelProvider, PreviewPanelProvider } from '../views';
-import { UriHandler } from '../handlers';
+import { UriHandler, UriGitHubHandler } from '../handlers';
 import {
   // chat
   HistoryCommand,
@@ -43,7 +43,8 @@ export class RootStore {
   chatPanelProvider = new ChatPanelProvider(this);
   previewPanelProvider = new PreviewPanelProvider(this);
   // handlers
-  uriHandler = new UriHandler(this);
+  // uriHandler = new UriHandler(this);
+  UriGitHubHandler = new UriGitHubHandler(this);
   // commands
   historyCommand = new HistoryCommand(this);
   inlineChatCommand = new InlineChatCommand(this);
@@ -87,7 +88,7 @@ export class RootStore {
     return this.context.extension.packageJSON.version;
   }
 
-  constructor(private context: ExtensionContext) { }
+  constructor(private context: ExtensionContext) {}
 
   register = () => {
     Logger.register();
@@ -99,7 +100,8 @@ export class RootStore {
     // views
     this.context.subscriptions.push(this.chatPanelProvider.register());
     // handlers
-    this.context.subscriptions.push(this.uriHandler.register());
+    // this.context.subscriptions.push(this.uriHandler.register());
+    this.context.subscriptions.push(this.UriGitHubHandler.register());
 
     // commands
     this.context.subscriptions.push(this.historyCommand.register());

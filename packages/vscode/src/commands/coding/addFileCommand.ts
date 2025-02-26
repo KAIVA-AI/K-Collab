@@ -2,7 +2,7 @@ import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../../stores';
 import path from 'path';
 
-const COMMAND_ID = 'v-collab.command.add-file';
+const COMMAND_ID = 'k-collab.command.add-file';
 const COMMAND_TITLE = 'Add File to Chat';
 
 export class AddFileCommand {

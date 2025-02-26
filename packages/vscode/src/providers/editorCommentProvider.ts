@@ -9,7 +9,7 @@ import {
 } from 'vscode';
 import { RootStore } from '../stores';
 
-const COMMENT_CONTROLLER_ID = 'v-collab.comment.ask';
+const COMMENT_CONTROLLER_ID = 'k-collab.comment.ask';
 const COMMENT_CONTROLLER_LABEL = 'Ask VietIS-Coding';
 
 export class EditorCommentProvider implements CommentingRangeProvider {

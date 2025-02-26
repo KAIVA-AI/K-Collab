@@ -6,7 +6,7 @@ export class Logger {
   static register() {
     outputChannel =
       outputChannel ??
-      window.createOutputChannel('V-Collab', {
+      window.createOutputChannel('K-Collab', {
         log: true,
       });
   }

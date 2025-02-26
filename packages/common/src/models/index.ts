@@ -5,6 +5,7 @@ export interface IWebviewMessage {
   data?: any;
   hasReturn?: boolean;
   webviewCallbackKey?: string;
+  type?: string;
 }
 
 export * from './message';

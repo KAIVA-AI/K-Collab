@@ -1,7 +1,7 @@
 import { commands, Disposable, window } from 'vscode';
 import { RootStore } from '../../stores';
 
-const COMMAND_ID = 'v-collab.command.preview.reject';
+const COMMAND_ID = 'k-collab.command.preview.reject';
 
 export class RejectChangeCommand {
   static COMMAND_ID = COMMAND_ID;

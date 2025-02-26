@@ -1,6 +1,6 @@
-import { Webview, Disposable, window, ColorThemeKind } from 'vscode';
+import { Webview, Disposable, window, ColorThemeKind, env, Uri } from 'vscode';
 import { IWebviewMessage } from 'src/models';
-import { Constants } from '@v-collab/common';
+import { Constants } from '@k-collab/common';
 import { RootStore } from 'src/stores';
 
 interface IMessageHandler {
@@ -70,6 +70,11 @@ export abstract class IBaseWebview {
           pageRouter: this.getPageRouter(),
         },
       });
+      return;
+    }
+    if (message.command === 'openGitHubLogin') {
+      env.openExternal(Uri.parse(message.data?.url));
+      console.log('REDIRECT TO GITHUB CALLBACK DONE');
       return;
     }
     const handler = this.messageHandler()[message.command];
